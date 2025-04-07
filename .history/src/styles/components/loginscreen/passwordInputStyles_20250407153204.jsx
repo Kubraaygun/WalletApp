@@ -6,7 +6,7 @@ const PasswordInputStyles = StyleSheet.create({
   },
   iconContainer: {
     position: "absolute",
-    right: 17,
+    right: 1,
     top: "50%",
     transform: [{ translateY: -17 }],
   },
