@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setInitialData, resetBalance } from "../store/walletSlice";
 import CustomButton from "../components/customButton";
+
+TransactionList;
 import { Colors } from "../utils/colors";
-import BalanceCard from "../components/homeScreen/balanceCard";
-import TransactionList from "../components/homeScreen/transactionList";
 import { height } from "../utils/constant";
+import BalanceCard from "../components/homeScreen/balanceCard";
+import TransactionList from "../components/homeScreen/TransaclionList";
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -32,13 +34,12 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.PRIMARY }}>
       <View style={styles.container}>
-        {/* BALANCE  */}
         <BalanceCard balance={balance} />
 
         {transactions.length > 0 && (
           <Text style={styles.sectionTitle}>Son İşlemler</Text>
         )}
-        {/* TRANSACTION LIST  */}
+
         <TransactionList transactions={transactions} />
 
         <CustomButton
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     position: "absolute",
-    bottom: height * 0.1,
+    bottom: 60,
     width: "60%",
     backgroundColor: Colors.BLACK,
   },

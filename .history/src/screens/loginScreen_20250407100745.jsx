@@ -4,9 +4,10 @@ import { Colors } from "../utils/colors";
 import CustomButton from "../components/customButton";
 import { Formik } from "formik";
 import validationSchema from "../utils/validation";
+PasswordInput;
+import LoginHeader from "../components/loginScreen/LoginHeader";
 import EmailOrPhoneInput from "../components/loginScreen/emailOrPhoneInput";
 import PasswordInput from "../components/loginScreen/passwordInput";
-import LoginHeader from "../components/loginScreen/loginHeader";
 
 const LoginScreen = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);

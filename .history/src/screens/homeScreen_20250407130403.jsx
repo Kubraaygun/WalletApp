@@ -32,13 +32,12 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.PRIMARY }}>
       <View style={styles.container}>
-        {/* BALANCE  */}
         <BalanceCard balance={balance} />
 
         {transactions.length > 0 && (
           <Text style={styles.sectionTitle}>Son İşlemler</Text>
         )}
-        {/* TRANSACTION LIST  */}
+
         <TransactionList transactions={transactions} />
 
         <CustomButton

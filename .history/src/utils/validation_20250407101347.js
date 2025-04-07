@@ -10,7 +10,7 @@ const validationSchema = Yup.object().shape({
         if (!value) return false;
 
         const isEmail = value.includes("@");
-
+  
         const isPhone = /^\d{11}$/.test(value);
 
         return isEmail || isPhone; // Hem e-posta hem telefon numarası kabul edilir

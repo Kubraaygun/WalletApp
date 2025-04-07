@@ -50,7 +50,7 @@ const TransferScreen = ({ navigation }) => {
     });
     setIsModalVisible(true);
   };
-  // Handle confirmation
+
   const handleConfirm = () => {
     try {
       dispatch(

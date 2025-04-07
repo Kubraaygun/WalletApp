@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Alert, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Modal,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { addTransaction } from "../store/walletSlice";
+import { addTransaction, setBalance } from "../store/walletSlice";
 import CustomTextInput from "../components/customTextInput";
 import { Colors } from "../utils/colors";
 import CustomButton from "../components/customButton";
 import PhoneValidationComponent from "../components/isPhoneNumberValid";
-import BalanceDisplay from "../components/transferScreen/balancaDisplay";
-import TransferModal from "../components/transferScreen/transferModal";
 
 // create a component
 const TransferScreen = ({ navigation }) => {
@@ -21,7 +28,7 @@ const TransferScreen = ({ navigation }) => {
   const [confirmData, setConfirmData] = useState(null);
 
   const MIN_AMOUNT = 10;
-  // Handle form submission
+
   const handleSubmit = () => {
     const isPhoneValid = PhoneValidationComponent({ phoneNumber });
     if (!isPhoneValid) {
@@ -50,7 +57,7 @@ const TransferScreen = ({ navigation }) => {
     });
     setIsModalVisible(true);
   };
-  // Handle confirmation
+
   const handleConfirm = () => {
     try {
       dispatch(
@@ -120,14 +127,60 @@ const TransferScreen = ({ navigation }) => {
           style={{ backgroundColor: Colors.BLACK, marginTop: 20 }}
         />
 
-        <BalanceDisplay balance={balance} />
+        <View style={styles.balanceContainer}>
+          <Text style={styles.balanceTextContainer}>
+            Bakiye:{" "}
+            {parseFloat(balance).toLocaleString("tr-TR", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            })}
+            TL
+          </Text>
+        </View>
 
-        <TransferModal
+        {/* MODAL */}
+        <Modal
           visible={isModalVisible}
-          confirmData={confirmData}
-          handleConfirm={handleConfirm}
-          handleCancel={handleCancel}
-        />
+          transparent={true}
+          animationType="slide"
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Transfer Onayla</Text>
+              <Text style={styles.modalText}>
+                Alıcı: {confirmData?.phoneNumber || "Telefon numarası yok"}
+              </Text>
+              <Text style={styles.modalText}>
+                Miktar:{" "}
+                {parseFloat(confirmData?.amount).toLocaleString("tr-TR", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2,
+                })}
+                TL
+              </Text>
+              {confirmData?.description && (
+                <Text style={styles.modalText}>
+                  Açıklama: {confirmData?.description}
+                </Text>
+              )}
+
+              <View style={styles.modalButtonContainer}>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={handleConfirm}
+                >
+                  <Text style={styles.buttonText}>Onayla</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={handleCancel}
+                >
+                  <Text style={styles.buttonText}>İptal</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ScrollView>
   );

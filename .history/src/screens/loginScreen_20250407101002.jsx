@@ -6,7 +6,6 @@ import { Formik } from "formik";
 import validationSchema from "../utils/validation";
 import EmailOrPhoneInput from "../components/loginScreen/emailOrPhoneInput";
 import PasswordInput from "../components/loginScreen/passwordInput";
-import LoginHeader from "../components/loginScreen/loginHeader";
 
 const LoginScreen = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -22,7 +21,6 @@ const LoginScreen = ({ navigation }) => {
       style={{ backgroundColor: Colors.PRIMARY }}
     >
       <View style={styles.container}>
-        <LoginHeader />
         <Formik
           initialValues={{ emailOrPhone: "", password: "" }}
           validationSchema={validationSchema}

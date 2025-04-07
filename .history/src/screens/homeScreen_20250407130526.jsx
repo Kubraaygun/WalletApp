@@ -38,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
         {transactions.length > 0 && (
           <Text style={styles.sectionTitle}>Son İşlemler</Text>
         )}
-        {/* TRANSACTION LIST  */}
+
         <TransactionList transactions={transactions} />
 
         <CustomButton

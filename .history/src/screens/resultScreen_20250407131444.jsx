@@ -3,8 +3,8 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Colors } from "../utils/colors";
-import ResultInfo from "../components/resultScreen/resultInfo";
-import ActionButtons from "../components/resultScreen/actionButton";
+import ResultInfo from "../components/ResultInfo";
+import ActionButtons from "../components/ActionButtons";
 
 const ResultScreen = () => {
   const navigation = useNavigation();

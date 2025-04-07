@@ -3,8 +3,8 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Colors } from "../utils/colors";
-import ResultInfo from "../components/resultScreen/resultInfo";
-import ActionButtons from "../components/resultScreen/actionButton";
+import ResultInfo from "../components/ResultInfo";
+import ActionButtons from "../components/ActionButtons";
 
 const ResultScreen = () => {
   const navigation = useNavigation();
@@ -58,18 +58,3 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.PRIMARY,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-  },
-  icon: {
-    width: 80,
-    height: 80,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-});
-
-export default ResultScreen;

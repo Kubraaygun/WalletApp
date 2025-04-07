@@ -7,6 +7,7 @@ import validationSchema from "../utils/validation";
 import EmailOrPhoneInput from "../components/loginScreen/emailOrPhoneInput";
 import PasswordInput from "../components/loginScreen/passwordInput";
 import LoginHeader from "../components/loginScreen/loginHeader";
+LoginHeader;
 
 const LoginScreen = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);

@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Alert, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Modal,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { addTransaction } from "../store/walletSlice";
+import { addTransaction, setBalance } from "../store/walletSlice";
 import CustomTextInput from "../components/customTextInput";
 import { Colors } from "../utils/colors";
 import CustomButton from "../components/customButton";
@@ -21,7 +30,7 @@ const TransferScreen = ({ navigation }) => {
   const [confirmData, setConfirmData] = useState(null);
 
   const MIN_AMOUNT = 10;
-  // Handle form submission
+
   const handleSubmit = () => {
     const isPhoneValid = PhoneValidationComponent({ phoneNumber });
     if (!isPhoneValid) {
@@ -50,7 +59,7 @@ const TransferScreen = ({ navigation }) => {
     });
     setIsModalVisible(true);
   };
-  // Handle confirmation
+
   const handleConfirm = () => {
     try {
       dispatch(

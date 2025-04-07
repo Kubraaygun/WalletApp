@@ -21,7 +21,7 @@ const TransferScreen = ({ navigation }) => {
   const [confirmData, setConfirmData] = useState(null);
 
   const MIN_AMOUNT = 10;
-  // Handle form submission
+
   const handleSubmit = () => {
     const isPhoneValid = PhoneValidationComponent({ phoneNumber });
     if (!isPhoneValid) {
@@ -50,7 +50,7 @@ const TransferScreen = ({ navigation }) => {
     });
     setIsModalVisible(true);
   };
-  // Handle confirmation
+
   const handleConfirm = () => {
     try {
       dispatch(

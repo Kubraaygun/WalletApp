@@ -6,7 +6,7 @@ import { Formik } from "formik";
 import validationSchema from "../utils/validation";
 import EmailOrPhoneInput from "../components/loginScreen/emailOrPhoneInput";
 import PasswordInput from "../components/loginScreen/passwordInput";
-import LoginHeader from "../components/loginScreen/loginHeader";
+import LoginHeader from "../components/loginScreen/LoginHeader";
 
 const LoginScreen = ({ navigation }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
