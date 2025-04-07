@@ -1,0 +1,25 @@
+import { createStackNavigator } from "@react-navigation/stack";
+import {
+  HOMESCREEN,
+  LOGINSCREEN,
+  RESULTSCREEN,
+  TRANSFERSCREEN,
+} from "../utils/constants";
+
+const Stack = createStackNavigator();
+
+const RootNavigation = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name={LOGINSCREEN}
+        component={LoginScreen}
+      />
+      <Stack.Screen name={HOMESCREEN} component={HomeScreen} />
+      <Stack.Screen name={RESULTSCREEN} component={ResultScreen} />
+      <Stack.Screen name={TRANSFERSCREEN} component={TransferScreen} />
+    </Stack.Navigator>
+  );
+};
+export default RootNavigation;

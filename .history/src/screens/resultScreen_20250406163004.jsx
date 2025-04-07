@@ -1,0 +1,135 @@
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Colors } from "../utils/colors";
+import CustomButton from "../components/customButton";
+
+const ResultScreen = () => {
+  const navigation = useNavigation();
+  const { params } = useRoute();
+  const { success, phoneNumber, amount, description, timestamp, errorMessage } =
+    params || {};
+
+  // Kontrol amaçlı log at
+  console.log("success:", success);
+
+  const formattedAmount = parseFloat(amount).toLocaleString("tr-TR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+
+  return (
+    <View style={styles.container}>
+      <Image
+        source={
+          success
+            ? require("../assets/images/check.png")
+            : require("../assets/images/close.png")
+        }
+        style={styles.icon}
+      />
+
+      <Text style={styles.title}>
+        {success ? "İşlem Başarılı" : "İşlem Başarısız"}
+      </Text>
+
+      {success ? (
+        <>
+          <View
+            style={{
+              alignItems: "center",
+              borderWidth: 1,
+              backgroundColor: Colors.LIGHT,
+              borderColor: Colors.LIGHTGRAY,
+              padding: 10,
+              borderRadius: 10,
+              shadowColor: "#000",
+              shadowOpacity: 0.1,
+              shadowRadius: 6,
+              elevation: 4,
+            }}
+          >
+            <Text style={styles.info}>Tutar: {formattedAmount} TL</Text>
+            <Text style={styles.info}>Alıcı: {phoneNumber}</Text>
+            {description ? (
+              <Text style={styles.info}>Açıklama: {description}</Text>
+            ) : null}
+            <Text style={styles.info}>
+              Zaman: {new Date(timestamp).toLocaleString("tr-TR")}
+            </Text>
+          </View>
+
+
+          <CustomButton
+                title="Login"
+                onPress={handleSubmit}
+                disabled={!values.emailOrPhone || !values.password}
+                style={{
+                  backgroundColor:
+                    !values.emailOrPhone || !values.password
+                      ? Colors.BASEGRAY
+                      : Colors.BLACK, // Buton rengi aktif değilse gri olur
+                }}
+              />
+
+
+
+
+       
+      ) : (
+        <>
+          <Text style={styles.info}>Hata: {errorMessage}</Text>
+
+          <TouchableOpacity
+            style={[styles.button, styles.retryButton]}
+            onPress={() => navigation.navigate("TransferScreen")}
+          >
+            <Text style={styles.buttonText}>Tekrar Dene</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.PRIMARY,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  icon: {
+    width: 80,
+    height: 80,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  info: {
+    fontSize: 16,
+    marginVertical: 5,
+  },
+  button: {
+    backgroundColor: Colors.BLACK,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 20,
+    width: "60%",
+    alignItems: "center",
+  },
+  retryButton: {
+    backgroundColor: "#D32F2F",
+  },
+  buttonText: {
+    color: Colors.WHITE,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
+
+export default ResultScreen;
