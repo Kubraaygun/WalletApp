@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     position: "absolute",
-    bottom: 60,
+    bottom: height * 0.1,
     width: "60%",
     backgroundColor: Colors.BLACK,
   },

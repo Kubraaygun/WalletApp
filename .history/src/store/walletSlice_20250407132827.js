@@ -32,7 +32,7 @@ const walletSlice = createSlice({
         amount: amount.toFixed(2),
         date: formattedDate,
       };
-      state.transactions.unshift(newTransaction);
+      state.transactions.unshify(newTransaction);
       state.balance -= amount;
       // AsyncStorage'e kaydet
       AsyncStorage.setItem(
