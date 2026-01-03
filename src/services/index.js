@@ -1,3 +1,5 @@
 export { default as apiClient } from "./apiClient";
 export * as authService from "./authService";
 export * as walletService from "./walletService";
+export * as biometricService from "./biometricService";
+export * as qrService from "./qrService";

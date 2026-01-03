@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -9,13 +9,17 @@ import {
   Platform,
   TouchableOpacity,
   Text,
+  Alert,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import Icon from "react-native-vector-icons/Feather";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import validationSchema from "../utils/validation";
+import { authSuccess } from "../store/authSlice";
+import { biometricService } from "../services";
 
 // Components
 import LoginHeader from "../components/loginScreen/loginHeader";
@@ -24,10 +28,56 @@ import PasswordInput from "../components/loginScreen/passwordInput";
 import CustomButton from "../components/customButton";
 
 const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState(false);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [biometricType, setBiometricType] = useState("Face ID");
+
+  useEffect(() => {
+    checkBiometricAvailability();
+  }, []);
+
+  const checkBiometricAvailability = async () => {
+    const hasHardware = await biometricService.hasBiometricHardware();
+    const isEnrolled = await biometricService.hasBiometricEnrolled();
+    const isEnabled = await biometricService.isBiometricLoginEnabled();
+    
+    setBiometricAvailable(hasHardware && isEnrolled && isEnabled);
+    
+    // Biyometrik türünü belirle
+    const types = await biometricService.getSupportedBiometricTypes();
+    if (types.includes("FACIAL_RECOGNITION")) {
+      setBiometricType("Face ID");
+    } else if (types.includes("FINGERPRINT")) {
+      setBiometricType("Touch ID");
+    }
+  };
 
   const handleLogin = (values) => {
+    // TODO: Backend API entegrasyonu
+    // Şimdilik mock login
+    dispatch(authSuccess({
+      user: { name: "Kübra", email: values.emailOrPhone },
+      token: "mock_token_12345",
+    }));
     navigation.navigate("HomeScreen");
+  };
+
+  const handleBiometricLogin = async () => {
+    const result = await biometricService.authenticateWithBiometric(
+      `${biometricType} ile giriş yapın`
+    );
+
+    if (result.success) {
+      // TODO: Token'ı SecureStore'dan al ve validasyonunu yap
+      dispatch(authSuccess({
+        user: { name: "Kübra", email: "biometric@example.com" },
+        token: "biometric_token_12345",
+      }));
+      navigation.navigate("HomeScreen");
+    } else {
+      Alert.alert("Doğrulama Başarısız", result.error);
+    }
   };
 
   return (
@@ -110,16 +160,21 @@ const LoginScreen = ({ navigation }) => {
                   />
 
                   {/* Biometric Login */}
-                  <TouchableOpacity style={styles.biometricButton}>
-                    <Icon
-                      name="smartphone"
-                      size={IconSize.md}
-                      color={Colors.ACCENT}
-                    />
-                    <Text style={styles.biometricText}>
-                      Face ID ile giriş yap
-                    </Text>
-                  </TouchableOpacity>
+                  {biometricAvailable && (
+                    <TouchableOpacity 
+                      style={styles.biometricButton}
+                      onPress={handleBiometricLogin}
+                    >
+                      <Icon
+                        name={biometricType === "Face ID" ? "smartphone" : "fingerprint"}
+                        size={IconSize.md}
+                        color={Colors.ACCENT}
+                      />
+                      <Text style={styles.biometricText}>
+                        {biometricType} ile giriş yap
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               )}
             </Formik>

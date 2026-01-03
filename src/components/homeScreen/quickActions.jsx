@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import { Colors } from "../../utils/colors";
-import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
 
@@ -41,19 +40,19 @@ const QuickActions = ({ navigation }) => {
             icon: "download",
             label: "Al",
             color: Colors.SUCCESS,
-            onPress: () => console.log("Al pressed"),
+            onPress: () => console.log("Al pressed"), // TODO: Para isteme ekranı
         },
         {
             icon: "maximize",
             label: "QR Tara",
             color: Colors.SECONDARY,
-            onPress: () => console.log("QR pressed"),
+            onPress: () => handleNavigate("QRScannerScreen"),
         },
         {
             icon: "more-horizontal",
             label: "Daha Fazla",
             color: Colors.GRAY_500,
-            onPress: () => console.log("More pressed"),
+            onPress: () => console.log("More pressed"), // TODO: Daha fazla menüsü
         },
     ];
 

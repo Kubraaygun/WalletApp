@@ -6,12 +6,14 @@ import ResultScreen from "../screens/resultScreen";
 import TransferScreen from "../screens/transferScreen";
 import LoginScreen from "../screens/loginScreen";
 import RegisterScreen from "../screens/registerScreen";
+import QRScannerScreen from "../screens/qrScannerScreen";
 import {
   HOMESCREEN,
   LOGINSCREEN,
   RESULTSCREEN,
   TRANSFERSCREEN,
   REGISTERSCREEN,
+  QRSCANNERSCREEN,
 } from "../utils/routes";
 
 const Stack = createStackNavigator();
@@ -30,6 +32,11 @@ const AppStack = () => (
     <Stack.Screen name={HOMESCREEN} component={HomeScreen} />
     <Stack.Screen name={TRANSFERSCREEN} component={TransferScreen} />
     <Stack.Screen name={RESULTSCREEN} component={ResultScreen} />
+    <Stack.Screen 
+      name={QRSCANNERSCREEN} 
+      component={QRScannerScreen}
+      options={{ presentation: "modal" }}
+    />
   </Stack.Navigator>
 );
 

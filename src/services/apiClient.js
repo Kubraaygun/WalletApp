@@ -1,8 +1,22 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import Constants from "expo-constants";
 
-// API Base URL - Production'da environment variable olarak ayarlanmalı
-const API_BASE_URL = "https://api.walletapp.com/v1"; // Placeholder
+// API Base URL - Environment variable'dan al, yoksa placeholder kullan
+const getApiBaseUrl = () => {
+  // Expo Constants'tan extra config al
+  const extra = Constants.expoConfig?.extra;
+  
+  // Development modda mock API kullan
+  if (__DEV__) {
+    return extra?.apiUrl || "http://localhost:3001/api";
+  }
+  
+  // Production'da gerçek API URL
+  return extra?.apiUrl || "https://api.walletapp.com/v1";
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Axios instance oluştur
 const apiClient = axios.create({
@@ -23,7 +37,10 @@ apiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
-      console.warn("Token okuma hatası:", error);
+      // Secure store erişim hatası - sessizce devam et
+      if (__DEV__) {
+        console.warn("Token okuma hatası:", error);
+      }
     }
     return config;
   },
@@ -66,7 +83,6 @@ apiClient.interceptors.response.use(
         // Refresh token da geçersizse logout yap
         await SecureStore.deleteItemAsync("authToken");
         await SecureStore.deleteItemAsync("refreshToken");
-        // Navigation reset işlemi burada yapılabilir
         return Promise.reject(refreshError);
       }
     }
