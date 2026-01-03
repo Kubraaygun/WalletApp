@@ -50,14 +50,6 @@ Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
 | Secure Storage   | expo-secure-store             |
 | Error Tracking   | Sentry                        |
 
----
-
-## 🎬 Demo
-
-<p align="center">
-  <img src="assets/screenshots/app_demo.png" width="600" alt="App Showcase" />
-</p>
-
 ## 📄 Lisans
 
 Bu proje [0BSD](LICENSE) lisansı altındadır.
