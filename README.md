@@ -6,13 +6,36 @@ Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
 ![Expo](https://img.shields.io/badge/Expo-52-000020?logo=expo)
 ![License](https://img.shields.io/badge/License-0BSD-green)
 
+---
+
+## ✨ Önizleme (Showcase)
+
+<p align="center">
+  <img src="assets/screenshots/showcase_onboarding.png" width="200" alt="Onboarding" />
+  <img src="assets/screenshots/showcase_home.png" width="200" alt="Ana Sayfa" />
+  <img src="assets/screenshots/showcase_crypto.png" width="200" alt="Kripto Takibi" />
+  <img src="assets/screenshots/showcase_stats.png" width="200" alt="İstatistikler" />
+</p>
+
+---
+
 ## 📱 Özellikler
 
 - **💸 Para Transferi** - Telefon numarasıyla hızlı para gönderme
-- **📷 QR Kod Tarama** - QR ile anında ödeme başlatma
+- **� Harcama Grafikleri** - Aylık harcama analizi ve kategorilendirme
+- **🪙 Kripto Takibi** - Canlı kripto para fiyatları ve trendler
+- **�📷 QR Kod Tarama** - QR ile anında ödeme başlatma
 - **🔐 Biyometrik Giriş** - Face ID / Touch ID desteği
-- **📊 İşlem Geçmişi** - Tüm transferlerin takibi
-- **🔒 Güvenli Depolama** - Token'lar şifrelenmiş olarak saklanır
+- **� Kart Yönetimi** - Sanal kart oluşturma ve yönetme
+- **💱 Döviz Çevirici** - Anlık döviz kuru hesaplama
+- **🌍 Çoklu Dil Desteği** - Türkçe ve İngilizce desteği
+
+## 🎨 Tasarım Sistemi
+
+- **Minimal White Tema** - Apple Pay tarzı temiz ve modern arayüz
+- **İnteraktif Animasyonlar** - Lottie ve Reanimated ile akıcı geçişler
+- **Glassmorphism** - Buzlu cam efektli modern bileşenler
+- **Dark Mode Hazırlığı** - Koyu mod uyumlu renk paleti
 
 ## 🛠 Teknolojiler
 
@@ -22,10 +45,10 @@ Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
 | State Management | Redux Toolkit + Redux Persist |
 | Navigation       | React Navigation              |
 | API              | Axios                         |
-| Form Validation  | Formik + Yup                  |
+| Charts           | react-native-chart-kit        |
+| Animations       | reanimated + reanimated       |
 | Secure Storage   | expo-secure-store             |
-| Biometric        | expo-local-authentication     |
-| Camera/QR        | expo-camera                   |
+| Error Tracking   | Sentry                        |
 
 ## 🚀 Kurulum
 
@@ -51,29 +74,6 @@ cp .env.example .env
 
 # iOS'ta çalıştır
 npm run ios
-
-# Android'de çalıştır
-npm run android
-```
-
-## 📁 Proje Yapısı
-
-```
-src/
-├── components/       # Yeniden kullanılabilir UI bileşenleri
-│   ├── homeScreen/   # Ana sayfa bileşenleri
-│   ├── loginScreen/  # Giriş ekranı bileşenleri
-│   └── ...
-├── navigation/       # React Navigation yapılandırması
-├── screens/          # Uygulama ekranları
-├── services/         # API ve harici servisler
-│   ├── apiClient.js  # Axios instance
-│   ├── authService.js
-│   ├── walletService.js
-│   ├── biometricService.js
-│   └── qrService.js
-├── store/            # Redux store ve slice'lar
-└── utils/            # Yardımcı fonksiyonlar ve sabitler
 ```
 
 ## 🔐 Güvenlik
@@ -83,22 +83,13 @@ src/
 - API istekleri JWT ile korunur
 - Biyometrik doğrulama opsiyonel olarak aktif edilebilir
 
-## 📝 Environment Variables
-
-`.env.example` dosyasını kopyalayarak `.env` oluşturun:
-
-```env
-API_BASE_URL=https://api.walletapp.com/v1
-API_KEY=your_api_key_here
-NODE_ENV=development
-```
-
 ## 🗺 Yol Haritası
 
 - [x] **Faz 1**: Mimari ve Güvenlik Temelleri
 - [x] **Faz 2**: QR Kod ve Biyometrik Giriş
 - [x] **Faz 3**: Push Notifications, i18n
 - [x] **Faz 4**: Store Yayını Hazırlığı (Sentry, EAS Build)
+- [x] **Faz 5**: Tasarım Yenileme (Minimal White) ve Yeni Özellikler
 
 ## 📄 Lisans
 
