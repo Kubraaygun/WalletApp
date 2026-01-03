@@ -1,17 +1,18 @@
 import React from "react";
-import { Text } from "react-native";
 import CustomTextInput from "../customTextInput";
-import styles from "../../styles/components/loginscreen/EmailOrPhoneInputStyles";
+
 const EmailOrPhoneInput = ({ value, onChangeText, onBlur, error }) => (
-  <>
-    <CustomTextInput
-      placeholder="Email veya Telefon"
-      value={value}
-      onChangeText={onChangeText}
-      onBlur={onBlur}
-    />
-    {error && <Text style={styles.errorText}>{error}</Text>}
-  </>
+  <CustomTextInput
+    label="Email veya Telefon"
+    placeholder="ornek@email.com"
+    value={value}
+    onChangeText={onChangeText}
+    onBlur={onBlur}
+    error={error}
+    leftIcon="user"
+    keyboardType="email-address"
+    autoCapitalize="none"
+  />
 );
 
 export default EmailOrPhoneInput;

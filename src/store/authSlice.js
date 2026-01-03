@@ -1,31 +1,59 @@
 import { createSlice } from "@reduxjs/toolkit";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
+    token: null,
     isAuthenticated: false,
+    isLoading: false,
     error: null,
   },
   reducers: {
-    loginSuccess: (state, action) => {
-      state.user = action.payload;
-      state.isAuthenticated = true;
+    // Auth işlemi başladığında
+    authStart: (state) => {
+      state.isLoading = true;
       state.error = null;
-      AsyncStorage.setItem("user", JSON.stringify(action.payload));
     },
-    loginFailure: (state, action) => {
+    // Login/Register başarılı
+    authSuccess: (state, action) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      state.isLoading = false;
+      state.error = null;
+    },
+    // Auth hatası
+    authFailure: (state, action) => {
+      state.isLoading = false;
       state.error = action.payload;
+      state.isAuthenticated = false;
     },
+    // Logout
     logout: (state) => {
       state.user = null;
+      state.token = null;
       state.isAuthenticated = false;
       state.error = null;
-      AsyncStorage.removeItem("user");
+    },
+    // Hata mesajını temizle
+    clearError: (state) => {
+      state.error = null;
+    },
+    // User bilgisini güncelle (profil güncelleme için)
+    updateUser: (state, action) => {
+      state.user = { ...state.user, ...action.payload };
     },
   },
 });
 
-export const { loginSuccess, loginFailure, logout } = authSlice.actions;
+export const {
+  authStart,
+  authSuccess,
+  authFailure,
+  logout,
+  clearError,
+  updateUser,
+} = authSlice.actions;
+
 export default authSlice.reducer;
