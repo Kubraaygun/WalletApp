@@ -135,9 +135,7 @@ const CryptoScreen = ({ navigation }) => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Icon name="arrow-left" size={IconSize.md} color={Colors.TEXT_PRIMARY} />
-        </TouchableOpacity>
+        <View style={styles.headerSpacer} />
         <Text style={styles.headerTitle}>Kripto Fiyatları</Text>
         <View style={styles.headerSpacer} />
       </View>

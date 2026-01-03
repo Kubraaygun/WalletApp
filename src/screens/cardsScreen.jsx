@@ -177,9 +177,7 @@ const CardsScreen = ({ navigation }) => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Icon name="arrow-left" size={IconSize.md} color={Colors.TEXT_PRIMARY} />
-        </TouchableOpacity>
+        <View style={styles.headerSpacer} />
         <Text style={styles.headerTitle}>Kartlarım</Text>
         <TouchableOpacity style={styles.addButton} onPress={handleAddCard}>
           <Icon name="plus" size={IconSize.md} color={Colors.PRIMARY} />
