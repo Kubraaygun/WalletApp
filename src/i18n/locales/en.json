@@ -1,0 +1,89 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "retry": "Retry"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "phone": "Phone Number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "biometricLogin": "Login with {{type}}",
+    "loginSuccess": "Login successful",
+    "loginError": "Login failed"
+  },
+  "home": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "balance": "Balance",
+    "quickActions": "Quick Actions",
+    "send": "Send",
+    "receive": "Receive",
+    "scanQR": "Scan QR",
+    "more": "More",
+    "transactions": "Recent Transactions",
+    "seeAll": "See All",
+    "noTransactions": "No transactions yet"
+  },
+  "transfer": {
+    "title": "Send Money",
+    "amount": "Amount",
+    "recipient": "Recipient Details",
+    "phone": "Phone Number",
+    "description": "Description (Optional)",
+    "continue": "Continue",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "success": "Transfer Successful",
+    "error": "Transfer Failed",
+    "insufficientBalance": "Insufficient balance",
+    "minAmount": "Minimum amount is {{amount}} TL"
+  },
+  "qr": {
+    "title": "Scan QR Code",
+    "permissionTitle": "Camera Permission Required",
+    "permissionText": "You need to grant camera access to scan QR codes.",
+    "grantPermission": "Grant Permission",
+    "invalidQR": "Invalid QR Code",
+    "invalidQRText": "This QR code does not contain payment information.",
+    "scanAgain": "Scan Again",
+    "alignQR": "Align the QR code within the frame"
+  },
+  "notifications": {
+    "transferSuccess": "Transfer Successful ✅",
+    "transferSuccessBody": "₺{{amount}} was sent to {{recipient}}.",
+    "moneyReceived": "Money Received! 💰",
+    "moneyReceivedBody": "{{sender}} sent you ₺{{amount}}."
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "language": "Language",
+    "notifications": "Notifications",
+    "biometric": "Biometric Login",
+    "security": "Security",
+    "about": "About",
+    "version": "Version"
+  }
+}

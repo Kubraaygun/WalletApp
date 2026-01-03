@@ -7,6 +7,7 @@ import TransferScreen from "../screens/transferScreen";
 import LoginScreen from "../screens/loginScreen";
 import RegisterScreen from "../screens/registerScreen";
 import QRScannerScreen from "../screens/qrScannerScreen";
+import ProfileScreen from "../screens/profileScreen";
 import {
   HOMESCREEN,
   LOGINSCREEN,
@@ -14,6 +15,7 @@ import {
   TRANSFERSCREEN,
   REGISTERSCREEN,
   QRSCANNERSCREEN,
+  PROFILESCREEN,
 } from "../utils/routes";
 
 const Stack = createStackNavigator();
@@ -37,6 +39,7 @@ const AppStack = () => (
       component={QRScannerScreen}
       options={{ presentation: "modal" }}
     />
+    <Stack.Screen name={PROFILESCREEN} component={ProfileScreen} />
   </Stack.Navigator>
 );
 

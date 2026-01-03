@@ -1,0 +1,89 @@
+{
+  "common": {
+    "welcome": "Hoş geldiniz",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarılı",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "back": "Geri",
+    "next": "İleri",
+    "done": "Tamam",
+    "retry": "Tekrar Dene"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "register": "Kayıt Ol",
+    "email": "E-posta",
+    "phone": "Telefon Numarası",
+    "password": "Şifre",
+    "confirmPassword": "Şifre Tekrarı",
+    "rememberMe": "Beni hatırla",
+    "forgotPassword": "Şifremi unuttum",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "biometricLogin": "{{type}} ile giriş yap",
+    "loginSuccess": "Giriş başarılı",
+    "loginError": "Giriş başarısız"
+  },
+  "home": {
+    "greeting": {
+      "morning": "Günaydın",
+      "afternoon": "İyi günler",
+      "evening": "İyi akşamlar"
+    },
+    "balance": "Bakiye",
+    "quickActions": "Hızlı İşlemler",
+    "send": "Gönder",
+    "receive": "Al",
+    "scanQR": "QR Tara",
+    "more": "Daha Fazla",
+    "transactions": "Son İşlemler",
+    "seeAll": "Tümünü Gör",
+    "noTransactions": "Henüz işlem yok"
+  },
+  "transfer": {
+    "title": "Para Gönder",
+    "amount": "Tutar",
+    "recipient": "Alıcı Bilgileri",
+    "phone": "Telefon Numarası",
+    "description": "Açıklama (Opsiyonel)",
+    "continue": "Devam Et",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "success": "Transfer Başarılı",
+    "error": "Transfer Başarısız",
+    "insufficientBalance": "Yetersiz bakiye",
+    "minAmount": "Minimum tutar {{amount}} TL"
+  },
+  "qr": {
+    "title": "QR Kod Tara",
+    "permissionTitle": "Kamera İzni Gerekli",
+    "permissionText": "QR kod okumak için kamera erişimine izin vermeniz gerekmektedir.",
+    "grantPermission": "İzin Ver",
+    "invalidQR": "Geçersiz QR Kod",
+    "invalidQRText": "Bu QR kod bir ödeme bilgisi içermiyor.",
+    "scanAgain": "Tekrar Tara",
+    "alignQR": "QR kodu çerçevenin içine hizalayın"
+  },
+  "notifications": {
+    "transferSuccess": "Transfer Başarılı ✅",
+    "transferSuccessBody": "₺{{amount}} tutarında {{recipient}} kişisine transfer yapıldı.",
+    "moneyReceived": "Para Geldi! 💰",
+    "moneyReceivedBody": "{{sender}} size ₺{{amount}} gönderdi."
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "profile": "Profil",
+    "language": "Dil",
+    "notifications": "Bildirimler",
+    "biometric": "Biyometrik Giriş",
+    "security": "Güvenlik",
+    "about": "Hakkında",
+    "version": "Versiyon"
+  }
+}

@@ -53,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleProfilePress = () => {
-    // TODO: Profil ekranına yönlendir
+    navigation.navigate("ProfileScreen");
   };
 
   const handleNotificationPress = () => {
