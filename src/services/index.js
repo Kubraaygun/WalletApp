@@ -4,3 +4,4 @@ export * as walletService from "./walletService";
 export * as biometricService from "./biometricService";
 export * as qrService from "./qrService";
 export * as notificationService from "./notificationService";
+export * as sentryService from "./sentryService";

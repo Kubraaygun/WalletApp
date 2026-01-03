@@ -1,4 +1,4 @@
-# 💰 WalletApp
+# WalletApp
 
 Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
 
@@ -97,8 +97,8 @@ NODE_ENV=development
 
 - [x] **Faz 1**: Mimari ve Güvenlik Temelleri
 - [x] **Faz 2**: QR Kod ve Biyometrik Giriş
-- [ ] **Faz 3**: Push Notifications, i18n
-- [ ] **Faz 4**: Store Yayını (App Store / Play Store)
+- [x] **Faz 3**: Push Notifications, i18n
+- [x] **Faz 4**: Store Yayını Hazırlığı (Sentry, EAS Build)
 
 ## 📄 Lisans
 

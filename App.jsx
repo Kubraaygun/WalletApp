@@ -8,9 +8,13 @@ import RootNavigation from "./src/navigation/rootNavigation";
 import LoadingModal from "./src/components/loadingModal";
 import { Colors } from "./src/utils/colors";
 import { notificationService } from "./src/services";
+import { initSentry, withSentry } from "./src/services/sentryService";
 
 // i18n yapılandırmasını yükle
 import "./src/i18n";
+
+// Sentry'yi başlat (production'da aktif)
+initSentry();
 
 // Persist yüklenirken gösterilecek loading ekranı
 const PersistLoading = () => (
@@ -66,4 +70,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+// Sentry HOC ile sar (crash raporlama için)
+export default withSentry(App);

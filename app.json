@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "walletapp",
+    "name": "WalletApp",
     "slug": "walletapp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,28 +10,54 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#4F46E5"
     },
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.walletapp.mobile",
+      "buildNumber": "1",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Güvenli giriş için Face ID kullanılır"
+        "NSFaceIDUsageDescription": "Güvenli giriş için Face ID kullanılır",
+        "NSCameraUsageDescription": "QR kod taramak için kamera kullanılır"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#4F46E5"
+      },
+      "package": "com.walletapp.mobile",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "apiUrl": "http://localhost:3001/api"
-    },
     "plugins": [
-      "expo-localization"
-    ]
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "QR kod taramak için kameraya erişim gereklidir."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Güvenli giriş için Face ID kullanılır."
+        }
+      ]
+    ],
+    "extra": {
+      "apiUrl": "http://localhost:3001/api",
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    },
+    "owner": "kubraaygun"
   }
 }
