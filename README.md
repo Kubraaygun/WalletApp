@@ -50,47 +50,6 @@ Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
 | Secure Storage   | expo-secure-store             |
 | Error Tracking   | Sentry                        |
 
-## 🚀 Kurulum
-
-### Gereksinimler
-
-- Node.js 18+
-- npm veya yarn
-- Expo CLI
-- iOS Simulator (Mac) veya Android Emulator
-
-### Adımlar
-
-```bash
-# Repoyu klonla
-git clone https://github.com/Kubraaygun/WalletApp.git
-cd WalletApp
-
-# Bağımlılıkları yükle
-npm install
-
-# Environment dosyasını oluştur
-cp .env.example .env
-
-# iOS'ta çalıştır
-npm run ios
-```
-
-## 🔐 Güvenlik
-
-- Hassas veriler `.env` dosyasında saklanır (gitignore'da)
-- Token'lar `expo-secure-store` ile şifrelenir
-- API istekleri JWT ile korunur
-- Biyometrik doğrulama opsiyonel olarak aktif edilebilir
-
-## 🗺 Yol Haritası
-
-- [x] **Faz 1**: Mimari ve Güvenlik Temelleri
-- [x] **Faz 2**: QR Kod ve Biyometrik Giriş
-- [x] **Faz 3**: Push Notifications, i18n
-- [x] **Faz 4**: Store Yayını Hazırlığı (Sentry, EAS Build)
-- [x] **Faz 5**: Tasarım Yenileme (Minimal White) ve Yeni Özellikler
-
 ## 📄 Lisans
 
 Bu proje [0BSD](LICENSE) lisansı altındadır.
