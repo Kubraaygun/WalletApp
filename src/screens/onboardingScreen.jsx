@@ -10,7 +10,7 @@ import {
   Animated,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius } from "../utils/spacing";
@@ -165,7 +165,7 @@ const OnboardingScreen = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: true }
+          { useNativeDriver: false }
         )}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}

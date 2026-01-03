@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   TextInput,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Animated,
 } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
 import { BorderRadius, InputHeight, Spacing, IconSize } from "../utils/spacing";
@@ -37,15 +36,6 @@ const CustomTextInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isSecure, setIsSecure] = useState(secureTextEntry);
-  const labelPosition = useRef(new Animated.Value(value ? 1 : 0)).current;
-
-  useEffect(() => {
-    Animated.timing(labelPosition, {
-      toValue: isFocused || value ? 1 : 0,
-      duration: 150,
-      useNativeDriver: false,
-    }).start();
-  }, [isFocused, value]);
 
   const handleFocus = (e) => {
     setIsFocused(true);
@@ -91,7 +81,7 @@ const CustomTextInput = ({
   return (
     <View style={[styles.container, style]}>
       {label && (
-        <Animated.Text style={getLabelStyle()}>{label}</Animated.Text>
+        <Text style={styles.label}>{label}</Text>
       )}
 
       <View
@@ -171,6 +161,12 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: Spacing.md,
     width: "100%",
+  },
+  label: {
+    ...TextStyles.labelMedium,
+    color: Colors.TEXT_SECONDARY,
+    marginBottom: Spacing.xxs,
+    marginLeft: Spacing.xs,
   },
   inputContainer: {
     flexDirection: "row",

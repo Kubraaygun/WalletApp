@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Colors, Gradients } from "../../utils/colors";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, IconSize, BorderRadius } from "../../utils/spacing";
@@ -11,7 +11,7 @@ const LoginHeader = () => {
     <View style={styles.container}>
       {/* Logo Container */}
       <LinearGradient
-        colors={Gradients.primary}
+        colors={Gradients.balance}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.logoContainer}

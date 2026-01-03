@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import Avatar from "../avatar";
 import { Colors } from "../../utils/colors";
 import { TextStyles } from "../../utils/typography";

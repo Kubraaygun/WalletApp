@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Modal, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../../utils/colors";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";

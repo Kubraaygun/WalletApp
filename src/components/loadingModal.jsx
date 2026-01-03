@@ -8,8 +8,11 @@ import { Spacing, BorderRadius } from "../utils/spacing";
 const LoadingModal = ({ message = "Lütfen bekleyin..." }) => {
   const loading = useSelector((state) => state.loading);
 
+  // loading undefined veya false ise modal'ı gösterme
+  if (!loading) return null;
+
   return (
-    <Modal visible={loading} transparent statusBarTranslucent animationType="fade">
+    <Modal visible={true} transparent statusBarTranslucent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.ACCENT} />

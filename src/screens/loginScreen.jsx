@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
@@ -26,10 +26,12 @@ import LoginHeader from "../components/loginScreen/loginHeader";
 import EmailOrPhoneInput from "../components/loginScreen/emailOrPhoneInput";
 import PasswordInput from "../components/loginScreen/passwordInput";
 import CustomButton from "../components/customButton";
+import mockAuthService from "../services/mockAuthService";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricType, setBiometricType] = useState("Face ID");
 
@@ -53,14 +55,29 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const handleLogin = (values) => {
-    // TODO: Backend API entegrasyonu
-    // Şimdilik mock login
-    dispatch(authSuccess({
-      user: { name: "Kübra", email: values.emailOrPhone },
-      token: "mock_token_12345",
-    }));
-    navigation.navigate("HomeScreen");
+  const handleLogin = async (values) => {
+    setIsLoading(true);
+    try {
+      const result = await mockAuthService.login({
+        emailOrPhone: values.emailOrPhone,
+        password: values.password,
+      });
+      
+      dispatch(authSuccess({
+        user: result.user,
+        token: result.token,
+      }));
+      
+      // Navigation artık Tab içinde olduğu için reset yerine ana stack'e geç
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "MainTabs" }],
+      });
+    } catch (error) {
+      Alert.alert("Giriş Hatası", error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBiometricLogin = async () => {
@@ -155,7 +172,8 @@ const LoginScreen = ({ navigation }) => {
                     onPress={handleSubmit}
                     variant="primary"
                     size="lg"
-                    disabled={!values.emailOrPhone || !values.password}
+                    disabled={!values.emailOrPhone || !values.password || isLoading}
+                    loading={isLoading}
                     style={styles.loginButton}
                   />
 

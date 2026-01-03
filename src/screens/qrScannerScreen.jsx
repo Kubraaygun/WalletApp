@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { qrService } from "../services";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { View, Platform, StyleSheet } from "react-native";
 
 // Screens

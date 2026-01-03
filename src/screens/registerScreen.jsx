@@ -9,10 +9,11 @@ import {
     Platform,
     TouchableOpacity,
     Text,
+    Alert,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Gradients } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
@@ -21,6 +22,7 @@ import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 // Components
 import CustomTextInput from "../components/customTextInput";
 import CustomButton from "../components/customButton";
+import mockAuthService from "../services/mockAuthService";
 
 const registerValidationSchema = Yup.object().shape({
     fullName: Yup.string()
@@ -42,10 +44,32 @@ const registerValidationSchema = Yup.object().shape({
 
 const RegisterScreen = ({ navigation }) => {
     const [agreeTerms, setAgreeTerms] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleRegister = (values) => {
-        // Şimdilik sadece login sayfasına yönlendir
-        navigation.navigate("LoginScreen");
+    const handleRegister = async (values) => {
+        setIsLoading(true);
+        try {
+            await mockAuthService.register({
+                name: values.fullName,
+                email: values.email,
+                phone: values.phone,
+                password: values.password,
+            });
+            Alert.alert(
+                "Kayıt Başarılı! 🎉",
+                "Hesabınız oluşturuldu. Şimdi giriş yapabilirsiniz.",
+                [
+                    {
+                        text: "Giriş Yap",
+                        onPress: () => navigation.replace("LoginScreen"),
+                    },
+                ]
+            );
+        } catch (error) {
+            Alert.alert("Kayıt Hatası", error.message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -73,7 +97,7 @@ const RegisterScreen = ({ navigation }) => {
                     {/* Logo */}
                     <View style={styles.logoContainer}>
                         <LinearGradient
-                            colors={Gradients.primary}
+                            colors={Gradients.balance}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                             style={styles.logoGradient}
@@ -192,7 +216,8 @@ const RegisterScreen = ({ navigation }) => {
                                         onPress={handleSubmit}
                                         variant="primary"
                                         size="lg"
-                                        disabled={!agreeTerms}
+                                        disabled={!agreeTerms || isLoading}
+                                        loading={isLoading}
                                         style={styles.registerButton}
                                     />
                                 </View>

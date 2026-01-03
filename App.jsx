@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import store, { persistor } from "./src/store/store";
 import RootNavigation from "./src/navigation/rootNavigation";
 import LoadingModal from "./src/components/loadingModal";
@@ -51,12 +52,14 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={<PersistLoading />} persistor={persistor}>
-        <NavigationContainer>
-          <RootNavigation />
-        </NavigationContainer>
-        <LoadingModal />
-      </PersistGate>
+      <SafeAreaProvider>
+        <PersistGate loading={<PersistLoading />} persistor={persistor}>
+          <NavigationContainer>
+            <RootNavigation />
+          </NavigationContainer>
+          <LoadingModal />
+        </PersistGate>
+      </SafeAreaProvider>
     </Provider>
   );
 };

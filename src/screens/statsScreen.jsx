@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from "react-native";
 import { LineChart, PieChart } from "react-native-chart-kit";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";

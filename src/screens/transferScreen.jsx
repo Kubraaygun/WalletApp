@@ -12,7 +12,7 @@ import {
   Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import { addTransaction } from "../store/walletSlice";
 import { walletService } from "../services";
 import { Colors } from "../utils/colors";

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import { Feather as Icon } from "@expo/vector-icons";
 import CustomButton from "../customButton";
 import { Colors } from "../../utils/colors";
 import { Spacing, IconSize } from "../../utils/spacing";
