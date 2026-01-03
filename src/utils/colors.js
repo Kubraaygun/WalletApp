@@ -1,79 +1,126 @@
-// Premium Fintech Color Palette
+/**
+ * WalletApp - Minimal White Theme (Apple Pay Style)
+ * Clean, minimal design with single accent color
+ */
+
+// Primary Brand Colors
 export const Colors = {
-  // Primary (Dark Theme Base)
-  PRIMARY_DARK: "#0F172A",
-  PRIMARY: "#1E293B",
-  PRIMARY_LIGHT: "#334155",
-
-  // Background
-  BACKGROUND: "#F8FAFC",
-  SURFACE: "#FFFFFF",
-  SURFACE_DARK: "#1E293B",
-
-  // Accent Gradient (Purple-Blue)
-  ACCENT: "#6366F1",
-  ACCENT_LIGHT: "#818CF8",
-  ACCENT_DARK: "#4F46E5",
-  GRADIENT_START: "#6366F1",
-  GRADIENT_END: "#8B5CF6",
-
-  // Secondary Gradient (Teal)
-  SECONDARY: "#14B8A6",
-  SECONDARY_LIGHT: "#2DD4BF",
-  SECONDARY_DARK: "#0D9488",
-
+  // Primary Accent - iOS Blue
+  PRIMARY: "#007AFF",
+  ACCENT: "#007AFF",
+  
+  // Secondary Colors
+  SECONDARY: "#5856D6", // Purple
+  TERTIARY: "#FF9500",  // Orange
+  
   // Semantic Colors
-  SUCCESS: "#10B981",
-  SUCCESS_LIGHT: "#D1FAE5",
-  ERROR: "#EF4444",
-  ERROR_LIGHT: "#FEE2E2",
-  WARNING: "#F59E0B",
-  WARNING_LIGHT: "#FEF3C7",
-  INFO: "#3B82F6",
-  INFO_LIGHT: "#DBEAFE",
-
-  // Neutrals
-  BLACK: "#0F172A",
+  SUCCESS: "#34C759",
+  WARNING: "#FF9500",
+  ERROR: "#FF3B30",
+  INFO: "#5AC8FA",
+  
+  // Neutral - Minimal White Palette
   WHITE: "#FFFFFF",
-  GRAY_50: "#F8FAFC",
-  GRAY_100: "#F1F5F9",
-  GRAY_200: "#E2E8F0",
-  GRAY_300: "#CBD5E1",
-  GRAY_400: "#94A3B8",
-  GRAY_500: "#64748B",
-  GRAY_600: "#475569",
-  GRAY_700: "#334155",
-  GRAY_800: "#1E293B",
-  GRAY_900: "#0F172A",
-
+  BLACK: "#000000",
+  
+  // Grays - Apple Style
+  GRAY_50: "#FAFAFA",
+  GRAY_100: "#F5F5F7",
+  GRAY_200: "#E5E5EA",
+  GRAY_300: "#D1D1D6",
+  GRAY_400: "#C7C7CC",
+  GRAY_500: "#8E8E93",
+  GRAY_600: "#636366",
+  GRAY_700: "#48484A",
+  GRAY_800: "#3A3A3C",
+  GRAY_900: "#1C1C1E",
+  
+  // Backgrounds
+  BACKGROUND: "#FFFFFF",
+  SURFACE: "#F5F5F7",
+  CARD: "#FFFFFF",
+  
   // Text Colors
-  TEXT_PRIMARY: "#0F172A",
-  TEXT_SECONDARY: "#64748B",
-  TEXT_TERTIARY: "#94A3B8",
+  TEXT_PRIMARY: "#1C1C1E",
+  TEXT_SECONDARY: "#8E8E93",
+  TEXT_TERTIARY: "#C7C7CC",
   TEXT_INVERSE: "#FFFFFF",
-
+  
   // Border Colors
-  BORDER: "#E2E8F0",
-  BORDER_FOCUS: "#6366F1",
-
+  BORDER: "#E5E5EA",
+  BORDER_LIGHT: "#F5F5F7",
+  
+  // Gradients (for cards)
+  GRADIENT_START: "#007AFF",
+  GRADIENT_END: "#5856D6",
+  
   // Overlay
-  OVERLAY: "rgba(15, 23, 42, 0.5)",
-  OVERLAY_LIGHT: "rgba(255, 255, 255, 0.9)",
-
-  // Legacy compatibility
-  BASEGRAY: "#64748B",
-  LIGHTGRAY: "#94A3B8",
-  GREEN: "#10B981",
-  LIGHT: "#F1F5F9",
+  OVERLAY: "rgba(0, 0, 0, 0.4)",
+  OVERLAY_LIGHT: "rgba(0, 0, 0, 0.1)",
 };
 
-// Gradient presets for LinearGradient
+// Gradient definitions
 export const Gradients = {
-  primary: ["#6366F1", "#8B5CF6"],
-  secondary: ["#14B8A6", "#2DD4BF"],
-  success: ["#10B981", "#34D399"],
-  error: ["#EF4444", "#F87171"],
-  dark: ["#1E293B", "#334155"],
-  card: ["#FFFFFF", "#F8FAFC"],
-  balance: ["#6366F1", "#8B5CF6", "#A855F7"],
+  balance: ["#007AFF", "#5856D6"],
+  card: ["#1C1C1E", "#3A3A3C"],
+  success: ["#34C759", "#30D158"],
+  premium: ["#FFD700", "#FF9500"],
 };
+
+// Dark Mode Colors
+export const DarkColors = {
+  // Primary Accent
+  PRIMARY: "#0A84FF",
+  ACCENT: "#0A84FF",
+  
+  // Secondary Colors
+  SECONDARY: "#5E5CE6",
+  TERTIARY: "#FF9F0A",
+  
+  // Semantic Colors
+  SUCCESS: "#30D158",
+  WARNING: "#FF9F0A",
+  ERROR: "#FF453A",
+  INFO: "#64D2FF",
+  
+  // Neutral
+  WHITE: "#FFFFFF",
+  BLACK: "#000000",
+  
+  // Grays - Dark Mode
+  GRAY_50: "#1C1C1E",
+  GRAY_100: "#2C2C2E",
+  GRAY_200: "#3A3A3C",
+  GRAY_300: "#48484A",
+  GRAY_400: "#636366",
+  GRAY_500: "#8E8E93",
+  GRAY_600: "#AEAEB2",
+  GRAY_700: "#C7C7CC",
+  GRAY_800: "#D1D1D6",
+  GRAY_900: "#E5E5EA",
+  
+  // Backgrounds
+  BACKGROUND: "#000000",
+  SURFACE: "#1C1C1E",
+  CARD: "#2C2C2E",
+  
+  // Text Colors
+  TEXT_PRIMARY: "#FFFFFF",
+  TEXT_SECONDARY: "#8E8E93",
+  TEXT_TERTIARY: "#636366",
+  TEXT_INVERSE: "#1C1C1E",
+  
+  // Border Colors
+  BORDER: "#3A3A3C",
+  BORDER_LIGHT: "#2C2C2E",
+  
+  // Gradients
+  GRADIENT_START: "#0A84FF",
+  GRADIENT_END: "#5E5CE6",
+  
+  // Overlay
+  OVERLAY: "rgba(0, 0, 0, 0.6)",
+  OVERLAY_LIGHT: "rgba(255, 255, 255, 0.1)",
+};
+
+export default Colors;

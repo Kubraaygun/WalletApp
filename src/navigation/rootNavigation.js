@@ -8,6 +8,11 @@ import LoginScreen from "../screens/loginScreen";
 import RegisterScreen from "../screens/registerScreen";
 import QRScannerScreen from "../screens/qrScannerScreen";
 import ProfileScreen from "../screens/profileScreen";
+import OnboardingScreen from "../screens/onboardingScreen";
+import CryptoScreen from "../screens/cryptoScreen";
+import StatsScreen from "../screens/statsScreen";
+import CardsScreen from "../screens/cardsScreen";
+import CurrencyConverterScreen from "../screens/currencyConverterScreen";
 import {
   HOMESCREEN,
   LOGINSCREEN,
@@ -16,6 +21,11 @@ import {
   REGISTERSCREEN,
   QRSCANNERSCREEN,
   PROFILESCREEN,
+  ONBOARDINGSCREEN,
+  CRYPTOSCREEN,
+  STATSSCREEN,
+  CARDSSCREEN,
+  CURRENCYSCREEN,
 } from "../utils/routes";
 
 const Stack = createStackNavigator();
@@ -23,6 +33,7 @@ const Stack = createStackNavigator();
 // Auth Stack - Giriş yapmamış kullanıcılar için
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name={ONBOARDINGSCREEN} component={OnboardingScreen} />
     <Stack.Screen name={LOGINSCREEN} component={LoginScreen} />
     <Stack.Screen name={REGISTERSCREEN} component={RegisterScreen} />
   </Stack.Navigator>
@@ -40,6 +51,10 @@ const AppStack = () => (
       options={{ presentation: "modal" }}
     />
     <Stack.Screen name={PROFILESCREEN} component={ProfileScreen} />
+    <Stack.Screen name={CRYPTOSCREEN} component={CryptoScreen} />
+    <Stack.Screen name={STATSSCREEN} component={StatsScreen} />
+    <Stack.Screen name={CARDSSCREEN} component={CardsScreen} />
+    <Stack.Screen name={CURRENCYSCREEN} component={CurrencyConverterScreen} />
   </Stack.Navigator>
 );
 
