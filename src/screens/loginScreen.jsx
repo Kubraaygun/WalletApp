@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   Text,
   Alert,
 } from "react-native";
@@ -63,16 +65,12 @@ const LoginScreen = ({ navigation }) => {
         password: values.password,
       });
       
+      // authSuccess dispatch edilince isAuthenticated true olur
+      // RootNavigation otomatik olarak MainTabs'a geçer
       dispatch(authSuccess({
         user: result.user,
         token: result.token,
       }));
-      
-      // Navigation artık Tab içinde olduğu için reset yerine ana stack'e geç
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "MainTabs" }],
-      });
     } catch (error) {
       Alert.alert("Giriş Hatası", error.message);
     } finally {
@@ -86,12 +84,11 @@ const LoginScreen = ({ navigation }) => {
     );
 
     if (result.success) {
-      // TODO: Token'ı SecureStore'dan al ve validasyonunu yap
+      // authSuccess dispatch edilince RootNavigation otomatik MainTabs'a geçer
       dispatch(authSuccess({
         user: { name: "Kübra", email: "biometric@example.com" },
         token: "biometric_token_12345",
       }));
-      navigation.navigate("HomeScreen");
     } else {
       Alert.alert("Doğrulama Başarısız", result.error);
     }
@@ -106,7 +103,8 @@ const LoginScreen = ({ navigation }) => {
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps="always"
+          keyboardDismissMode="none"
           showsVerticalScrollIndicator={false}
         >
           {/* Header with Logo */}
@@ -120,8 +118,8 @@ const LoginScreen = ({ navigation }) => {
               onSubmit={handleLogin}
             >
               {({
-                handleChange,
-                handleBlur,
+                setFieldValue,
+                setFieldTouched,
                 handleSubmit,
                 values,
                 errors,
@@ -130,15 +128,15 @@ const LoginScreen = ({ navigation }) => {
                 <View style={styles.form}>
                   <EmailOrPhoneInput
                     value={values.emailOrPhone}
-                    onChangeText={handleChange("emailOrPhone")}
-                    onBlur={handleBlur("emailOrPhone")}
+                    onChangeText={(text) => setFieldValue("emailOrPhone", text)}
+                    onBlur={() => setFieldTouched("emailOrPhone", true)}
                     error={touched.emailOrPhone && errors.emailOrPhone}
                   />
 
                   <PasswordInput
                     value={values.password}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
+                    onChangeText={(text) => setFieldValue("password", text)}
+                    onBlur={() => setFieldTouched("password", true)}
                     error={touched.password && errors.password}
                   />
 

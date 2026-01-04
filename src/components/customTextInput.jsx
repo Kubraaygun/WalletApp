@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   TextInput,
@@ -10,7 +10,6 @@ import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
 import { BorderRadius, InputHeight, Spacing, IconSize } from "../utils/spacing";
-import { Shadows } from "../utils/shadows";
 
 const CustomTextInput = ({
   label,
@@ -34,48 +33,10 @@ const CustomTextInput = ({
   inputStyle,
   ...props
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isSecure, setIsSecure] = useState(secureTextEntry);
-
-  const handleFocus = (e) => {
-    setIsFocused(true);
-    onFocus?.(e);
-  };
-
-  const handleBlur = (e) => {
-    setIsFocused(false);
-    onBlur?.(e);
-  };
+  const [isSecure, setIsSecure] = React.useState(secureTextEntry);
 
   const toggleSecure = () => {
-    setIsSecure(!isSecure);
-  };
-
-  const getLabelStyle = () => ({
-    position: "absolute",
-    left: leftIcon ? Spacing.xl + Spacing.md : Spacing.md,
-    top: labelPosition.interpolate({
-      inputRange: [0, 1],
-      outputRange: [InputHeight[size] / 2 - 8, -8],
-    }),
-    fontSize: labelPosition.interpolate({
-      inputRange: [0, 1],
-      outputRange: [14, 12],
-    }),
-    color: error
-      ? Colors.ERROR
-      : isFocused
-        ? Colors.ACCENT
-        : Colors.TEXT_SECONDARY,
-    backgroundColor: Colors.SURFACE,
-    paddingHorizontal: 4,
-    zIndex: 1,
-  });
-
-  const getBorderColor = () => {
-    if (error) return Colors.ERROR;
-    if (isFocused) return Colors.ACCENT;
-    return Colors.BORDER;
+    setIsSecure(prev => !prev);
   };
 
   return (
@@ -87,12 +48,7 @@ const CustomTextInput = ({
       <View
         style={[
           styles.inputContainer,
-          {
-            height: InputHeight[size],
-            borderColor: getBorderColor(),
-            backgroundColor: disabled ? Colors.GRAY_50 : Colors.SURFACE,
-          },
-          isFocused && styles.inputFocused,
+          { height: InputHeight[size] },
           error && styles.inputError,
         ]}
       >
@@ -101,7 +57,7 @@ const CustomTextInput = ({
             <Icon
               name={leftIcon}
               size={IconSize.sm}
-              color={isFocused ? Colors.ACCENT : Colors.GRAY_400}
+              color={Colors.GRAY_400}
             />
           </View>
         )}
@@ -113,17 +69,18 @@ const CustomTextInput = ({
             (rightIcon || showPasswordToggle) && styles.inputWithRightIcon,
             inputStyle,
           ]}
-          placeholder={!label || isFocused || value ? placeholder : ""}
+          placeholder={placeholder}
           placeholderTextColor={Colors.GRAY_400}
           value={value}
           onChangeText={onChangeText}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={onFocus}
+          onBlur={onBlur}
           secureTextEntry={isSecure}
           keyboardType={keyboardType}
           editable={!disabled}
           maxLength={maxLength}
           autoCapitalize={autoCapitalize}
+          autoCorrect={false}
           {...props}
         />
 
@@ -173,11 +130,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1.5,
     borderRadius: BorderRadius.md,
+    borderColor: Colors.BORDER,
     backgroundColor: Colors.SURFACE,
-  },
-  inputFocused: {
-    ...Shadows.sm,
-    borderWidth: 2,
   },
   inputError: {
     borderColor: Colors.ERROR,

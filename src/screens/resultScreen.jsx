@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView, StatusBar, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Animated, {
   useAnimatedStyle,
@@ -67,7 +67,10 @@ const ResultScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
 
-      <View style={styles.container}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Success/Error Icon */}
         <Animated.View
           style={[
@@ -111,11 +114,11 @@ const ResultScreen = () => {
             </TouchableOpacity>
           )}
         </Animated.View>
+      </ScrollView>
 
-        {/* Action Buttons */}
-        <View style={styles.buttonsContainer}>
-          <ActionButtons success={success} navigation={navigation} />
-        </View>
+      {/* Action Buttons - Fixed at bottom */}
+      <View style={styles.buttonsContainer}>
+        <ActionButtons success={success} navigation={navigation} />
       </View>
     </SafeAreaView>
   );
@@ -126,10 +129,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.BACKGROUND,
   },
-  container: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
     paddingTop: Spacing["3xl"],
+    paddingBottom: Spacing.lg,
   },
   iconContainer: {
     width: 80,
@@ -160,7 +164,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     width: "100%",
-    flex: 1,
   },
   shareButton: {
     flexDirection: "row",
@@ -177,6 +180,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     width: "100%",
     paddingBottom: Spacing.xl,
+    backgroundColor: Colors.BACKGROUND,
   },
 });
 

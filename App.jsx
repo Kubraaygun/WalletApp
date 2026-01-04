@@ -14,8 +14,8 @@ import { initSentry, withSentry } from "./src/services/sentryService";
 // i18n yapılandırmasını yükle
 import "./src/i18n";
 
-// Sentry'yi başlat (production'da aktif)
-initSentry();
+// Sentry'yi başlat (geçici olarak devre dışı - focus sorunu testi)
+// initSentry();
 
 // Persist yüklenirken gösterilecek loading ekranı
 const PersistLoading = () => (
@@ -73,5 +73,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Sentry HOC ile sar (crash raporlama için)
-export default withSentry(App);
+// Sentry HOC geçici olarak devre dışı - focus sorununu test etmek için
+// export default withSentry(App);
+export default App;

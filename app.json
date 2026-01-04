@@ -50,7 +50,8 @@
         {
           "faceIDPermission": "Güvenli giriş için Face ID kullanılır."
         }
-      ]
+      ],
+      "@sentry/react-native"
     ],
     "extra": {
       "apiUrl": "http://localhost:3001/api",
