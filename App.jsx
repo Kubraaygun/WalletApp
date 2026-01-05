@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { ActivityIndicator, View, StyleSheet } from "react-native";
+import { ActivityIndicator, View, StyleSheet, LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import store, { persistor } from "./src/store/store";
 import RootNavigation from "./src/navigation/rootNavigation";
@@ -13,6 +13,13 @@ import { initSentry, withSentry } from "./src/services/sentryService";
 
 // i18n yapılandırmasını yükle
 import "./src/i18n";
+
+// Expo Go'da gösterilen uyarıları gizle (SDK 53+ limitation)
+LogBox.ignoreLogs([
+  "expo-notifications",
+  "SafeAreaView has been deprecated",
+  "`expo-notifications` functionality is not fully supported",
+]);
 
 // Sentry'yi başlat (geçici olarak devre dışı - focus sorunu testi)
 // initSentry();

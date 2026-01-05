@@ -1,63 +1,74 @@
 # WalletApp
 
-Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
+Modern, guvenli ve kullanici dostu bir mobil cuzdan uygulamasi.
 
-![React Native](https://img.shields.io/badge/React_Native-0.76.9-61DAFB?logo=react)
-![Expo](https://img.shields.io/badge/Expo-52-000020?logo=expo)
+![React Native](https://img.shields.io/badge/React_Native-0.81.5-61DAFB?logo=react)
+![Expo](https://img.shields.io/badge/Expo-54-000020?logo=expo)
 ![License](https://img.shields.io/badge/License-0BSD-green)
 
 ---
 
-## ✨ Önizleme (Showcase)
+## Onizleme (Showcase)
 
 <p align="center">
   <img src="assets/screenshots/showcase_onboarding.png" width="200" alt="Onboarding" />
   <img src="assets/screenshots/showcase_home.png" width="200" alt="Ana Sayfa" />
   <img src="assets/screenshots/showcase_crypto.png" width="200" alt="Kripto Takibi" />
-  <img src="assets/screenshots/showcase_stats.png" width="200" alt="İstatistikler" />
+  <img src="assets/screenshots/showcase_stats.png" width="200" alt="Istatistikler" />
 </p>
 
 ---
 
-## 📱 Özellikler
+## Ozellikler
 
-- **💸 Para Transferi** - Telefon numarasıyla hızlı para gönderme
-- **� Harcama Grafikleri** - Aylık harcama analizi ve kategorilendirme
-- **🪙 Kripto Takibi** - Canlı kripto para fiyatları ve trendler
-- **�📷 QR Kod Tarama** - QR ile anında ödeme başlatma
-- **🔐 Biyometrik Giriş** - Face ID / Touch ID desteği
-- **� Kart Yönetimi** - Sanal kart oluşturma ve yönetme
-- **💱 Döviz Çevirici** - Anlık döviz kuru hesaplama
-- **🌍 Çoklu Dil Desteği** - Türkçe ve İngilizce desteği
+- **Para Transferi** - Telefon numarasiyla hizli para gonderme
+- **Harcama Grafikleri** - Aylik harcama analizi ve kategorilendirme
+- **Kripto Takibi** - Canli kripto para fiyatlari ve trendler
+- **QR Kod Tarama** - QR ile aninda odeme baslatma
+- **Biyometrik Giris** - Face ID / Touch ID destegi
+- **Kart Yonetimi** - Sanal kart olusturma ve yonetme
+- **Doviz Cevirici** - Anlik doviz kuru hesaplama
+- **Coklu Dil Destegi** - Turkce ve Ingilizce destegi
 
-## 🎨 Tasarım Sistemi
+## Tasarim Sistemi
 
-- **Minimal White Tema** - Apple Pay tarzı temiz ve modern arayüz
-- **İnteraktif Animasyonlar** - Lottie ve Reanimated ile akıcı geçişler
-- **Glassmorphism** - Buzlu cam efektli modern bileşenler
-- **Dark Mode Hazırlığı** - Koyu mod uyumlu renk paleti
+- **Minimal White Tema** - Apple Pay tarzi temiz ve modern arayuz
+- **Interaktif Animasyonlar** - Lottie ve Reanimated ile akici gecisler
+- **Glassmorphism** - Buzlu cam efektli modern bilesenler
+- **Dark Mode Hazirligi** - Koyu mod uyumlu renk paleti
 
-## 🛠 Teknolojiler
+## Teknolojiler
 
 | Kategori         | Teknoloji                     |
 | ---------------- | ----------------------------- |
-| Framework        | React Native + Expo           |
+| Framework        | React Native 0.81 + Expo 54   |
 | State Management | Redux Toolkit + Redux Persist |
-| Navigation       | React Navigation              |
+| Navigation       | React Navigation 7            |
 | API              | Axios                         |
 | Charts           | react-native-chart-kit        |
-| Animations       | reanimated + reanimated       |
+| Animations       | react-native-reanimated 4     |
 | Secure Storage   | expo-secure-store             |
 | Error Tracking   | Sentry                        |
+| i18n             | i18next + react-i18next       |
 
-## 📄 Lisans
+## Kurulum
 
-Bu proje [0BSD](LICENSE) lisansı altındadır.
+```bash
+# Bagimlilikiari yukle
+npm install --legacy-peer-deps
 
-## 👩‍💻 Geliştirici
+# Gelistirme sunucusunu baslat
+npx expo start --android --clear
+```
 
-**Kübra Aygün**
+## Lisans
+
+Bu proje [0BSD](LICENSE) lisansi altindadir.
+
+## Gelistirici
+
+**Kubra Aygun**
 
 ---
 
-⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
+Bu projeyi begendiniyseniz yildiz vermeyi unutmayin!
