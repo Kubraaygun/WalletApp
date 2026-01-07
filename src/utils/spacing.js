@@ -1,6 +1,26 @@
-import { Dimensions } from "react-native";
+import { Dimensions, PixelRatio } from "react-native";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+// Base design width (iPhone 14 Pro)
+const BASE_WIDTH = 375;
+const BASE_HEIGHT = 812;
+
+// Responsive scaling functions
+export const scale = (size) => (SCREEN_WIDTH / BASE_WIDTH) * size;
+export const verticalScale = (size) => (SCREEN_HEIGHT / BASE_HEIGHT) * size;
+export const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
+
+// Font scaling with accessibility support
+export const fontScale = (size) => {
+  const newSize = scale(size);
+  return Math.round(PixelRatio.roundToNearestPixel(newSize));
+};
+
+// Check if screen is small
+export const isSmallDevice = SCREEN_WIDTH < 375;
+export const isMediumDevice = SCREEN_WIDTH >= 375 && SCREEN_WIDTH < 414;
+export const isLargeDevice = SCREEN_WIDTH >= 414;
 
 // Base unit for 8px grid system
 const BASE_UNIT = 8;

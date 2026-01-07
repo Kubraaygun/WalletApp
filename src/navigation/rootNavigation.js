@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather as Icon } from "@expo/vector-icons";
 import { View, Platform, StyleSheet } from "react-native";
+import { useTheme } from "../contexts/ThemeContext";
 
 // Screens
 import HomeScreen from "../screens/homeScreen";
@@ -33,68 +34,82 @@ import {
   CARDSSCREEN,
   CURRENCYSCREEN,
 } from "../utils/routes";
-import { Colors } from "../utils/colors";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Tab Bar Icon Component
-const TabIcon = ({ name, color, size, focused }) => (
+const TabIcon = ({ name, color, size, focused, primaryColor }) => (
   <View style={styles.iconContainer}>
     <Icon name={name} size={size} color={color} />
-    {focused && <View style={styles.activeDot} />}
+    {focused && <View style={[styles.activeDot, { backgroundColor: primaryColor }]} />}
   </View>
 );
 
 // Main Tab Navigation
-const TabStack = () => (
-  <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerShown: false,
-      tabBarActiveTintColor: Colors.PRIMARY,
-      tabBarInactiveTintColor: Colors.GRAY_500,
-      tabBarStyle: styles.tabBar,
-      tabBarShowLabel: true,
-      tabBarLabelStyle: styles.tabBarLabel,
-      tabBarIcon: ({ color, size, focused }) => {
-        let iconName;
-        if (route.name === HOMESCREEN) iconName = "home";
-        else if (route.name === STATSSCREEN) iconName = "pie-chart";
-        else if (route.name === CARDSSCREEN) iconName = "credit-card";
-        else if (route.name === CRYPTOSCREEN) iconName = "trending-up";
-        else if (route.name === PROFILESCREEN) iconName = "user";
-        
-        return <TabIcon name={iconName} color={color} size={22} focused={focused} />;
-      },
-    })}
-  >
-    <Tab.Screen 
-      name={HOMESCREEN} 
-      component={HomeScreen} 
-      options={{ tabBarLabel: "Ana Sayfa" }}
-    />
-    <Tab.Screen 
-      name={STATSSCREEN} 
-      component={StatsScreen} 
-      options={{ tabBarLabel: "İstatistik" }}
-    />
-    <Tab.Screen 
-      name={CRYPTOSCREEN} 
-      component={CryptoScreen} 
-      options={{ tabBarLabel: "Kripto" }}
-    />
-    <Tab.Screen 
-      name={CARDSSCREEN} 
-      component={CardsScreen} 
-      options={{ tabBarLabel: "Kartlarım" }}
-    />
-    <Tab.Screen 
-      name={PROFILESCREEN} 
-      component={ProfileScreen} 
-      options={{ tabBarLabel: "Profil" }}
-    />
-  </Tab.Navigator>
-);
+const TabStack = () => {
+  const { colors, isDark } = useTheme();
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: colors.PRIMARY,
+        tabBarInactiveTintColor: colors.GRAY_500,
+        tabBarStyle: {
+          backgroundColor: colors.SURFACE,
+          borderTopWidth: 0,
+          elevation: 20,
+          shadowColor: "#000000",
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: isDark ? 0.3 : 0.05,
+          shadowRadius: 10,
+          height: Platform.OS === "ios" ? 88 : 80,
+          paddingBottom: Platform.OS === "ios" ? 30 : 28,
+          paddingTop: 6,
+        },
+        tabBarShowLabel: true,
+        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarIcon: ({ color, size, focused }) => {
+          let iconName;
+          if (route.name === HOMESCREEN) iconName = "home";
+          else if (route.name === STATSSCREEN) iconName = "pie-chart";
+          else if (route.name === CARDSSCREEN) iconName = "credit-card";
+          else if (route.name === CRYPTOSCREEN) iconName = "trending-up";
+          else if (route.name === PROFILESCREEN) iconName = "user";
+          
+          return <TabIcon name={iconName} color={color} size={22} focused={focused} primaryColor={colors.PRIMARY} />;
+        },
+      })}
+    >
+      <Tab.Screen 
+        name={HOMESCREEN} 
+        component={HomeScreen} 
+        options={{ tabBarLabel: "Ana Sayfa" }}
+      />
+      <Tab.Screen 
+        name={STATSSCREEN} 
+        component={StatsScreen} 
+        options={{ tabBarLabel: "Istatistik" }}
+      />
+      <Tab.Screen 
+        name={CRYPTOSCREEN} 
+        component={CryptoScreen} 
+        options={{ tabBarLabel: "Kripto" }}
+      />
+      <Tab.Screen 
+        name={CARDSSCREEN} 
+        component={CardsScreen} 
+        options={{ tabBarLabel: "Kartlarim" }}
+      />
+      <Tab.Screen 
+        name={PROFILESCREEN} 
+        component={ProfileScreen} 
+        options={{ tabBarLabel: "Profil" }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 // Auth Stack
 const AuthStack = () => (
@@ -131,18 +146,6 @@ const RootNavigation = () => {
 };
 
 const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: Colors.WHITE,
-    borderTopWidth: 0,
-    elevation: 20,
-    shadowColor: Colors.BLACK,
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    height: Platform.OS === "ios" ? 88 : 65,
-    paddingBottom: Platform.OS === "ios" ? 30 : 10,
-    paddingTop: 10,
-  },
   tabBarLabel: {
     fontSize: 10,
     fontWeight: "600",
@@ -155,7 +158,6 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.PRIMARY,
     marginTop: 4,
     position: "absolute",
     bottom: -8,

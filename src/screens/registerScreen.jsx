@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
     View,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     StyleSheet,
     KeyboardAvoidingView,
@@ -11,6 +10,7 @@ import {
     Text,
     Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Feather as Icon } from "@expo/vector-icons";

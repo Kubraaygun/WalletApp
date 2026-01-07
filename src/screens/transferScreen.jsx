@@ -4,13 +4,13 @@ import {
   Text,
   Alert,
   ScrollView,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { Feather as Icon } from "@expo/vector-icons";
 import { addTransaction } from "../store/walletSlice";

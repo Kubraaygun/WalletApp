@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   TextInput,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather as Icon } from "@expo/vector-icons";
 import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";

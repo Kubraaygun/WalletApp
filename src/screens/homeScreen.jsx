@@ -1,5 +1,6 @@
 import React from "react";
-import { View, ScrollView, SafeAreaView, StatusBar, StyleSheet, RefreshControl } from "react-native";
+import { View, ScrollView, StatusBar, StyleSheet, RefreshControl } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { walletStart, walletSuccess, walletFailure } from "../store/walletSlice";
 import { logout } from "../store/authSlice";
@@ -20,7 +21,6 @@ const HomeScreen = ({ navigation }) => {
   const { colors, isDark } = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
 
-  // API'den wallet verilerini çek
   const fetchWalletData = async () => {
     try {
       dispatch(walletStart());
@@ -49,18 +49,11 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleNotificationPress = () => {
-    // TODO: Bildirimler ekranına yönlendir
-  };
-
-  const dynamicStyles = {
-    safeArea: {
-      flex: 1,
-      backgroundColor: colors.BACKGROUND,
-    },
+    // TODO: Bildirimler ekranina yonlendir
   };
 
   return (
-    <SafeAreaView style={dynamicStyles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
       <ScrollView
         style={styles.scrollView}
@@ -77,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
       >
         {/* Header */}
         <HomeHeader
-          userName={user?.name || "Kullanıcı"}
+          userName={user?.name || "Kullanici"}
           onNotificationPress={handleNotificationPress}
           onProfilePress={handleProfilePress}
         />
@@ -103,6 +96,9 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   scrollView: {
     flex: 1,
   },

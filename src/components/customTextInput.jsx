@@ -7,9 +7,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
-import { BorderRadius, InputHeight, Spacing, IconSize } from "../utils/spacing";
+import { BorderRadius, InputHeight, Spacing, IconSize, moderateScale } from "../utils/spacing";
 
 const CustomTextInput = ({
   label,
@@ -33,6 +33,7 @@ const CustomTextInput = ({
   inputStyle,
   ...props
 }) => {
+  const { colors } = useTheme();
   const [isSecure, setIsSecure] = React.useState(secureTextEntry);
 
   const toggleSecure = () => {
@@ -42,22 +43,25 @@ const CustomTextInput = ({
   return (
     <View style={[styles.container, style]}>
       {label && (
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.label, { color: colors.TEXT_SECONDARY }]}>{label}</Text>
       )}
 
       <View
         style={[
           styles.inputContainer,
-          { height: InputHeight[size] },
-          error && styles.inputError,
+          { 
+            height: InputHeight[size], 
+            borderColor: error ? colors.ERROR : colors.BORDER,
+            backgroundColor: colors.SURFACE,
+          },
         ]}
       >
         {leftIcon && (
           <View style={styles.iconLeft}>
             <Icon
               name={leftIcon}
-              size={IconSize.sm}
-              color={Colors.GRAY_400}
+              size={moderateScale(18)}
+              color={colors.GRAY_400}
             />
           </View>
         )}
@@ -65,12 +69,13 @@ const CustomTextInput = ({
         <TextInput
           style={[
             styles.input,
+            { color: colors.TEXT_PRIMARY },
             leftIcon && styles.inputWithLeftIcon,
             (rightIcon || showPasswordToggle) && styles.inputWithRightIcon,
             inputStyle,
           ]}
           placeholder={placeholder}
-          placeholderTextColor={Colors.GRAY_400}
+          placeholderTextColor={colors.GRAY_400}
           value={value}
           onChangeText={onChangeText}
           onFocus={onFocus}
@@ -88,8 +93,8 @@ const CustomTextInput = ({
           <TouchableOpacity style={styles.iconRight} onPress={toggleSecure}>
             <Icon
               name={isSecure ? "eye-off" : "eye"}
-              size={IconSize.sm}
-              color={Colors.GRAY_400}
+              size={moderateScale(18)}
+              color={colors.GRAY_400}
             />
           </TouchableOpacity>
         )}
@@ -98,15 +103,15 @@ const CustomTextInput = ({
           <View style={styles.iconRight}>
             <Icon
               name={rightIcon}
-              size={IconSize.sm}
-              color={Colors.GRAY_400}
+              size={moderateScale(18)}
+              color={colors.GRAY_400}
             />
           </View>
         )}
       </View>
 
       {(error || helperText) && (
-        <Text style={[styles.helperText, error && styles.errorText]}>
+        <Text style={[styles.helperText, { color: error ? colors.ERROR : colors.TEXT_SECONDARY }]}>
           {error || helperText}
         </Text>
       )}
@@ -121,7 +126,6 @@ const styles = StyleSheet.create({
   },
   label: {
     ...TextStyles.labelMedium,
-    color: Colors.TEXT_SECONDARY,
     marginBottom: Spacing.xxs,
     marginLeft: Spacing.xs,
   },
@@ -130,19 +134,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1.5,
     borderRadius: BorderRadius.md,
-    borderColor: Colors.BORDER,
-    backgroundColor: Colors.SURFACE,
-  },
-  inputError: {
-    borderColor: Colors.ERROR,
   },
   input: {
     flex: 1,
     height: "100%",
     paddingHorizontal: Spacing.md,
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: "400",
-    color: Colors.TEXT_PRIMARY,
   },
   inputWithLeftIcon: {
     paddingLeft: Spacing.xs,
@@ -160,10 +158,6 @@ const styles = StyleSheet.create({
     marginTop: Spacing.xxs,
     marginLeft: Spacing.md,
     ...TextStyles.caption,
-    color: Colors.TEXT_SECONDARY,
-  },
-  errorText: {
-    color: Colors.ERROR,
   },
 });
 

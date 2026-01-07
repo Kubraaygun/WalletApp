@@ -3,13 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   ScrollView,
   TouchableOpacity,
   Dimensions,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather as Icon } from "@expo/vector-icons";
 import { useTheme } from "../contexts/ThemeContext";
@@ -123,7 +123,7 @@ const CardsScreen = ({ navigation }) => {
   const totalBalance = cards.filter((c) => c.isActive).reduce((sum, card) => sum + card.balance, 0);
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
 
       <View style={styles.header}>

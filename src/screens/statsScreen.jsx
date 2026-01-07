@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   StatusBar,
   ScrollView,
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { LineChart, PieChart } from "react-native-chart-kit";
 import { Feather as Icon } from "@expo/vector-icons";
 import { useTheme } from "../contexts/ThemeContext";
@@ -86,7 +86,7 @@ const StatsScreen = ({ navigation }) => {
   const totalSpending = categoryData.reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
 
       {/* Header */}

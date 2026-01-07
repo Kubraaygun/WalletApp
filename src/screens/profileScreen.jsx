@@ -3,13 +3,13 @@ import {
   View,
   Text,
   ScrollView,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
   Switch,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Feather as Icon } from "@expo/vector-icons";

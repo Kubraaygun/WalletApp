@@ -6,8 +6,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { Colors } from "../utils/colors";
-import { BorderRadius, ButtonHeight, Spacing } from "../utils/spacing";
+import { useTheme } from "../contexts/ThemeContext";
+import { BorderRadius, ButtonHeight, Spacing, moderateScale } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 
 const CustomButton = ({
@@ -24,33 +24,35 @@ const CustomButton = ({
   textStyle,
   ...props
 }) => {
+  const { colors } = useTheme();
+
   const getVariantStyles = () => {
     const variants = {
       primary: {
         button: {
-          backgroundColor: Colors.ACCENT,
+          backgroundColor: colors.ACCENT,
           ...Shadows.md,
         },
         text: {
-          color: Colors.WHITE,
+          color: colors.WHITE,
         },
       },
       secondary: {
         button: {
-          backgroundColor: Colors.GRAY_100,
+          backgroundColor: colors.GRAY_100,
         },
         text: {
-          color: Colors.TEXT_PRIMARY,
+          color: colors.TEXT_PRIMARY,
         },
       },
       outline: {
         button: {
           backgroundColor: "transparent",
           borderWidth: 1.5,
-          borderColor: Colors.ACCENT,
+          borderColor: colors.ACCENT,
         },
         text: {
-          color: Colors.ACCENT,
+          color: colors.ACCENT,
         },
       },
       ghost: {
@@ -58,25 +60,25 @@ const CustomButton = ({
           backgroundColor: "transparent",
         },
         text: {
-          color: Colors.ACCENT,
+          color: colors.ACCENT,
         },
       },
       danger: {
         button: {
-          backgroundColor: Colors.ERROR,
+          backgroundColor: colors.ERROR,
           ...Shadows.md,
         },
         text: {
-          color: Colors.WHITE,
+          color: colors.WHITE,
         },
       },
       success: {
         button: {
-          backgroundColor: Colors.SUCCESS,
+          backgroundColor: colors.SUCCESS,
           ...Shadows.md,
         },
         text: {
-          color: Colors.WHITE,
+          color: colors.WHITE,
         },
       },
     };
@@ -92,7 +94,7 @@ const CustomButton = ({
           borderRadius: BorderRadius.sm,
         },
         text: {
-          fontSize: 12,
+          fontSize: moderateScale(12),
           fontWeight: "500",
         },
       },
@@ -103,7 +105,7 @@ const CustomButton = ({
           borderRadius: BorderRadius.md,
         },
         text: {
-          fontSize: 14,
+          fontSize: moderateScale(14),
           fontWeight: "600",
         },
       },
@@ -114,7 +116,7 @@ const CustomButton = ({
           borderRadius: BorderRadius.lg,
         },
         text: {
-          fontSize: 16,
+          fontSize: moderateScale(16),
           fontWeight: "600",
         },
       },
@@ -132,7 +134,7 @@ const CustomButton = ({
         sizeStyles.button,
         variantStyles.button,
         fullWidth && styles.fullWidth,
-        disabled && styles.disabled,
+        disabled && { backgroundColor: colors.GRAY_200, opacity: 0.7 },
         style,
       ]}
       onPress={onPress}
@@ -150,7 +152,7 @@ const CustomButton = ({
               styles.text,
               sizeStyles.text,
               variantStyles.text,
-              disabled && styles.disabledText,
+              disabled && { color: colors.GRAY_400 },
               (leftIcon || rightIcon) && styles.textWithIcon,
               textStyle,
             ]}
@@ -184,13 +186,6 @@ const styles = StyleSheet.create({
   },
   textWithIcon: {
     marginHorizontal: Spacing.xs,
-  },
-  disabled: {
-    backgroundColor: Colors.GRAY_200,
-    opacity: 0.7,
-  },
-  disabledText: {
-    color: Colors.GRAY_400,
   },
 });
 
