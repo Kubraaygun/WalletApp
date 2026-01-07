@@ -10,7 +10,7 @@ import Animated, {
   withDelay,
 } from "react-native-reanimated";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
@@ -22,6 +22,7 @@ import ActionButtons from "../components/resultScreen/actionButton";
 const ResultScreen = () => {
   const navigation = useNavigation();
   const { params } = useRoute();
+  const { colors, isDark } = useTheme();
 
   const { success, phoneNumber, amount, description, timestamp, errorMessage } =
     params || {};
@@ -64,8 +65,8 @@ const ResultScreen = () => {
   }));
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
 
       <ScrollView 
         contentContainerStyle={styles.scrollContent}
@@ -75,25 +76,25 @@ const ResultScreen = () => {
         <Animated.View
           style={[
             styles.iconContainer,
-            success ? styles.successIcon : styles.errorIcon,
+            { backgroundColor: success ? colors.SUCCESS : colors.ERROR },
             iconAnimatedStyle,
           ]}
         >
           <Icon
             name={success ? "check" : "x"}
             size={IconSize["3xl"]}
-            color={Colors.WHITE}
+            color={colors.WHITE}
           />
         </Animated.View>
 
         {/* Title */}
-        <Text style={styles.title}>
-          {success ? "Transfer Başarılı!" : "Transfer Başarısız"}
+        <Text style={[styles.title, { color: colors.TEXT_PRIMARY }]}>
+          {success ? "Transfer Basarili!" : "Transfer Basarisiz"}
         </Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.subtitle, { color: colors.TEXT_SECONDARY }]}>
           {success
-            ? "Paranız başarıyla gönderildi"
-            : errorMessage || "İşlem sırasında bir hata oluştu"}
+            ? "Paraniz basariyla gonderildi"
+            : errorMessage || "Islem sirasinda bir hata olustu"}
         </Text>
 
         {/* Transaction Details */}
@@ -109,15 +110,15 @@ const ResultScreen = () => {
           {/* Share Button */}
           {success && (
             <TouchableOpacity style={styles.shareButton}>
-              <Icon name="share-2" size={IconSize.sm} color={Colors.ACCENT} />
-              <Text style={styles.shareText}>Makbuzu Paylaş</Text>
+              <Icon name="share-2" size={IconSize.sm} color={colors.ACCENT} />
+              <Text style={[styles.shareText, { color: colors.ACCENT }]}>Makbuzu Paylas</Text>
             </TouchableOpacity>
           )}
         </Animated.View>
       </ScrollView>
 
       {/* Action Buttons - Fixed at bottom */}
-      <View style={styles.buttonsContainer}>
+      <View style={[styles.buttonsContainer, { backgroundColor: colors.BACKGROUND }]}>
         <ActionButtons success={success} navigation={navigation} />
       </View>
     </SafeAreaView>
@@ -127,7 +128,6 @@ const ResultScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND,
   },
   scrollContent: {
     flexGrow: 1,
@@ -144,21 +144,13 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
     ...Shadows.lg,
   },
-  successIcon: {
-    backgroundColor: Colors.SUCCESS,
-  },
-  errorIcon: {
-    backgroundColor: Colors.ERROR,
-  },
   title: {
     ...TextStyles.h1,
-    color: Colors.TEXT_PRIMARY,
     marginBottom: Spacing.xxs,
     textAlign: "center",
   },
   subtitle: {
     ...TextStyles.bodyMedium,
-    color: Colors.TEXT_SECONDARY,
     textAlign: "center",
     marginBottom: Spacing.xl,
   },
@@ -174,13 +166,11 @@ const styles = StyleSheet.create({
   },
   shareText: {
     ...TextStyles.labelMedium,
-    color: Colors.ACCENT,
     marginLeft: Spacing.xs,
   },
   buttonsContainer: {
     width: "100%",
     paddingBottom: Spacing.xl,
-    backgroundColor: Colors.BACKGROUND,
   },
 });
 

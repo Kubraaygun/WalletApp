@@ -11,62 +11,21 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 import { FadeSlide } from "../components/animations";
 
-// Mock kripto verileri (gerçek uygulamada CoinGecko API kullanılır)
 const MOCK_CRYPTO_DATA = [
-  {
-    id: "bitcoin",
-    symbol: "BTC",
-    name: "Bitcoin",
-    price: 1850000,
-    change24h: 2.45,
-    icon: "circle",
-    color: "#F7931A",
-  },
-  {
-    id: "ethereum",
-    symbol: "ETH",
-    name: "Ethereum",
-    price: 98500,
-    change24h: -1.23,
-    icon: "hexagon",
-    color: "#627EEA",
-  },
-  {
-    id: "binance",
-    symbol: "BNB",
-    name: "BNB",
-    price: 12400,
-    change24h: 0.87,
-    icon: "square",
-    color: "#F3BA2F",
-  },
-  {
-    id: "solana",
-    symbol: "SOL",
-    name: "Solana",
-    price: 4850,
-    change24h: 5.67,
-    icon: "zap",
-    color: "#00FFA3",
-  },
-  {
-    id: "cardano",
-    symbol: "ADA",
-    name: "Cardano",
-    price: 18.5,
-    change24h: -0.45,
-    icon: "target",
-    color: "#0033AD",
-  },
+  { id: "bitcoin", symbol: "BTC", name: "Bitcoin", price: 1850000, change24h: 2.45, icon: "circle", color: "#F7931A" },
+  { id: "ethereum", symbol: "ETH", name: "Ethereum", price: 98500, change24h: -1.23, icon: "hexagon", color: "#627EEA" },
+  { id: "binance", symbol: "BNB", name: "BNB", price: 12400, change24h: 0.87, icon: "square", color: "#F3BA2F" },
+  { id: "solana", symbol: "SOL", name: "Solana", price: 4850, change24h: 5.67, icon: "zap", color: "#00FFA3" },
+  { id: "cardano", symbol: "ADA", name: "Cardano", price: 18.5, change24h: -0.45, icon: "target", color: "#0033AD" },
 ];
 
-const CryptoCard = ({ crypto, index }) => {
+const CryptoCard = ({ crypto, index, colors }) => {
   const isPositive = crypto.change24h >= 0;
 
   const formatPrice = (price) => {
@@ -79,25 +38,25 @@ const CryptoCard = ({ crypto, index }) => {
   };
 
   return (
-    <FadeSlide delay={index * 100} style={styles.cryptoCard}>
+    <FadeSlide delay={index * 100} style={[styles.cryptoCard, { backgroundColor: colors.CARD }]}>
       <View style={styles.cryptoLeft}>
         <View style={[styles.cryptoIcon, { backgroundColor: `${crypto.color}20` }]}>
           <Icon name={crypto.icon} size={IconSize.md} color={crypto.color} />
         </View>
         <View style={styles.cryptoInfo}>
-          <Text style={styles.cryptoName}>{crypto.name}</Text>
-          <Text style={styles.cryptoSymbol}>{crypto.symbol}</Text>
+          <Text style={[styles.cryptoName, { color: colors.TEXT_PRIMARY }]}>{crypto.name}</Text>
+          <Text style={[styles.cryptoSymbol, { color: colors.TEXT_SECONDARY }]}>{crypto.symbol}</Text>
         </View>
       </View>
       <View style={styles.cryptoRight}>
-        <Text style={styles.cryptoPrice}>{formatPrice(crypto.price)}</Text>
-        <View style={[styles.changeBadge, isPositive ? styles.positive : styles.negative]}>
+        <Text style={[styles.cryptoPrice, { color: colors.TEXT_PRIMARY }]}>{formatPrice(crypto.price)}</Text>
+        <View style={[styles.changeBadge, { backgroundColor: `${isPositive ? colors.SUCCESS : colors.ERROR}15` }]}>
           <Icon
             name={isPositive ? "trending-up" : "trending-down"}
             size={12}
-            color={isPositive ? Colors.SUCCESS : Colors.ERROR}
+            color={isPositive ? colors.SUCCESS : colors.ERROR}
           />
-          <Text style={[styles.changeText, isPositive ? styles.positiveText : styles.negativeText]}>
+          <Text style={[styles.changeText, { color: isPositive ? colors.SUCCESS : colors.ERROR }]}>
             {isPositive ? "+" : ""}{crypto.change24h.toFixed(2)}%
           </Text>
         </View>
@@ -107,15 +66,14 @@ const CryptoCard = ({ crypto, index }) => {
 };
 
 const CryptoScreen = ({ navigation }) => {
+  const { colors, isDark } = useTheme();
   const [cryptoData, setCryptoData] = useState(MOCK_CRYPTO_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    // Simüle edilen API çağrısı
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    // Rastgele fiyat değişimleri
     setCryptoData(
       MOCK_CRYPTO_DATA.map((crypto) => ({
         ...crypto,
@@ -125,18 +83,14 @@ const CryptoScreen = ({ navigation }) => {
     setRefreshing(false);
   };
 
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
 
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerSpacer} />
-        <Text style={styles.headerTitle}>Kripto Fiyatları</Text>
+        <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>Kripto Fiyatlari</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -149,38 +103,38 @@ const CryptoScreen = ({ navigation }) => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={Colors.PRIMARY}
+            tintColor={colors.PRIMARY}
           />
         }
       >
         {/* Market Overview */}
-        <View style={styles.overviewCard}>
-          <Text style={styles.overviewTitle}>Piyasa Özeti</Text>
+        <View style={[styles.overviewCard, { backgroundColor: colors.SURFACE }]}>
+          <Text style={[styles.overviewTitle, { color: colors.TEXT_SECONDARY }]}>Piyasa Ozeti</Text>
           <View style={styles.overviewStats}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>₺2.4T</Text>
-              <Text style={styles.statLabel}>Toplam Piyasa</Text>
+              <Text style={[styles.statValue, { color: colors.TEXT_PRIMARY }]}>₺2.4T</Text>
+              <Text style={[styles.statLabel, { color: colors.TEXT_SECONDARY }]}>Toplam Piyasa</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, { backgroundColor: colors.BORDER }]} />
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>₺89.5B</Text>
-              <Text style={styles.statLabel}>24s Hacim</Text>
+              <Text style={[styles.statValue, { color: colors.TEXT_PRIMARY }]}>₺89.5B</Text>
+              <Text style={[styles.statLabel, { color: colors.TEXT_SECONDARY }]}>24s Hacim</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, { backgroundColor: colors.BORDER }]} />
             <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: Colors.SUCCESS }]}>+1.2%</Text>
-              <Text style={styles.statLabel}>24s Değişim</Text>
+              <Text style={[styles.statValue, { color: colors.SUCCESS }]}>+1.2%</Text>
+              <Text style={[styles.statLabel, { color: colors.TEXT_SECONDARY }]}>24s Degisim</Text>
             </View>
           </View>
         </View>
 
         {/* Crypto List */}
-        <Text style={styles.sectionTitle}>Popüler Kriptolar</Text>
+        <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>Populer Kriptolar</Text>
         {isLoading ? (
-          <ActivityIndicator size="large" color={Colors.PRIMARY} style={styles.loader} />
+          <ActivityIndicator size="large" color={colors.PRIMARY} style={styles.loader} />
         ) : (
           cryptoData.map((crypto, index) => (
-            <CryptoCard key={crypto.id} crypto={crypto} index={index} />
+            <CryptoCard key={crypto.id} crypto={crypto} index={index} colors={colors} />
           ))
         )}
       </ScrollView>
@@ -191,7 +145,6 @@ const CryptoScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND,
   },
   header: {
     flexDirection: "row",
@@ -200,17 +153,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
   },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   headerTitle: {
     ...TextStyles.h3,
-    color: Colors.TEXT_PRIMARY,
   },
   headerSpacer: {
     width: 44,
@@ -223,7 +167,6 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing["2xl"],
   },
   overviewCard: {
-    backgroundColor: Colors.SURFACE,
     borderRadius: BorderRadius.xl,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
@@ -231,7 +174,6 @@ const styles = StyleSheet.create({
   },
   overviewTitle: {
     ...TextStyles.labelMedium,
-    color: Colors.TEXT_SECONDARY,
     marginBottom: Spacing.md,
   },
   overviewStats: {
@@ -245,21 +187,17 @@ const styles = StyleSheet.create({
   },
   statValue: {
     ...TextStyles.h4,
-    color: Colors.TEXT_PRIMARY,
   },
   statLabel: {
     ...TextStyles.caption,
-    color: Colors.TEXT_SECONDARY,
     marginTop: Spacing.xxs,
   },
   statDivider: {
     width: 1,
     height: 30,
-    backgroundColor: Colors.BORDER,
   },
   sectionTitle: {
     ...TextStyles.h4,
-    color: Colors.TEXT_PRIMARY,
     marginBottom: Spacing.md,
   },
   loader: {
@@ -269,7 +207,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: Colors.CARD,
     borderRadius: BorderRadius.lg,
     padding: Spacing.md,
     marginBottom: Spacing.sm,
@@ -291,18 +228,15 @@ const styles = StyleSheet.create({
   },
   cryptoName: {
     ...TextStyles.labelLarge,
-    color: Colors.TEXT_PRIMARY,
   },
   cryptoSymbol: {
     ...TextStyles.caption,
-    color: Colors.TEXT_SECONDARY,
   },
   cryptoRight: {
     alignItems: "flex-end",
   },
   cryptoPrice: {
     ...TextStyles.labelLarge,
-    color: Colors.TEXT_PRIMARY,
   },
   changeBadge: {
     flexDirection: "row",
@@ -312,21 +246,9 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.sm,
     marginTop: Spacing.xxs,
   },
-  positive: {
-    backgroundColor: `${Colors.SUCCESS}15`,
-  },
-  negative: {
-    backgroundColor: `${Colors.ERROR}15`,
-  },
   changeText: {
     ...TextStyles.labelSmall,
     marginLeft: 2,
-  },
-  positiveText: {
-    color: Colors.SUCCESS,
-  },
-  negativeText: {
-    color: Colors.ERROR,
   },
 });
 

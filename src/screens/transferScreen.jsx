@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Feather as Icon } from "@expo/vector-icons";
 import { addTransaction } from "../store/walletSlice";
 import { walletService } from "../services";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
@@ -33,6 +33,7 @@ const MIN_AMOUNT = 10;
 const TransferScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { balance } = useSelector((state) => state.wallet);
+  const { colors, isDark } = useTheme();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [amount, setAmount] = useState("");
@@ -52,12 +53,12 @@ const TransferScreen = ({ navigation }) => {
     const parsedAmount = parseFloat(amount);
 
     if (isNaN(parsedAmount) || parsedAmount < MIN_AMOUNT) {
-      Alert.alert("Hata", `Minimum transfer tutarı ${MIN_AMOUNT} TL olmalıdır.`);
+      Alert.alert("Hata", `Minimum transfer tutari ${MIN_AMOUNT} TL olmalidir.`);
       return;
     }
 
     if (parsedAmount > balance) {
-      Alert.alert("Yetersiz Bakiye", "Transfer tutarı bakiyenizden fazla olamaz.");
+      Alert.alert("Yetersiz Bakiye", "Transfer tutari bakiyenizden fazla olamaz.");
       return;
     }
 
@@ -68,14 +69,6 @@ const TransferScreen = ({ navigation }) => {
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      // TODO: Backend hazır olduğunda API çağrısını aktif et
-      // const result = await walletService.transfer({
-      //   recipientId: confirmData.phoneNumber,
-      //   amount: confirmData.amount,
-      //   description: confirmData.description,
-      // });
-
-      // Lokal state güncelleme (mock mod)
       dispatch(
         addTransaction({
           receiver: confirmData.phoneNumber,
@@ -96,7 +89,7 @@ const TransferScreen = ({ navigation }) => {
       });
     } catch (error) {
       console.error("Transfer error:", error);
-      Alert.alert("Hata", error.message || "İşlem sırasında bir hata oluştu.");
+      Alert.alert("Hata", error.message || "Islem sirasinda bir hata olustu.");
     } finally {
       setIsLoading(false);
     }
@@ -111,18 +104,18 @@ const TransferScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Icon name="arrow-left" size={IconSize.md} color={Colors.TEXT_PRIMARY} />
+          <TouchableOpacity style={[styles.backButton, { backgroundColor: colors.SURFACE }]} onPress={handleBack}>
+            <Icon name="arrow-left" size={IconSize.md} color={colors.TEXT_PRIMARY} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Para Gönder</Text>
+          <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>Para Gonder</Text>
           <View style={styles.headerSpacer} />
         </View>
 
@@ -132,17 +125,17 @@ const TransferScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         >
           {/* Amount Section */}
-          <View style={styles.amountSection}>
-            <Text style={styles.sectionLabel}>Tutar</Text>
+          <View style={[styles.amountSection, { backgroundColor: colors.SURFACE }]}>
+            <Text style={[styles.sectionLabel, { color: colors.TEXT_SECONDARY }]}>Tutar</Text>
             <View style={styles.amountInputContainer}>
-              <Text style={styles.currencySymbol}>₺</Text>
+              <Text style={[styles.currencySymbol, { color: colors.TEXT_PRIMARY }]}>₺</Text>
               <CustomTextInput
                 placeholder="0.00"
                 keyboardType="numeric"
                 value={amount}
                 onChangeText={setAmount}
                 style={styles.amountInput}
-                inputStyle={styles.amountInputText}
+                inputStyle={[styles.amountInputText, { color: colors.TEXT_PRIMARY }]}
               />
             </View>
 
@@ -153,14 +146,16 @@ const TransferScreen = ({ navigation }) => {
                   key={presetAmount}
                   style={[
                     styles.presetButton,
-                    amount === presetAmount.toString() && styles.presetButtonActive,
+                    { backgroundColor: colors.GRAY_100 },
+                    amount === presetAmount.toString() && { backgroundColor: colors.ACCENT },
                   ]}
                   onPress={() => handlePresetAmount(presetAmount)}
                 >
                   <Text
                     style={[
                       styles.presetText,
-                      amount === presetAmount.toString() && styles.presetTextActive,
+                      { color: colors.TEXT_SECONDARY },
+                      amount === presetAmount.toString() && { color: colors.WHITE },
                     ]}
                   >
                     ₺{presetAmount}
@@ -172,9 +167,9 @@ const TransferScreen = ({ navigation }) => {
 
           {/* Recipient Section */}
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>Alıcı Bilgileri</Text>
+            <Text style={[styles.sectionLabel, { color: colors.TEXT_SECONDARY }]}>Alici Bilgileri</Text>
             <CustomTextInput
-              label="Telefon Numarası"
+              label="Telefon Numarasi"
               placeholder="0555 555 55 55"
               keyboardType="phone-pad"
               value={phoneNumber}
@@ -182,8 +177,8 @@ const TransferScreen = ({ navigation }) => {
               leftIcon="phone"
             />
             <CustomTextInput
-              label="Açıklama (Opsiyonel)"
-              placeholder="Transfer açıklaması"
+              label="Aciklama (Opsiyonel)"
+              placeholder="Transfer aciklamasi"
               value={description}
               onChangeText={setDescription}
               leftIcon="file-text"
@@ -221,7 +216,6 @@ const TransferScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND,
   },
   keyboardView: {
     flex: 1,
@@ -237,13 +231,11 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.GRAY_100,
     justifyContent: "center",
     alignItems: "center",
   },
   headerTitle: {
     ...TextStyles.h3,
-    color: Colors.TEXT_PRIMARY,
   },
   headerSpacer: {
     width: 44,
@@ -253,7 +245,6 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing["2xl"],
   },
   amountSection: {
-    backgroundColor: Colors.SURFACE,
     borderRadius: BorderRadius.xl,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
@@ -261,7 +252,6 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     ...TextStyles.labelMedium,
-    color: Colors.TEXT_SECONDARY,
     marginBottom: Spacing.sm,
   },
   amountInputContainer: {
@@ -270,7 +260,6 @@ const styles = StyleSheet.create({
   },
   currencySymbol: {
     ...TextStyles.displayMedium,
-    color: Colors.TEXT_PRIMARY,
     marginRight: Spacing.xs,
   },
   amountInput: {
@@ -279,7 +268,6 @@ const styles = StyleSheet.create({
   },
   amountInputText: {
     ...TextStyles.displayMedium,
-    color: Colors.TEXT_PRIMARY,
   },
   presetContainer: {
     flexDirection: "row",
@@ -290,19 +278,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: Spacing.sm,
     marginHorizontal: Spacing.xxs,
-    backgroundColor: Colors.GRAY_100,
     borderRadius: BorderRadius.md,
     alignItems: "center",
   },
-  presetButtonActive: {
-    backgroundColor: Colors.ACCENT,
-  },
   presetText: {
     ...TextStyles.labelMedium,
-    color: Colors.TEXT_SECONDARY,
-  },
-  presetTextActive: {
-    color: Colors.WHITE,
   },
   section: {
     marginBottom: Spacing.md,

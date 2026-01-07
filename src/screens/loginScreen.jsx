@@ -8,15 +8,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
   Text,
   Alert,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import validationSchema from "../utils/validation";
@@ -32,6 +30,7 @@ import mockAuthService from "../services/mockAuthService";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { colors, isDark } = useTheme();
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
@@ -48,7 +47,6 @@ const LoginScreen = ({ navigation }) => {
     
     setBiometricAvailable(hasHardware && isEnrolled && isEnabled);
     
-    // Biyometrik türünü belirle
     const types = await biometricService.getSupportedBiometricTypes();
     if (types.includes("FACIAL_RECOGNITION")) {
       setBiometricType("Face ID");
@@ -65,14 +63,12 @@ const LoginScreen = ({ navigation }) => {
         password: values.password,
       });
       
-      // authSuccess dispatch edilince isAuthenticated true olur
-      // RootNavigation otomatik olarak MainTabs'a geçer
       dispatch(authSuccess({
         user: result.user,
         token: result.token,
       }));
     } catch (error) {
-      Alert.alert("Giriş Hatası", error.message);
+      Alert.alert("Giris Hatasi", error.message);
     } finally {
       setIsLoading(false);
     }
@@ -80,23 +76,22 @@ const LoginScreen = ({ navigation }) => {
 
   const handleBiometricLogin = async () => {
     const result = await biometricService.authenticateWithBiometric(
-      `${biometricType} ile giriş yapın`
+      `${biometricType} ile giris yapin`
     );
 
     if (result.success) {
-      // authSuccess dispatch edilince RootNavigation otomatik MainTabs'a geçer
       dispatch(authSuccess({
-        user: { name: "Kübra", email: "biometric@example.com" },
+        user: { name: "Kubra", email: "biometric@example.com" },
         token: "biometric_token_12345",
       }));
     } else {
-      Alert.alert("Doğrulama Başarısız", result.error);
+      Alert.alert("Dogrulama Basarisiz", result.error);
     }
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
@@ -149,24 +144,25 @@ const LoginScreen = ({ navigation }) => {
                       <View
                         style={[
                           styles.checkbox,
-                          rememberMe && styles.checkboxChecked,
+                          { borderColor: colors.GRAY_300 },
+                          rememberMe && { backgroundColor: colors.ACCENT, borderColor: colors.ACCENT },
                         ]}
                       >
                         {rememberMe && (
-                          <Icon name="check" size={12} color={Colors.WHITE} />
+                          <Icon name="check" size={12} color={colors.WHITE} />
                         )}
                       </View>
-                      <Text style={styles.rememberText}>Beni hatırla</Text>
+                      <Text style={[styles.rememberText, { color: colors.TEXT_SECONDARY }]}>Beni hatirla</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity>
-                      <Text style={styles.forgotPassword}>Şifremi unuttum</Text>
+                      <Text style={[styles.forgotPassword, { color: colors.ACCENT }]}>Sifremi unuttum</Text>
                     </TouchableOpacity>
                   </View>
 
                   {/* Login Button */}
                   <CustomButton
-                    title="Giriş Yap"
+                    title="Giris Yap"
                     onPress={handleSubmit}
                     variant="primary"
                     size="lg"
@@ -184,10 +180,10 @@ const LoginScreen = ({ navigation }) => {
                       <Icon
                         name={biometricType === "Face ID" ? "smartphone" : "fingerprint"}
                         size={IconSize.md}
-                        color={Colors.ACCENT}
+                        color={colors.ACCENT}
                       />
-                      <Text style={styles.biometricText}>
-                        {biometricType} ile giriş yap
+                      <Text style={[styles.biometricText, { color: colors.ACCENT }]}>
+                        {biometricType} ile giris yap
                       </Text>
                     </TouchableOpacity>
                   )}
@@ -198,9 +194,9 @@ const LoginScreen = ({ navigation }) => {
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Hesabınız yok mu?</Text>
+            <Text style={[styles.footerText, { color: colors.TEXT_SECONDARY }]}>Hesabiniz yok mu?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
-              <Text style={styles.signUpText}> Kayıt Ol</Text>
+              <Text style={[styles.signUpText, { color: colors.ACCENT }]}> Kayit Ol</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -212,7 +208,6 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND,
   },
   keyboardView: {
     flex: 1,
@@ -242,22 +237,15 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: Colors.GRAY_300,
     justifyContent: "center",
     alignItems: "center",
     marginRight: Spacing.xs,
   },
-  checkboxChecked: {
-    backgroundColor: Colors.ACCENT,
-    borderColor: Colors.ACCENT,
-  },
   rememberText: {
     ...TextStyles.bodySmall,
-    color: Colors.TEXT_SECONDARY,
   },
   forgotPassword: {
     ...TextStyles.labelMedium,
-    color: Colors.ACCENT,
   },
   loginButton: {
     marginTop: Spacing.xs,
@@ -271,7 +259,6 @@ const styles = StyleSheet.create({
   },
   biometricText: {
     ...TextStyles.labelMedium,
-    color: Colors.ACCENT,
     marginLeft: Spacing.xs,
   },
   footer: {
@@ -281,11 +268,9 @@ const styles = StyleSheet.create({
   },
   footerText: {
     ...TextStyles.bodyMedium,
-    color: Colors.TEXT_SECONDARY,
   },
   signUpText: {
     ...TextStyles.labelLarge,
-    color: Colors.ACCENT,
   },
 });
 
