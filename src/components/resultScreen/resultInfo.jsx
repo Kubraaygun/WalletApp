@@ -3,8 +3,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../../utils/colors";
 import { TextStyles } from "../../utils/typography";
-import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
+import { Spacing, BorderRadius, IconSize, moderateScale } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const ResultInfo = ({
   formattedAmount,
@@ -13,14 +14,16 @@ const ResultInfo = ({
   formattedDate,
   formattedTime,
 }) => {
+  const { colors } = useTheme();
+
   const InfoRow = ({ icon, label, value }) => (
-    <View style={styles.infoRow}>
-      <View style={styles.infoIcon}>
-        <Icon name={icon} size={IconSize.sm} color={Colors.ACCENT} />
+    <View style={[styles.infoRow, { borderBottomColor: colors.BORDER, paddingVertical: moderateScale(Spacing.xxs) }]}>
+      <View style={[styles.infoIcon, { backgroundColor: `${colors.ACCENT}15` }]}>
+        <Icon name={icon} size={IconSize.sm} color={colors.ACCENT} />
       </View>
       <View style={styles.infoContent}>
-        <Text style={styles.infoLabel}>{label}</Text>
-        <Text style={styles.infoValue}>{value}</Text>
+        <Text style={[styles.infoLabel, { color: colors.TEXT_SECONDARY }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: colors.TEXT_PRIMARY }]}>{value}</Text>
       </View>
     </View>
   );
@@ -28,13 +31,13 @@ const ResultInfo = ({
   return (
     <View style={styles.container}>
       {/* Amount Highlight */}
-      <View style={styles.amountContainer}>
-        <Text style={styles.amountLabel}>Transfer Tutarı</Text>
-        <Text style={styles.amount}>₺{formattedAmount}</Text>
+      <View style={[styles.amountContainer, { backgroundColor: colors.SURFACE, paddingVertical: moderateScale(Spacing.md) }]}>
+        <Text style={[styles.amountLabel, { color: colors.TEXT_SECONDARY }]}>Transfer Tutarı</Text>
+        <Text style={[styles.amount, { color: colors.ACCENT }]}>₺{formattedAmount}</Text>
       </View>
 
       {/* Details Card */}
-      <View style={styles.detailsCard}>
+      <View style={[styles.detailsCard, { backgroundColor: colors.CARD }]}>
         <InfoRow icon="user" label="Alıcı" value={phoneNumber} />
 
         {description && (
@@ -64,22 +67,17 @@ const styles = StyleSheet.create({
   },
   amountContainer: {
     alignItems: "center",
-    paddingVertical: Spacing.lg,
-    backgroundColor: Colors.GRAY_50,
     borderRadius: BorderRadius.lg,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   amountLabel: {
     ...TextStyles.labelMedium,
-    color: Colors.TEXT_SECONDARY,
     marginBottom: Spacing.xxs,
   },
   amount: {
     ...TextStyles.displayMedium,
-    color: Colors.ACCENT,
   },
   detailsCard: {
-    backgroundColor: Colors.SURFACE,
     borderRadius: BorderRadius.lg,
     padding: Spacing.md,
     ...Shadows.sm,
@@ -87,15 +85,12 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: Spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.GRAY_100,
   },
   infoIcon: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: `${Colors.ACCENT}15`,
     justifyContent: "center",
     alignItems: "center",
     marginRight: Spacing.sm,
@@ -105,13 +100,10 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     ...TextStyles.caption,
-    color: Colors.TEXT_SECONDARY,
   },
   infoValue: {
-    ...TextStyles.bodyMedium,
-    color: Colors.TEXT_PRIMARY,
-    fontWeight: "500",
-    marginTop: 2,
+    ...TextStyles.labelMedium,
+    marginTop: 1,
   },
 });
 

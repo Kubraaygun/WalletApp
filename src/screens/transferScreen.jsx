@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +18,7 @@ import { addTransaction } from "../store/walletSlice";
 import { walletService } from "../services";
 import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
-import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
+import { Spacing, BorderRadius, IconSize, scale, verticalScale, moderateScale } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 
 // Components
@@ -27,6 +28,7 @@ import BalanceDisplay from "../components/transferScreen/balancaDisplay";
 import TransferModal from "../components/transferScreen/transferModal";
 import PhoneValidationComponent from "../components/isPhoneNumberValid";
 
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const PRESET_AMOUNTS = [100, 500, 1000, 2500];
 const MIN_AMOUNT = 10;
 
@@ -103,8 +105,11 @@ const TransferScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
+  // Responsive font size for amount input
+  const amountFontSize = SCREEN_WIDTH < 375 ? 28 : moderateScale(32);
+
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -128,14 +133,22 @@ const TransferScreen = ({ navigation }) => {
           <View style={[styles.amountSection, { backgroundColor: colors.SURFACE }]}>
             <Text style={[styles.sectionLabel, { color: colors.TEXT_SECONDARY }]}>Tutar</Text>
             <View style={styles.amountInputContainer}>
-              <Text style={[styles.currencySymbol, { color: colors.TEXT_PRIMARY }]}>₺</Text>
+              <Text style={[styles.currencySymbol, { color: colors.TEXT_PRIMARY, fontSize: amountFontSize }]}>₺</Text>
               <CustomTextInput
                 placeholder="0.00"
                 keyboardType="numeric"
                 value={amount}
                 onChangeText={setAmount}
-                style={styles.amountInput}
-                inputStyle={[styles.amountInputText, { color: colors.TEXT_PRIMARY }]}
+                containerStyle={styles.amountInput}
+                inputStyle={[
+                  styles.amountInputText, 
+                  { 
+                    color: colors.TEXT_PRIMARY, 
+                    fontSize: amountFontSize,
+                    height: moderateScale(60) 
+                  }
+                ]}
+                size="lg"
               />
             </View>
 
@@ -200,7 +213,7 @@ const TransferScreen = ({ navigation }) => {
           />
         </ScrollView>
       </KeyboardAvoidingView>
-
+ 
       {/* Confirmation Modal */}
       <TransferModal
         visible={isModalVisible}
@@ -228,9 +241,9 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
   },
   backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: moderateScale(44),
+    height: moderateScale(44),
+    borderRadius: moderateScale(22),
     justifyContent: "center",
     alignItems: "center",
   },
@@ -238,7 +251,7 @@ const styles = StyleSheet.create({
     ...TextStyles.h3,
   },
   headerSpacer: {
-    width: 44,
+    width: moderateScale(44),
   },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
@@ -259,7 +272,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   currencySymbol: {
-    ...TextStyles.displayMedium,
+    fontWeight: "700",
     marginRight: Spacing.xs,
   },
   amountInput: {
@@ -267,7 +280,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   amountInputText: {
-    ...TextStyles.displayMedium,
+    fontWeight: "700",
   },
   presetContainer: {
     flexDirection: "row",

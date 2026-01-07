@@ -13,7 +13,7 @@ import Animated, {
 import { Feather as Icon } from "@expo/vector-icons";
 import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
-import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
+import { Spacing, BorderRadius, IconSize, moderateScale } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 
 // Components
@@ -65,18 +65,34 @@ const ResultScreen = () => {
     opacity: contentOpacity.value,
   }));
 
+  // Dynamic Styles
+  const dynamicStyles = {
+    scrollContent: {
+      paddingTop: moderateScale(32),
+    },
+    iconContainer: {
+      width: moderateScale(70),
+      height: moderateScale(70),
+      borderRadius: moderateScale(35),
+    },
+    buttonsContainer: {
+      paddingBottom: moderateScale(Spacing.lg),
+    },
+  };
+
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
 
       <ScrollView 
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, dynamicStyles.scrollContent]}
         showsVerticalScrollIndicator={false}
       >
         {/* Success/Error Icon */}
         <Animated.View
           style={[
             styles.iconContainer,
+            dynamicStyles.iconContainer,
             { backgroundColor: success ? colors.SUCCESS : colors.ERROR },
             iconAnimatedStyle,
           ]}
@@ -119,7 +135,7 @@ const ResultScreen = () => {
       </ScrollView>
 
       {/* Action Buttons - Fixed at bottom */}
-      <View style={[styles.buttonsContainer, { backgroundColor: colors.BACKGROUND }]}>
+      <View style={[styles.buttonsContainer, dynamicStyles.buttonsContainer, { backgroundColor: colors.BACKGROUND }]}>
         <ActionButtons success={success} navigation={navigation} />
       </View>
     </SafeAreaView>
@@ -133,16 +149,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     alignItems: "center",
-    paddingTop: Spacing["3xl"],
-    paddingBottom: Spacing.lg,
+    paddingBottom: Spacing.md,
   },
   iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
     ...Shadows.lg,
   },
   title: {
@@ -171,7 +183,6 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     width: "100%",
-    paddingBottom: Spacing.xl,
   },
 });
 
