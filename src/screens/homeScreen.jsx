@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { walletStart, walletSuccess, walletFailure } from "../store/walletSlice";
 import { logout } from "../store/authSlice";
 import { walletService } from "../services";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { Spacing } from "../utils/spacing";
 
 // Components
@@ -17,21 +17,13 @@ const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { balance, transactions, isLoading } = useSelector((state) => state.wallet);
   const { user } = useSelector((state) => state.auth);
+  const { colors, isDark } = useTheme();
   const [refreshing, setRefreshing] = React.useState(false);
 
   // API'den wallet verilerini çek
   const fetchWalletData = async () => {
     try {
       dispatch(walletStart());
-      // TODO: Backend hazır olduğunda aşağıdaki satırları aktif et
-      // const balanceData = await walletService.getBalance();
-      // const transactionsData = await walletService.getTransactions();
-      // dispatch(walletSuccess({
-      //   balance: balanceData.balance,
-      //   transactions: transactionsData.transactions,
-      // }));
-      
-      // Şimdilik mock data ile devam (redux-persist'ten gelen veriyi kullan)
       dispatch(walletSuccess({ balance, transactions }));
     } catch (error) {
       dispatch(walletFailure(error.message));
@@ -60,9 +52,16 @@ const HomeScreen = ({ navigation }) => {
     // TODO: Bildirimler ekranına yönlendir
   };
 
+  const dynamicStyles = {
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.BACKGROUND,
+    },
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+    <SafeAreaView style={dynamicStyles.safeArea}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -71,8 +70,8 @@ const HomeScreen = ({ navigation }) => {
           <RefreshControl
             refreshing={refreshing || isLoading}
             onRefresh={onRefresh}
-            tintColor={Colors.ACCENT}
-            colors={[Colors.ACCENT]}
+            tintColor={colors.ACCENT}
+            colors={[colors.ACCENT]}
           />
         }
       >
@@ -104,10 +103,6 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.BACKGROUND,
-  },
   scrollView: {
     flex: 1,
   },

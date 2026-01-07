@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Colors } from "../../utils/colors";
+import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
 
-const QuickActionButton = ({ icon, label, onPress, color = Colors.PRIMARY }) => {
+const QuickActionButton = ({ icon, label, onPress, color, textColor }) => {
     return (
         <TouchableOpacity
             style={styles.actionButton}
@@ -16,24 +16,25 @@ const QuickActionButton = ({ icon, label, onPress, color = Colors.PRIMARY }) => 
             <View style={[styles.iconContainer, { backgroundColor: `${color}15` }]}>
                 <Icon name={icon} size={IconSize.md} color={color} />
             </View>
-            <Text style={styles.actionLabel} numberOfLines={1}>
+            <Text style={[styles.actionLabel, { color: textColor }]} numberOfLines={1}>
                 {label}
             </Text>
         </TouchableOpacity>
     );
 };
 
-const MoreMenuItem = ({ icon, label, onPress, color = Colors.TEXT_PRIMARY }) => (
-    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+const MoreMenuItem = ({ icon, label, onPress, color, textColor, borderColor }) => (
+    <TouchableOpacity style={[styles.menuItem, { borderBottomColor: borderColor }]} onPress={onPress}>
         <View style={[styles.menuIcon, { backgroundColor: `${color}15` }]}>
             <Icon name={icon} size={20} color={color} />
         </View>
-        <Text style={styles.menuLabel}>{label}</Text>
-        <Icon name="chevron-right" size={18} color={Colors.GRAY_400} />
+        <Text style={[styles.menuLabel, { color: textColor }]}>{label}</Text>
+        <Icon name="chevron-right" size={18} color={color} />
     </TouchableOpacity>
 );
 
 const QuickActions = ({ navigation }) => {
+    const { colors } = useTheme();
     const [showMoreMenu, setShowMoreMenu] = useState(false);
 
     const handleNavigate = (screen) => {
@@ -46,26 +47,26 @@ const QuickActions = ({ navigation }) => {
     const actions = [
         {
             icon: "send",
-            label: "Gönder",
-            color: Colors.PRIMARY,
+            label: "Gonder",
+            color: colors.PRIMARY,
             onPress: () => handleNavigate("TransferScreen"),
         },
         {
             icon: "download",
             label: "Al",
-            color: Colors.SUCCESS,
-            onPress: () => console.log("Al pressed"), // TODO: Para isteme ekranı
+            color: colors.SUCCESS,
+            onPress: () => console.log("Al pressed"),
         },
         {
             icon: "maximize",
             label: "QR Tara",
-            color: Colors.SECONDARY,
+            color: colors.SECONDARY,
             onPress: () => handleNavigate("QRScannerScreen"),
         },
         {
             icon: "grid",
             label: "Daha Fazla",
-            color: Colors.GRAY_600,
+            color: colors.GRAY_500,
             onPress: () => setShowMoreMenu(true),
         },
     ];
@@ -73,40 +74,41 @@ const QuickActions = ({ navigation }) => {
     const moreMenuItems = [
         {
             icon: "trending-up",
-            label: "Kripto Fiyatları",
+            label: "Kripto Fiyatlari",
             color: "#F7931A",
             screen: "CryptoScreen",
         },
         {
             icon: "pie-chart",
-            label: "Harcama İstatistikleri",
-            color: Colors.PRIMARY,
+            label: "Harcama Istatistikleri",
+            color: colors.PRIMARY,
             screen: "StatsScreen",
         },
         {
             icon: "credit-card",
-            label: "Kartlarım",
-            color: Colors.SECONDARY,
+            label: "Kartlarim",
+            color: colors.SECONDARY,
             screen: "CardsScreen",
         },
         {
             icon: "repeat",
-            label: "Döviz Çevirici",
-            color: Colors.SUCCESS,
+            label: "Doviz Cevirici",
+            color: colors.SUCCESS,
             screen: "CurrencyConverterScreen",
         },
     ];
 
     return (
         <View style={styles.container}>
-            <Text style={styles.sectionTitle}>Hızlı İşlemler</Text>
-            <View style={styles.actionsGrid}>
+            <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>Hizli Islemler</Text>
+            <View style={[styles.actionsGrid, { backgroundColor: colors.CARD }, Shadows.sm]}>
                 {actions.map((action, index) => (
                     <QuickActionButton
                         key={index}
                         icon={action.icon}
                         label={action.label}
                         color={action.color}
+                        textColor={colors.TEXT_PRIMARY}
                         onPress={action.onPress}
                     />
                 ))}
@@ -120,27 +122,29 @@ const QuickActions = ({ navigation }) => {
                 onRequestClose={() => setShowMoreMenu(false)}
             >
                 <TouchableOpacity
-                    style={styles.modalOverlay}
+                    style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
                     activeOpacity={1}
                     onPress={() => setShowMoreMenu(false)}
                 >
-                    <View style={styles.menuContainer}>
-                        <View style={styles.menuHandle} />
-                        <Text style={styles.menuTitle}>Daha Fazla</Text>
+                    <View style={[styles.menuContainer, { backgroundColor: colors.BACKGROUND }]}>
+                        <View style={[styles.menuHandle, { backgroundColor: colors.GRAY_300 }]} />
+                        <Text style={[styles.menuTitle, { color: colors.TEXT_PRIMARY }]}>Daha Fazla</Text>
                         {moreMenuItems.map((item, index) => (
                             <MoreMenuItem
                                 key={index}
                                 icon={item.icon}
                                 label={item.label}
                                 color={item.color}
+                                textColor={colors.TEXT_PRIMARY}
+                                borderColor={colors.BORDER}
                                 onPress={() => handleNavigate(item.screen)}
                             />
                         ))}
                         <TouchableOpacity
-                            style={styles.closeButton}
+                            style={[styles.closeButton, { backgroundColor: colors.SURFACE }]}
                             onPress={() => setShowMoreMenu(false)}
                         >
-                            <Text style={styles.closeButtonText}>Kapat</Text>
+                            <Text style={[styles.closeButtonText, { color: colors.TEXT_SECONDARY }]}>Kapat</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -156,16 +160,13 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         ...TextStyles.labelLarge,
-        color: Colors.TEXT_PRIMARY,
         marginBottom: Spacing.md,
     },
     actionsGrid: {
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor: Colors.CARD,
         borderRadius: BorderRadius.xl,
         padding: Spacing.md,
-        ...Shadows.sm,
     },
     actionButton: {
         alignItems: "center",
@@ -181,17 +182,14 @@ const styles = StyleSheet.create({
     },
     actionLabel: {
         ...TextStyles.labelSmall,
-        color: Colors.TEXT_PRIMARY,
         marginTop: Spacing.xs,
     },
     // Modal styles
     modalOverlay: {
         flex: 1,
-        backgroundColor: Colors.OVERLAY,
         justifyContent: "flex-end",
     },
     menuContainer: {
-        backgroundColor: Colors.BACKGROUND,
         borderTopLeftRadius: BorderRadius.xl,
         borderTopRightRadius: BorderRadius.xl,
         padding: Spacing.lg,
@@ -200,14 +198,12 @@ const styles = StyleSheet.create({
     menuHandle: {
         width: 40,
         height: 4,
-        backgroundColor: Colors.GRAY_300,
         borderRadius: 2,
         alignSelf: "center",
         marginBottom: Spacing.lg,
     },
     menuTitle: {
         ...TextStyles.h4,
-        color: Colors.TEXT_PRIMARY,
         marginBottom: Spacing.md,
     },
     menuItem: {
@@ -215,7 +211,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: Spacing.md,
         borderBottomWidth: 1,
-        borderBottomColor: Colors.BORDER,
     },
     menuIcon: {
         width: 40,
@@ -227,11 +222,9 @@ const styles = StyleSheet.create({
     },
     menuLabel: {
         ...TextStyles.bodyMedium,
-        color: Colors.TEXT_PRIMARY,
         flex: 1,
     },
     closeButton: {
-        backgroundColor: Colors.SURFACE,
         borderRadius: BorderRadius.lg,
         padding: Spacing.md,
         alignItems: "center",
@@ -239,7 +232,6 @@ const styles = StyleSheet.create({
     },
     closeButtonText: {
         ...TextStyles.labelLarge,
-        color: Colors.TEXT_SECONDARY,
     },
 });
 

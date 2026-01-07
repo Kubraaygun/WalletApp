@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Colors } from "../utils/colors";
+import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
@@ -21,22 +21,25 @@ import { logout } from "../store/authSlice";
 import { resetWallet } from "../store/walletSlice";
 import { biometricService } from "../services";
 import { changeLanguage, supportedLanguages, getCurrentLanguage } from "../i18n";
-import { useTheme } from "../contexts/ThemeContext";
 import Avatar from "../components/avatar";
 
-const SettingItem = ({ icon, label, value, onPress, hasArrow = true, rightComponent }) => (
-  <TouchableOpacity style={styles.settingItem} onPress={onPress} disabled={!onPress}>
+const SettingItem = ({ icon, label, value, onPress, hasArrow = true, rightComponent, colors }) => (
+  <TouchableOpacity 
+    style={[styles.settingItem, { borderBottomColor: colors.BORDER }]} 
+    onPress={onPress} 
+    disabled={!onPress}
+  >
     <View style={styles.settingLeft}>
-      <View style={styles.settingIconContainer}>
-        <Icon name={icon} size={IconSize.sm} color={Colors.ACCENT} />
+      <View style={[styles.settingIconContainer, { backgroundColor: `${colors.ACCENT}15` }]}>
+        <Icon name={icon} size={IconSize.sm} color={colors.ACCENT} />
       </View>
-      <Text style={styles.settingLabel}>{label}</Text>
+      <Text style={[styles.settingLabel, { color: colors.TEXT_PRIMARY }]}>{label}</Text>
     </View>
     <View style={styles.settingRight}>
-      {value && <Text style={styles.settingValue}>{value}</Text>}
+      {value && <Text style={[styles.settingValue, { color: colors.TEXT_SECONDARY }]}>{value}</Text>}
       {rightComponent}
       {hasArrow && !rightComponent && (
-        <Icon name="chevron-right" size={IconSize.sm} color={Colors.GRAY_400} />
+        <Icon name="chevron-right" size={IconSize.sm} color={colors.GRAY_400} />
       )}
     </View>
   </TouchableOpacity>
@@ -46,7 +49,7 @@ const ProfileScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { themeMode, setTheme, isDark } = useTheme();
+  const { colors, themeMode, setTheme, isDark } = useTheme();
   
   const [biometricEnabled, setBiometricEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -63,15 +66,14 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleBiometricToggle = async (value) => {
     if (value) {
-      // Önce doğrulama yap
       const result = await biometricService.authenticateWithBiometric(
-        "Biyometrik girişi etkinleştirmek için doğrulayın"
+        "Biyometrik girisi etkinlestirmek icin dogrulayin"
       );
       if (result.success) {
         await biometricService.setBiometricLoginEnabled(true);
         setBiometricEnabled(true);
       } else {
-        Alert.alert("Doğrulama Başarısız", result.error);
+        Alert.alert("Dogrulama Basarisiz", result.error);
       }
     } else {
       await biometricService.setBiometricLoginEnabled(false);
@@ -82,7 +84,7 @@ const ProfileScreen = ({ navigation }) => {
   const handleLanguageChange = () => {
     Alert.alert(
       t("settings.language"),
-      "Dil seçin / Select language",
+      "Dil secin / Select language",
       supportedLanguages.map((lang) => ({
         text: `${lang.flag} ${lang.name}`,
         onPress: async () => {
@@ -126,7 +128,7 @@ const ProfileScreen = ({ navigation }) => {
   const handleLogout = () => {
     Alert.alert(
       t("auth.logout"),
-      "Çıkış yapmak istediğinize emin misiniz?",
+      "Cikis yapmak istediginize emin misiniz?",
       [
         { text: t("common.cancel"), style: "cancel" },
         {
@@ -145,23 +147,19 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
   const getLangName = () => {
     const lang = supportedLanguages.find((l) => l.code === currentLang);
-    return lang ? `${lang.flag} ${lang.name}` : "Türkçe";
+    return lang ? `${lang.flag} ${lang.name}` : "Turkce";
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={Colors.BACKGROUND} />
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
       
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerSpacer} />
-        <Text style={styles.headerTitle}>{t("settings.profile")}</Text>
+        <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{t("settings.profile")}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -171,38 +169,41 @@ const ProfileScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Card */}
-        <View style={styles.profileCard}>
-          <Avatar name={user?.name || "Kullanıcı"} size="xl" />
-          <Text style={styles.profileName}>{user?.name || "Kullanıcı"}</Text>
-          <Text style={styles.profileEmail}>{user?.email || "email@example.com"}</Text>
+        <View style={[styles.profileCard, { backgroundColor: colors.SURFACE }]}>
+          <Avatar name={user?.name || "Kullanici"} size="xl" />
+          <Text style={[styles.profileName, { color: colors.TEXT_PRIMARY }]}>{user?.name || "Kullanici"}</Text>
+          <Text style={[styles.profileEmail, { color: colors.TEXT_SECONDARY }]}>{user?.email || "email@example.com"}</Text>
         </View>
 
         {/* Settings Sections */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Tercihler</Text>
-          <View style={styles.sectionCard}>
+          <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY }]}>Tercihler</Text>
+          <View style={[styles.sectionCard, { backgroundColor: colors.SURFACE }]}>
             <SettingItem
               icon="globe"
               label={t("settings.language")}
               value={getLangName()}
               onPress={handleLanguageChange}
+              colors={colors}
             />
             <SettingItem
               icon="moon"
               label="Tema"
               value={getThemeName()}
               onPress={handleThemeChange}
+              colors={colors}
             />
             <SettingItem
               icon="bell"
               label={t("settings.notifications")}
               hasArrow={false}
+              colors={colors}
               rightComponent={
                 <Switch
                   value={notificationsEnabled}
                   onValueChange={setNotificationsEnabled}
-                  trackColor={{ false: Colors.GRAY_300, true: Colors.ACCENT }}
-                  thumbColor={Colors.WHITE}
+                  trackColor={{ false: colors.GRAY_300, true: colors.ACCENT }}
+                  thumbColor={colors.WHITE}
                 />
               }
             />
@@ -210,12 +211,13 @@ const ProfileScreen = ({ navigation }) => {
               icon="smartphone"
               label={t("settings.biometric")}
               hasArrow={false}
+              colors={colors}
               rightComponent={
                 <Switch
                   value={biometricEnabled}
                   onValueChange={handleBiometricToggle}
-                  trackColor={{ false: Colors.GRAY_300, true: Colors.ACCENT }}
-                  thumbColor={Colors.WHITE}
+                  trackColor={{ false: colors.GRAY_300, true: colors.ACCENT }}
+                  thumbColor={colors.WHITE}
                 />
               }
             />
@@ -223,26 +225,28 @@ const ProfileScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Uygulama</Text>
-          <View style={styles.sectionCard}>
+          <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY }]}>Uygulama</Text>
+          <View style={[styles.sectionCard, { backgroundColor: colors.SURFACE }]}>
             <SettingItem
               icon="shield"
               label={t("settings.security")}
               onPress={() => {}}
+              colors={colors}
             />
             <SettingItem
               icon="info"
               label={t("settings.about")}
               value="v1.0.0"
               onPress={() => {}}
+              colors={colors}
             />
           </View>
         </View>
 
         {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Icon name="log-out" size={IconSize.sm} color={Colors.ERROR} />
-          <Text style={styles.logoutText}>{t("auth.logout")}</Text>
+        <TouchableOpacity style={[styles.logoutButton, { backgroundColor: `${colors.ERROR}15` }]} onPress={handleLogout}>
+          <Icon name="log-out" size={IconSize.sm} color={colors.ERROR} />
+          <Text style={[styles.logoutText, { color: colors.ERROR }]}>{t("auth.logout")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -252,7 +256,6 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.BACKGROUND,
   },
   header: {
     flexDirection: "row",
@@ -261,17 +264,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
   },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.GRAY_100,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   headerTitle: {
     ...TextStyles.h3,
-    color: Colors.TEXT_PRIMARY,
   },
   headerSpacer: {
     width: 44,
@@ -285,7 +279,6 @@ const styles = StyleSheet.create({
   },
   profileCard: {
     alignItems: "center",
-    backgroundColor: Colors.SURFACE,
     borderRadius: BorderRadius.xl,
     padding: Spacing.xl,
     marginBottom: Spacing.lg,
@@ -293,12 +286,10 @@ const styles = StyleSheet.create({
   },
   profileName: {
     ...TextStyles.h3,
-    color: Colors.TEXT_PRIMARY,
     marginTop: Spacing.md,
   },
   profileEmail: {
     ...TextStyles.bodyMedium,
-    color: Colors.TEXT_SECONDARY,
     marginTop: Spacing.xxs,
   },
   section: {
@@ -306,12 +297,10 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...TextStyles.labelMedium,
-    color: Colors.TEXT_SECONDARY,
     marginBottom: Spacing.sm,
     marginLeft: Spacing.xs,
   },
   sectionCard: {
-    backgroundColor: Colors.SURFACE,
     borderRadius: BorderRadius.lg,
     ...Shadows.sm,
   },
@@ -322,7 +311,6 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.GRAY_100,
   },
   settingLeft: {
     flexDirection: "row",
@@ -332,14 +320,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: BorderRadius.md,
-    backgroundColor: `${Colors.ACCENT}15`,
     justifyContent: "center",
     alignItems: "center",
     marginRight: Spacing.sm,
   },
   settingLabel: {
     ...TextStyles.bodyMedium,
-    color: Colors.TEXT_PRIMARY,
   },
   settingRight: {
     flexDirection: "row",
@@ -347,21 +333,18 @@ const styles = StyleSheet.create({
   },
   settingValue: {
     ...TextStyles.bodySmall,
-    color: Colors.TEXT_SECONDARY,
     marginRight: Spacing.xs,
   },
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: `${Colors.ERROR}10`,
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.lg,
     marginTop: Spacing.md,
   },
   logoutText: {
     ...TextStyles.labelLarge,
-    color: Colors.ERROR,
     marginLeft: Spacing.xs,
   },
 });
