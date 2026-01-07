@@ -67,9 +67,6 @@ const ResultScreen = () => {
 
   // Dynamic Styles
   const dynamicStyles = {
-    scrollContent: {
-      paddingTop: moderateScale(32),
-    },
     iconContainer: {
       width: moderateScale(70),
       height: moderateScale(70),
@@ -85,53 +82,57 @@ const ResultScreen = () => {
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
 
       <ScrollView 
-        contentContainerStyle={[styles.scrollContent, dynamicStyles.scrollContent]}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Success/Error Icon */}
-        <Animated.View
-          style={[
-            styles.iconContainer,
-            dynamicStyles.iconContainer,
-            { backgroundColor: success ? colors.SUCCESS : colors.ERROR },
-            iconAnimatedStyle,
-          ]}
-        >
-          <Icon
-            name={success ? "check" : "x"}
-            size={IconSize["3xl"]}
-            color={colors.WHITE}
-          />
-        </Animated.View>
+        <View style={styles.centerWrapper}>
+          {/* Success/Error Icon */}
+          <Animated.View
+            style={[
+              styles.iconContainer,
+              dynamicStyles.iconContainer,
+              { backgroundColor: success ? colors.SUCCESS : colors.ERROR },
+              iconAnimatedStyle,
+            ]}
+          >
+            <Icon
+              name={success ? "check" : "x"}
+              size={IconSize["3xl"]}
+              color={colors.WHITE}
+            />
+          </Animated.View>
 
-        {/* Title */}
-        <Text style={[styles.title, { color: colors.TEXT_PRIMARY }]}>
-          {success ? "Transfer Basarili!" : "Transfer Basarisiz"}
-        </Text>
-        <Text style={[styles.subtitle, { color: colors.TEXT_SECONDARY }]}>
-          {success
-            ? "Paraniz basariyla gonderildi"
-            : errorMessage || "Islem sirasinda bir hata olustu"}
-        </Text>
+          {/* Title Area */}
+          <View style={styles.titleArea}>
+            <Text style={[styles.title, { color: colors.TEXT_PRIMARY }]}>
+              {success ? "Transfer Başarılı!" : "Transfer Başarısız"}
+            </Text>
+            <Text style={[styles.subtitle, { color: colors.TEXT_SECONDARY }]}>
+              {success
+                ? "Paranız başarıyla gönderildi"
+                : errorMessage || "İşlem sırasında bir hata oluştu"}
+            </Text>
+          </View>
 
-        {/* Transaction Details */}
-        <Animated.View style={[styles.contentContainer, contentAnimatedStyle]}>
-          <ResultInfo
-            formattedAmount={formattedAmount}
-            phoneNumber={phoneNumber}
-            description={description}
-            formattedDate={formattedDate}
-            formattedTime={formattedTime}
-          />
+          {/* Transaction Details */}
+          <Animated.View style={[styles.contentContainer, contentAnimatedStyle]}>
+            <ResultInfo
+              formattedAmount={formattedAmount}
+              phoneNumber={phoneNumber}
+              description={description}
+              formattedDate={formattedDate}
+              formattedTime={formattedTime}
+            />
 
-          {/* Share Button */}
-          {success && (
-            <TouchableOpacity style={styles.shareButton}>
-              <Icon name="share-2" size={IconSize.sm} color={colors.ACCENT} />
-              <Text style={[styles.shareText, { color: colors.ACCENT }]}>Makbuzu Paylas</Text>
-            </TouchableOpacity>
-          )}
-        </Animated.View>
+            {/* Share Button */}
+            {success && (
+              <TouchableOpacity style={styles.shareButton}>
+                <Icon name="share-2" size={IconSize.sm} color={colors.ACCENT} />
+                <Text style={[styles.shareText, { color: colors.ACCENT }]}>Makbuzu Paylaş</Text>
+              </TouchableOpacity>
+            )}
+          </Animated.View>
+        </View>
       </ScrollView>
 
       {/* Action Buttons - Fixed at bottom */}
@@ -148,14 +149,22 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    alignItems: "center",
+    justifyContent: "center", // Vertically center the content
     paddingBottom: Spacing.md,
+  },
+  centerWrapper: {
+    alignItems: "center",
+    width: "100%",
   },
   iconContainer: {
     justifyContent: "center",
     alignItems: "center",
     marginBottom: Spacing.md,
     ...Shadows.lg,
+  },
+  titleArea: {
+    alignItems: "center",
+    marginBottom: Spacing.xl,
   },
   title: {
     ...TextStyles.h1,
@@ -165,7 +174,6 @@ const styles = StyleSheet.create({
   subtitle: {
     ...TextStyles.bodyMedium,
     textAlign: "center",
-    marginBottom: Spacing.xl,
   },
   contentContainer: {
     width: "100%",
@@ -174,8 +182,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: Spacing.md,
-    marginTop: Spacing.md,
+    paddingVertical: moderateScale(Spacing.sm),
+    marginTop: Spacing.xs,
   },
   shareText: {
     ...TextStyles.labelMedium,
