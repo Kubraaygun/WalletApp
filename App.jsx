@@ -8,6 +8,7 @@ import store, { persistor } from "./src/store/store";
 import RootNavigation from "./src/navigation/rootNavigation";
 import LoadingModal from "./src/components/loadingModal";
 import { Colors } from "./src/utils/colors";
+import { ThemeProvider } from "./src/contexts/ThemeContext";
 import { notificationService } from "./src/services";
 import { initSentry, withSentry } from "./src/services/sentryService";
 
@@ -59,14 +60,16 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <SafeAreaProvider>
-        <PersistGate loading={<PersistLoading />} persistor={persistor}>
-          <NavigationContainer>
-            <RootNavigation />
-          </NavigationContainer>
-          <LoadingModal />
-        </PersistGate>
-      </SafeAreaProvider>
+      <ThemeProvider>
+        <SafeAreaProvider>
+          <PersistGate loading={<PersistLoading />} persistor={persistor}>
+            <NavigationContainer>
+              <RootNavigation />
+            </NavigationContainer>
+            <LoadingModal />
+          </PersistGate>
+        </SafeAreaProvider>
+      </ThemeProvider>
     </Provider>
   );
 };

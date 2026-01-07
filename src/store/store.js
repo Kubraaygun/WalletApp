@@ -4,12 +4,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import authReducer from "./authSlice";
 import walletReducer from "./walletSlice";
 import loadingReducer from "./loadingSlice";
+import themeReducer from "./themeSlice";
 
 // Redux Persist yapılandırması
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth", "wallet"], // Loading state'ini persist etmeye gerek yok
+  whitelist: ["auth", "wallet", "theme"], // Theme tercihini de persist et
 };
 
 // Tüm reducer'ları birleştir
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   wallet: walletReducer,
   loading: loadingReducer,
+  theme: themeReducer,
 });
 
 // Persist edilmiş reducer

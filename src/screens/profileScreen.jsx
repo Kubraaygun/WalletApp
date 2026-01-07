@@ -21,6 +21,7 @@ import { logout } from "../store/authSlice";
 import { resetWallet } from "../store/walletSlice";
 import { biometricService } from "../services";
 import { changeLanguage, supportedLanguages, getCurrentLanguage } from "../i18n";
+import { useTheme } from "../contexts/ThemeContext";
 import Avatar from "../components/avatar";
 
 const SettingItem = ({ icon, label, value, onPress, hasArrow = true, rightComponent }) => (
@@ -45,6 +46,7 @@ const ProfileScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { themeMode, setTheme, isDark } = useTheme();
   
   const [biometricEnabled, setBiometricEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -91,6 +93,36 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
+  const handleThemeChange = () => {
+    const themeOptions = [
+      { text: "Acik", mode: "light" },
+      { text: "Koyu", mode: "dark" },
+      { text: "Sistem", mode: "system" },
+    ];
+
+    Alert.alert(
+      "Tema",
+      "Tema secin",
+      themeOptions.map((option) => ({
+        text: option.text,
+        onPress: () => setTheme(option.mode),
+      }))
+    );
+  };
+
+  const getThemeName = () => {
+    switch (themeMode) {
+      case "light":
+        return "Acik";
+      case "dark":
+        return "Koyu";
+      case "system":
+        return "Sistem";
+      default:
+        return "Sistem";
+    }
+  };
+
   const handleLogout = () => {
     Alert.alert(
       t("auth.logout"),
@@ -124,7 +156,7 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={Colors.BACKGROUND} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -154,6 +186,12 @@ const ProfileScreen = ({ navigation }) => {
               label={t("settings.language")}
               value={getLangName()}
               onPress={handleLanguageChange}
+            />
+            <SettingItem
+              icon="moon"
+              label="Tema"
+              value={getThemeName()}
+              onPress={handleThemeChange}
             />
             <SettingItem
               icon="bell"
