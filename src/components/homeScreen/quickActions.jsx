@@ -5,13 +5,14 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
+import { ScalePress } from "../animations";
 
 const QuickActionButton = ({ icon, label, onPress, color, textColor }) => {
     return (
-        <TouchableOpacity
-            style={styles.actionButton}
+        <ScalePress
             onPress={onPress}
-            activeOpacity={0.7}
+            scaleValue={0.92}
+            style={styles.actionButton}
         >
             <View style={[styles.iconContainer, { backgroundColor: `${color}15` }]}>
                 <Icon name={icon} size={IconSize.md} color={color} />
@@ -19,18 +20,22 @@ const QuickActionButton = ({ icon, label, onPress, color, textColor }) => {
             <Text style={[styles.actionLabel, { color: textColor }]} numberOfLines={1}>
                 {label}
             </Text>
-        </TouchableOpacity>
+        </ScalePress>
     );
 };
 
 const MoreMenuItem = ({ icon, label, onPress, color, textColor, borderColor }) => (
-    <TouchableOpacity style={[styles.menuItem, { borderBottomColor: borderColor }]} onPress={onPress}>
+    <ScalePress 
+        onPress={onPress}
+        scaleValue={0.98}
+        style={[styles.menuItem, { borderBottomColor: borderColor }]}
+    >
         <View style={[styles.menuIcon, { backgroundColor: `${color}15` }]}>
             <Icon name={icon} size={20} color={color} />
         </View>
         <Text style={[styles.menuLabel, { color: textColor }]}>{label}</Text>
         <Icon name="chevron-right" size={18} color={color} />
-    </TouchableOpacity>
+    </ScalePress>
 );
 
 const QuickActions = ({ navigation }) => {
@@ -140,12 +145,13 @@ const QuickActions = ({ navigation }) => {
                                 onPress={() => handleNavigate(item.screen)}
                             />
                         ))}
-                        <TouchableOpacity
-                            style={[styles.closeButton, { backgroundColor: colors.SURFACE }]}
+                        <ScalePress
                             onPress={() => setShowMoreMenu(false)}
+                            scaleValue={0.97}
+                            style={[styles.closeButton, { backgroundColor: colors.SURFACE }]}
                         >
                             <Text style={[styles.closeButtonText, { color: colors.TEXT_SECONDARY }]}>Kapat</Text>
-                        </TouchableOpacity>
+                        </ScalePress>
                     </View>
                 </TouchableOpacity>
             </Modal>

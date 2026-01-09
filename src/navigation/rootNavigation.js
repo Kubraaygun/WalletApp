@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feather as Icon } from "@expo/vector-icons";
-import { View, Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
+import { AnimatedTabIcon } from "../components/animations";
 
 // Screens
 import HomeScreen from "../screens/homeScreen";
@@ -38,13 +38,7 @@ import {
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Tab Bar Icon Component
-const TabIcon = ({ name, color, size, focused, primaryColor }) => (
-  <View style={styles.iconContainer}>
-    <Icon name={name} size={size} color={color} />
-    {focused && <View style={[styles.activeDot, { backgroundColor: primaryColor }]} />}
-  </View>
-);
+// Tab Bar Icon Component - Now using AnimatedTabIcon
 
 // Main Tab Navigation
 const TabStack = () => {
@@ -70,7 +64,7 @@ const TabStack = () => {
         },
         tabBarShowLabel: true,
         tabBarLabelStyle: styles.tabBarLabel,
-        tabBarIcon: ({ color, size, focused }) => {
+        tabBarIcon: ({ focused }) => {
           let iconName;
           if (route.name === HOMESCREEN) iconName = "home";
           else if (route.name === STATSSCREEN) iconName = "pie-chart";
@@ -78,7 +72,15 @@ const TabStack = () => {
           else if (route.name === CRYPTOSCREEN) iconName = "trending-up";
           else if (route.name === PROFILESCREEN) iconName = "user";
           
-          return <TabIcon name={iconName} color={color} size={22} focused={focused} primaryColor={colors.PRIMARY} />;
+          return (
+            <AnimatedTabIcon 
+              name={iconName} 
+              focused={focused} 
+              size={22} 
+              activeColor={colors.PRIMARY} 
+              inactiveColor={colors.GRAY_500} 
+            />
+          );
         },
       })}
     >
@@ -150,17 +152,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "600",
     marginTop: 4,
-  },
-  iconContainer: {
-    alignItems: "center",
-  },
-  activeDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    marginTop: 4,
-    position: "absolute",
-    bottom: -8,
   },
 });
 

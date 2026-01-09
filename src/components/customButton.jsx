@@ -1,14 +1,25 @@
 import React from "react";
 import {
-  TouchableOpacity,
   Text,
   ActivityIndicator,
   StyleSheet,
   View,
+  Platform,
 } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+} from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import * as Haptics from "expo-haptics";
 import { useTheme } from "../contexts/ThemeContext";
 import { BorderRadius, ButtonHeight, Spacing, moderateScale } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
+
+const AnimatedPressable = Animated.View;
 
 const CustomButton = ({
   title,
@@ -22,9 +33,44 @@ const CustomButton = ({
   fullWidth = true,
   style,
   textStyle,
+  enableHaptics = true,
   ...props
 }) => {
   const { colors } = useTheme();
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
+
+  const triggerHaptic = () => {
+    if (enableHaptics && !disabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
+
+  const handlePress = () => {
+    if (!disabled && !loading && onPress) {
+      onPress();
+    }
+  };
+
+  const tapGesture = Gesture.Tap()
+    .enabled(!disabled && !loading)
+    .onBegin(() => {
+      scale.value = withSpring(0.95, { damping: 15, stiffness: 400 });
+      opacity.value = withTiming(0.8, { duration: 100 });
+      runOnJS(triggerHaptic)();
+    })
+    .onFinalize(() => {
+      scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+      opacity.value = withTiming(1, { duration: 100 });
+    })
+    .onEnd(() => {
+      runOnJS(handlePress)();
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
 
   const getVariantStyles = () => {
     const variants = {
@@ -128,41 +174,41 @@ const CustomButton = ({
   const sizeStyles = getSizeStyles();
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.button,
-        sizeStyles.button,
-        variantStyles.button,
-        fullWidth && styles.fullWidth,
-        disabled && { backgroundColor: colors.GRAY_200, opacity: 0.7 },
-        style,
-      ]}
-      onPress={onPress}
-      disabled={disabled || loading}
-      activeOpacity={0.7}
-      {...props}
-    >
-      {loading ? (
-        <ActivityIndicator color={variantStyles.text.color} size="small" />
-      ) : (
-        <View style={styles.content}>
-          {leftIcon}
-          <Text
-            style={[
-              styles.text,
-              sizeStyles.text,
-              variantStyles.text,
-              disabled && { color: colors.GRAY_400 },
-              (leftIcon || rightIcon) && styles.textWithIcon,
-              textStyle,
-            ]}
-          >
-            {title}
-          </Text>
-          {rightIcon}
-        </View>
-      )}
-    </TouchableOpacity>
+    <GestureDetector gesture={tapGesture}>
+      <AnimatedPressable
+        style={[
+          styles.button,
+          sizeStyles.button,
+          variantStyles.button,
+          fullWidth && styles.fullWidth,
+          disabled && { backgroundColor: colors.GRAY_200, opacity: 0.7 },
+          animatedStyle,
+          style,
+        ]}
+        {...props}
+      >
+        {loading ? (
+          <ActivityIndicator color={variantStyles.text.color} size="small" />
+        ) : (
+          <View style={styles.content}>
+            {leftIcon}
+            <Text
+              style={[
+                styles.text,
+                sizeStyles.text,
+                variantStyles.text,
+                disabled && { color: colors.GRAY_400 },
+                (leftIcon || rightIcon) && styles.textWithIcon,
+                textStyle,
+              ]}
+            >
+              {title}
+            </Text>
+            {rightIcon}
+          </View>
+        )}
+      </AnimatedPressable>
+    </GestureDetector>
   );
 };
 

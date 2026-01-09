@@ -61,9 +61,10 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
 
       <FlatList
         data={displayedTransactions}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <TransactionItem 
             item={item} 
+            index={index}
             onPress={() => handleTransactionPress(item)}
           />
         )}
