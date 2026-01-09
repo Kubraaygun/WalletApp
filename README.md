@@ -15,8 +15,8 @@ Modern, guvenli ve kullanici dostu bir mobil cuzdan uygulamasi.
   <img src="assets/screenshots/showcase_home.png" width="200" alt="Ana Sayfa" />
   <img src="assets/screenshots/showcase_crypto.png" width="200" alt="Kripto Takibi" />
   <img src="assets/screenshots/showcase_stats.png" width="200" alt="Istatistikler" />
-  <img src="assets/screenshots/showcase_dashboard.png" width="200" alt="Dashboard" />
-  <img src="assets/screenshots/showcase_cards.png" width="200" alt="Kartlarim" />
+  <img src="assets/screenshots/showcase_transfer.png" width="200" alt="Para Transferi" />
+  <img src="assets/screenshots/showcase_profile.png" width="200" alt="Profil" />
 </p>
 
 ---
