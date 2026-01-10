@@ -9,6 +9,7 @@ import {
   Dimensions,
   Modal,
   TextInput,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,7 +37,7 @@ const CARD_TYPES = [
   {
     id: "savings",
     name: "Tasarruf Kartı",
-    icon: "piggy-bank",
+    icon: "dollar-sign",
     description: "Birikim yapmak için uygun",
     gradient: ["#34C759", "#30D158"],
     defaultName: "Tasarruf Kartı",
@@ -60,12 +61,12 @@ const CARD_TYPES = [
 ];
 
 const MOCK_CARDS = [
-  { id: "1", type: "general", name: "Ana Kart", number: "4582", expiry: "12/28", balance: 15420.5, gradient: ["#007AFF", "#5856D6"], isActive: true },
-  { id: "2", type: "shopping", name: "Alışveriş Kartı", number: "7891", expiry: "06/27", balance: 2500.0, gradient: ["#FF6B6B", "#EE5A5A"], isActive: true },
-  { id: "3", type: "savings", name: "Tasarruf Kartı", number: "3456", expiry: "03/29", balance: 8750.0, gradient: ["#34C759", "#30D158"], isActive: false },
+  { id: "1", type: "general", name: "Ana Kart", number: "4582", expiry: "12/28", balance: 15420.5, gradient: ["#007AFF", "#5856D6"], isActive: true, createdAt: "01.01.2024" },
+  { id: "2", type: "shopping", name: "Alışveriş Kartı", number: "7891", expiry: "06/27", balance: 2500.0, gradient: ["#FF6B6B", "#EE5A5A"], isActive: true, createdAt: "15.03.2024" },
+  { id: "3", type: "savings", name: "Tasarruf Kartı", number: "3456", expiry: "03/29", balance: 8750.0, gradient: ["#34C759", "#30D158"], isActive: false, createdAt: "20.06.2024" },
 ];
 
-const CardItem = ({ card, index, onPress, onToggle }) => {
+const CardItem = ({ card, index, onPress, onInfoPress }) => {
   const formatBalance = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       minimumFractionDigits: 2,
@@ -87,12 +88,14 @@ const CardItem = ({ card, index, onPress, onToggle }) => {
               <Text style={styles.cardName}>{card.name}</Text>
               <Text style={styles.cardType}>Sanal Kart</Text>
             </View>
-            <TouchableOpacity style={styles.toggleButton} onPress={() => onToggle(card.id)}>
-              <Icon
-                name={card.isActive ? "toggle-right" : "toggle-left"}
-                size={24}
-                color={card.isActive ? "#4ADE80" : "rgba(255,255,255,0.5)"}
-              />
+            <TouchableOpacity 
+              style={styles.infoButton} 
+              onPress={(e) => {
+                e.stopPropagation();
+                onInfoPress(card);
+              }}
+            >
+              <Icon name="info" size={20} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
 
@@ -159,18 +162,62 @@ const CardsScreen = ({ navigation }) => {
   const { colors, isDark } = useTheme();
   const [cards, setCards] = useState(MOCK_CARDS);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [cardName, setCardName] = useState("");
-  const [step, setStep] = useState(1); // 1: type selection, 2: name input
+  const [step, setStep] = useState(1);
+
+  const formatBalance = (amount) => {
+    return new Intl.NumberFormat("tr-TR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  };
 
   const handleCardPress = (card) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    // Could navigate to card detail screen
+    setSelectedCard(card);
+    setShowDetailModal(true);
   };
 
-  const handleToggleCard = (cardId) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setCards(cards.map((card) => card.id === cardId ? { ...card, isActive: !card.isActive } : card));
+  const handleInfoPress = (card) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setSelectedCard(card);
+    setShowDetailModal(true);
+  };
+
+  const handleToggleCard = () => {
+    if (selectedCard) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      setCards(cards.map((card) => 
+        card.id === selectedCard.id ? { ...card, isActive: !card.isActive } : card
+      ));
+      setSelectedCard({ ...selectedCard, isActive: !selectedCard.isActive });
+    }
+  };
+
+  const handleDeleteCard = () => {
+    if (!selectedCard) return;
+    
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Alert.alert(
+      "Kartı Sil",
+      `"${selectedCard.name}" kartını silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`,
+      [
+        { text: "İptal", style: "cancel" },
+        { 
+          text: "Sil", 
+          style: "destructive",
+          onPress: () => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            setCards(cards.filter(card => card.id !== selectedCard.id));
+            setShowDetailModal(false);
+            setSelectedCard(null);
+          }
+        }
+      ]
+    );
   };
 
   const handleAddCard = () => {
@@ -196,6 +243,7 @@ const CardsScreen = ({ navigation }) => {
 
   const handleCreateCard = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    const now = new Date();
     const newCard = {
       id: String(Date.now()),
       type: selectedType.id,
@@ -205,6 +253,7 @@ const CardsScreen = ({ navigation }) => {
       balance: 0,
       gradient: selectedType.gradient,
       isActive: true,
+      createdAt: `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear()}`,
     };
     setCards([...cards, newCard]);
     setShowAddModal(false);
@@ -252,7 +301,13 @@ const CardsScreen = ({ navigation }) => {
 
         <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>Sanal Kartlar</Text>
         {cards.map((card, index) => (
-          <CardItem key={card.id} card={card} index={index} onPress={handleCardPress} onToggle={handleToggleCard} />
+          <CardItem 
+            key={card.id} 
+            card={card} 
+            index={index} 
+            onPress={handleCardPress} 
+            onInfoPress={handleInfoPress} 
+          />
         ))}
 
         <FadeSlide delay={cards.length * 150 + 100}>
@@ -262,6 +317,103 @@ const CardsScreen = ({ navigation }) => {
           </TouchableOpacity>
         </FadeSlide>
       </ScrollView>
+
+      {/* Card Detail Modal */}
+      <Modal
+        visible={showDetailModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowDetailModal(false)}
+      >
+        <View style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}>
+          <View style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}>
+            {/* Modal Handle */}
+            <View style={styles.modalHandle}>
+              <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
+            </View>
+
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={() => setShowDetailModal(false)} style={styles.backButton}>
+                <Icon name="x" size={24} color={colors.TEXT_PRIMARY} />
+              </TouchableOpacity>
+              <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>Kart Detayı</Text>
+              <View style={styles.headerSpacer} />
+            </View>
+
+            {selectedCard && (
+              <>
+                {/* Card Preview */}
+                <LinearGradient
+                  colors={selectedCard.gradient}
+                  style={styles.detailCardPreview}
+                >
+                  <Text style={styles.detailCardName}>{selectedCard.name}</Text>
+                  <Text style={styles.detailCardNumber}>•••• •••• •••• {selectedCard.number}</Text>
+                  <View style={styles.detailCardFooter}>
+                    <Text style={styles.detailCardBalance}>₺{formatBalance(selectedCard.balance)}</Text>
+                    <Text style={styles.detailCardExpiry}>{selectedCard.expiry}</Text>
+                  </View>
+                </LinearGradient>
+
+                {/* Card Info */}
+                <View style={styles.detailInfo}>
+                  <DetailRow 
+                    icon="credit-card" 
+                    label="Kart Numarası" 
+                    value={`•••• •••• •••• ${selectedCard.number}`}
+                    colors={colors}
+                  />
+                  <DetailRow 
+                    icon="calendar" 
+                    label="Son Kullanma Tarihi" 
+                    value={selectedCard.expiry}
+                    colors={colors}
+                  />
+                  <DetailRow 
+                    icon="clock" 
+                    label="Oluşturma Tarihi" 
+                    value={selectedCard.createdAt || "01.01.2024"}
+                    colors={colors}
+                  />
+                  <DetailRow 
+                    icon="check-circle" 
+                    label="Durum" 
+                    value={selectedCard.isActive ? "Aktif" : "Pasif"}
+                    valueColor={selectedCard.isActive ? "#4ADE80" : colors.ERROR}
+                    colors={colors}
+                  />
+                </View>
+
+                {/* Action Buttons */}
+                <View style={styles.detailActions}>
+                  <TouchableOpacity 
+                    style={[styles.actionBtn, { backgroundColor: colors.BACKGROUND }]}
+                    onPress={handleToggleCard}
+                  >
+                    <Icon 
+                      name={selectedCard.isActive ? "pause-circle" : "play-circle"} 
+                      size={20} 
+                      color={colors.TEXT_PRIMARY} 
+                    />
+                    <Text style={[styles.actionBtnText, { color: colors.TEXT_PRIMARY }]}>
+                      {selectedCard.isActive ? "Dondur" : "Aktifleştir"}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={[styles.actionBtn, { backgroundColor: `${colors.ERROR}15` }]}
+                    onPress={handleDeleteCard}
+                  >
+                    <Icon name="trash-2" size={20} color={colors.ERROR} />
+                    <Text style={[styles.actionBtnText, { color: colors.ERROR }]}>Kartı Sil</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
 
       {/* Add Card Modal */}
       <Modal
@@ -374,6 +526,19 @@ const CardsScreen = ({ navigation }) => {
   );
 };
 
+// Detail Row Component
+const DetailRow = ({ icon, label, value, valueColor, colors }) => (
+  <View style={[styles.detailRow, { borderBottomColor: colors.BORDER }]}>
+    <View style={[styles.detailRowIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
+      <Icon name={icon} size={16} color={colors.PRIMARY} />
+    </View>
+    <View style={styles.detailRowContent}>
+      <Text style={[styles.detailRowLabel, { color: colors.TEXT_SECONDARY }]}>{label}</Text>
+      <Text style={[styles.detailRowValue, { color: valueColor || colors.TEXT_PRIMARY }]}>{value}</Text>
+    </View>
+  </View>
+);
+
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm },
@@ -392,7 +557,7 @@ const styles = StyleSheet.create({
   cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: Spacing.lg },
   cardName: { ...TextStyles.labelLarge, color: "#FFFFFF" },
   cardType: { ...TextStyles.caption, color: "rgba(255,255,255,0.7)" },
-  toggleButton: { padding: Spacing.xxs },
+  infoButton: { width: 36, height: 36, borderRadius: 18, backgroundColor: "rgba(255,255,255,0.2)", justifyContent: "center", alignItems: "center" },
   cardNumberRow: { flexDirection: "row", alignItems: "center", marginBottom: Spacing.lg },
   cardDots: { ...TextStyles.h4, color: "rgba(255,255,255,0.7)", letterSpacing: 2 },
   cardLastDigits: { ...TextStyles.h4, color: "#FFFFFF", marginLeft: Spacing.xs },
@@ -407,7 +572,7 @@ const styles = StyleSheet.create({
   
   // Modal Styles
   modalOverlay: { flex: 1, justifyContent: "flex-end" },
-  modalContent: { borderTopLeftRadius: BorderRadius["2xl"], borderTopRightRadius: BorderRadius["2xl"], paddingBottom: Spacing["2xl"], maxHeight: "85%" },
+  modalContent: { borderTopLeftRadius: BorderRadius["2xl"], borderTopRightRadius: BorderRadius["2xl"], paddingBottom: Spacing["2xl"], maxHeight: "90%" },
   modalHandle: { alignItems: "center", paddingVertical: Spacing.sm },
   handleBar: { width: 40, height: 4, borderRadius: 2 },
   modalHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: Spacing.md, marginBottom: Spacing.md },
@@ -439,6 +604,23 @@ const styles = StyleSheet.create({
   // Continue Button
   continueButton: { marginHorizontal: Spacing.md, paddingVertical: Spacing.md, borderRadius: BorderRadius.lg, alignItems: "center" },
   continueButtonText: { ...TextStyles.labelLarge, color: "#FFFFFF" },
+  
+  // Detail Modal
+  detailCardPreview: { marginHorizontal: Spacing.md, borderRadius: BorderRadius.xl, padding: Spacing.lg, marginBottom: Spacing.lg },
+  detailCardName: { ...TextStyles.h4, color: "#FFFFFF", marginBottom: Spacing.xs },
+  detailCardNumber: { ...TextStyles.bodyMedium, color: "rgba(255,255,255,0.8)", marginBottom: Spacing.md },
+  detailCardFooter: { flexDirection: "row", justifyContent: "space-between" },
+  detailCardBalance: { ...TextStyles.h3, color: "#FFFFFF" },
+  detailCardExpiry: { ...TextStyles.labelMedium, color: "rgba(255,255,255,0.7)" },
+  detailInfo: { paddingHorizontal: Spacing.md, marginBottom: Spacing.md },
+  detailRow: { flexDirection: "row", alignItems: "center", paddingVertical: Spacing.sm, borderBottomWidth: 1 },
+  detailRowIcon: { width: 36, height: 36, borderRadius: 10, justifyContent: "center", alignItems: "center", marginRight: Spacing.sm },
+  detailRowContent: { flex: 1 },
+  detailRowLabel: { ...TextStyles.caption, marginBottom: 2 },
+  detailRowValue: { ...TextStyles.bodyMedium, fontWeight: "500" },
+  detailActions: { flexDirection: "row", paddingHorizontal: Spacing.md, gap: Spacing.sm },
+  actionBtn: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", padding: Spacing.md, borderRadius: BorderRadius.lg, gap: Spacing.xs },
+  actionBtnText: { ...TextStyles.labelMedium },
 });
 
 export default CardsScreen;
