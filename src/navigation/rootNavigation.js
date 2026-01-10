@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Platform, StyleSheet } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { AnimatedTabIcon } from "../components/animations";
+import { ScreenTransitions } from "../utils/transitions";
 
 // Screens
 import HomeScreen from "../screens/homeScreen";
@@ -37,8 +38,6 @@ import {
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-// Tab Bar Icon Component - Now using AnimatedTabIcon
 
 // Main Tab Navigation
 const TabStack = () => {
@@ -113,34 +112,79 @@ const TabStack = () => {
   );
 };
 
-// Auth Stack
+// Auth Stack with Custom Transitions
 const AuthStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name={ONBOARDINGSCREEN} component={OnboardingScreen} />
-    <Stack.Screen name={LOGINSCREEN} component={LoginScreen} />
-    <Stack.Screen name={REGISTERSCREEN} component={RegisterScreen} />
+  <Stack.Navigator 
+    screenOptions={{ 
+      headerShown: false,
+      ...ScreenTransitions.slideFromRight,
+    }}
+  >
+    <Stack.Screen 
+      name={ONBOARDINGSCREEN} 
+      component={OnboardingScreen}
+      options={ScreenTransitions.fadeIn}
+    />
+    <Stack.Screen 
+      name={LOGINSCREEN} 
+      component={LoginScreen}
+      options={ScreenTransitions.fadeIn}
+    />
+    <Stack.Screen 
+      name={REGISTERSCREEN} 
+      component={RegisterScreen}
+      options={ScreenTransitions.slideFromRight}
+    />
   </Stack.Navigator>
 );
 
-// Root Navigation Structure
+// Root Navigation Structure with Custom Transitions
 const RootNavigation = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+      screenOptions={{ 
+        headerShown: false,
+        ...ScreenTransitions.slideFromRight,
+      }}
+    >
       {!isAuthenticated ? (
-        <Stack.Screen name="Auth" component={AuthStack} />
+        <Stack.Screen 
+          name="Auth" 
+          component={AuthStack}
+          options={ScreenTransitions.fadeIn}
+        />
       ) : (
         <>
-          <Stack.Screen name="MainTabs" component={TabStack} />
-          <Stack.Screen name={TRANSFERSCREEN} component={TransferScreen} />
-          <Stack.Screen name={RESULTSCREEN} component={ResultScreen} />
+          <Stack.Screen 
+            name="MainTabs" 
+            component={TabStack}
+            options={ScreenTransitions.fadeIn}
+          />
+          <Stack.Screen 
+            name={TRANSFERSCREEN} 
+            component={TransferScreen}
+            options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={RESULTSCREEN} 
+            component={ResultScreen}
+            options={ScreenTransitions.scaleFromCenter}
+          />
           <Stack.Screen 
             name={QRSCANNERSCREEN} 
             component={QRScannerScreen}
-            options={{ presentation: "modal" }}
+            options={{
+              presentation: "modal",
+              ...ScreenTransitions.slideFromBottom,
+            }}
           />
-          <Stack.Screen name={CURRENCYSCREEN} component={CurrencyConverterScreen} />
+          <Stack.Screen 
+            name={CURRENCYSCREEN} 
+            component={CurrencyConverterScreen}
+            options={ScreenTransitions.slideFromBottom}
+          />
         </>
       )}
     </Stack.Navigator>
