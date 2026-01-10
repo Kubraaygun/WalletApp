@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import store, { persistor } from "./src/store/store";
 import RootNavigation from "./src/navigation/rootNavigation";
 import LoadingModal from "./src/components/loadingModal";
+import AnimatedSplash from "./src/components/AnimatedSplash";
 import { Colors } from "./src/utils/colors";
 import { ThemeProvider } from "./src/contexts/ThemeContext";
 import { notificationService } from "./src/services";
@@ -33,6 +34,9 @@ const PersistLoading = () => (
 );
 
 const App = () => {
+  const [showSplash, setShowSplash] = useState(true);
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
     // Push notification izni ve token al
     notificationService.registerForPushNotifications().then((token) => {
@@ -58,15 +62,32 @@ const App = () => {
     return unsubscribe;
   }, []);
 
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
+  const handlePersistorReady = () => {
+    setIsReady(true);
+  };
+
   return (
     <Provider store={store}>
       <ThemeProvider>
         <SafeAreaProvider>
-          <PersistGate loading={<PersistLoading />} persistor={persistor}>
+          <PersistGate 
+            loading={<PersistLoading />} 
+            persistor={persistor}
+            onBeforeLift={handlePersistorReady}
+          >
             <NavigationContainer>
               <RootNavigation />
             </NavigationContainer>
             <LoadingModal />
+            
+            {/* Animated Splash Screen */}
+            {showSplash && (
+              <AnimatedSplash onAnimationComplete={handleSplashComplete} />
+            )}
           </PersistGate>
         </SafeAreaProvider>
       </ThemeProvider>
