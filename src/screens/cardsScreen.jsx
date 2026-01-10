@@ -83,20 +83,21 @@ const CardItem = ({ card, index, onPress, onInfoPress }) => {
           end={{ x: 1, y: 1 }}
           style={[styles.cardContainer, !card.isActive && styles.cardInactive]}
         >
+          {/* Info Button - Top Right Corner */}
+          <TouchableOpacity 
+            style={styles.infoButton} 
+            onPress={(e) => {
+              e.stopPropagation();
+              onInfoPress(card);
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Icon name="eye" size={16} color="#FFFFFF" />
+          </TouchableOpacity>
+
           <View style={styles.cardHeader}>
-            <View>
-              <Text style={styles.cardName}>{card.name}</Text>
-              <Text style={styles.cardType}>Sanal Kart</Text>
-            </View>
-            <TouchableOpacity 
-              style={styles.infoButton} 
-              onPress={(e) => {
-                e.stopPropagation();
-                onInfoPress(card);
-              }}
-            >
-              <Icon name="info" size={20} color="#FFFFFF" />
-            </TouchableOpacity>
+            <Text style={styles.cardName}>{card.name}</Text>
+            <Text style={styles.cardType}>Sanal Kart</Text>
           </View>
 
           <View style={styles.cardNumberRow}>
@@ -554,10 +555,10 @@ const styles = StyleSheet.create({
   sectionTitle: { ...TextStyles.h4, marginBottom: Spacing.md },
   cardContainer: { width: CARD_WIDTH, borderRadius: BorderRadius.xl, padding: Spacing.lg, marginBottom: Spacing.md, overflow: "hidden", ...Shadows.lg },
   cardInactive: { opacity: 0.6 },
-  cardHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: Spacing.lg },
+  cardHeader: { marginBottom: Spacing.lg },
   cardName: { ...TextStyles.labelLarge, color: "#FFFFFF" },
   cardType: { ...TextStyles.caption, color: "rgba(255,255,255,0.7)" },
-  infoButton: { width: 36, height: 36, borderRadius: 18, backgroundColor: "rgba(255,255,255,0.2)", justifyContent: "center", alignItems: "center" },
+  infoButton: { position: "absolute", top: Spacing.md, right: Spacing.md, width: 32, height: 32, borderRadius: 16, backgroundColor: "rgba(255,255,255,0.2)", justifyContent: "center", alignItems: "center", zIndex: 10 },
   cardNumberRow: { flexDirection: "row", alignItems: "center", marginBottom: Spacing.lg },
   cardDots: { ...TextStyles.h4, color: "rgba(255,255,255,0.7)", letterSpacing: 2 },
   cardLastDigits: { ...TextStyles.h4, color: "#FFFFFF", marginLeft: Spacing.xs },
