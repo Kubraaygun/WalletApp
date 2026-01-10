@@ -1,6 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  FadeIn,
+  SlideInUp,
+} from "react-native-reanimated";
 import { Feather as Icon } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import TransactionItem from "./transactionItem";
 import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
@@ -16,11 +25,13 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
   const hasMore = transactions.length > maxItems;
 
   const handleTransactionPress = (item) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setSelectedTransaction(item);
     setModalVisible(true);
   };
 
   const closeModal = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setModalVisible(false);
     setSelectedTransaction(null);
   };
@@ -31,6 +42,14 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(numAmount);
+  };
+
+  const getTransactionStatus = (transaction) => {
+    // Mock status based on amount for demo
+    const amount = parseFloat(transaction.amount);
+    if (amount > 1000) return { label: "Tamamlandı", color: "#4ADE80", icon: "check-circle" };
+    if (amount > 500) return { label: "İşlemde", color: "#FBBF24", icon: "clock" };
+    return { label: "Tamamlandı", color: "#4ADE80", icon: "check-circle" };
   };
 
   if (!transactions.length) {
@@ -77,14 +96,27 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
       <Modal
         visible={modalVisible}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={closeModal}
       >
-        <View style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}>
-          <View style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}>
+        <TouchableOpacity 
+          style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
+          activeOpacity={1}
+          onPress={closeModal}
+        >
+          <TouchableOpacity 
+            activeOpacity={1} 
+            onPress={() => {}}
+            style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}
+          >
+            {/* Modal Handle */}
+            <View style={styles.modalHandle}>
+              <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
+            </View>
+
             {/* Modal Header */}
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>Islem Detayi</Text>
+              <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>İşlem Detayı</Text>
               <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
                 <Icon name="x" size={IconSize.md} color={colors.TEXT_PRIMARY} />
               </TouchableOpacity>
@@ -92,6 +124,19 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
 
             {selectedTransaction && (
               <View style={styles.modalBody}>
+                {/* Status Badge */}
+                {(() => {
+                  const status = getTransactionStatus(selectedTransaction);
+                  return (
+                    <View style={[styles.statusBadge, { backgroundColor: `${status.color}20` }]}>
+                      <Icon name={status.icon} size={14} color={status.color} />
+                      <Text style={[styles.statusText, { color: status.color }]}>
+                        {status.label}
+                      </Text>
+                    </View>
+                  );
+                })()}
+
                 {/* Amount */}
                 <View style={[styles.amountContainer, { backgroundColor: colors.BACKGROUND }]}>
                   <Text style={[styles.amountLabel, { color: colors.TEXT_SECONDARY }]}>Tutar</Text>
@@ -101,60 +146,87 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
                 </View>
 
                 {/* Details */}
-                <View style={[styles.detailRow, { borderBottomColor: colors.BORDER }]}>
-                  <View style={[styles.detailIcon, { backgroundColor: `${colors.ACCENT}15` }]}>
-                    <Icon name="user" size={IconSize.sm} color={colors.ACCENT} />
-                  </View>
-                  <View style={styles.detailContent}>
-                    <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Alici</Text>
-                    <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.receiver}</Text>
-                  </View>
-                </View>
+                <DetailRow 
+                  icon="user" 
+                  label="Alıcı" 
+                  value={selectedTransaction.receiver}
+                  colors={colors}
+                />
 
                 {selectedTransaction.description && (
-                  <View style={[styles.detailRow, { borderBottomColor: colors.BORDER }]}>
-                    <View style={[styles.detailIcon, { backgroundColor: `${colors.ACCENT}15` }]}>
-                      <Icon name="file-text" size={IconSize.sm} color={colors.ACCENT} />
-                    </View>
-                    <View style={styles.detailContent}>
-                      <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Aciklama</Text>
-                      <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.description}</Text>
-                    </View>
-                  </View>
+                  <DetailRow 
+                    icon="file-text" 
+                    label="Açıklama" 
+                    value={selectedTransaction.description}
+                    colors={colors}
+                  />
                 )}
 
-                <View style={[styles.detailRow, { borderBottomColor: colors.BORDER }]}>
-                  <View style={[styles.detailIcon, { backgroundColor: `${colors.ACCENT}15` }]}>
-                    <Icon name="calendar" size={IconSize.sm} color={colors.ACCENT} />
-                  </View>
-                  <View style={styles.detailContent}>
-                    <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Tarih</Text>
-                    <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.date}</Text>
-                  </View>
-                </View>
+                <DetailRow 
+                  icon="calendar" 
+                  label="Tarih" 
+                  value={selectedTransaction.date}
+                  colors={colors}
+                />
 
-                <View style={[styles.detailRow, { borderBottomColor: colors.BORDER }]}>
-                  <View style={[styles.detailIcon, { backgroundColor: `${colors.ACCENT}15` }]}>
-                    <Icon name="hash" size={IconSize.sm} color={colors.ACCENT} />
-                  </View>
-                  <View style={styles.detailContent}>
-                    <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Islem No</Text>
-                    <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.id}</Text>
-                  </View>
-                </View>
+                <DetailRow 
+                  icon="hash" 
+                  label="İşlem No" 
+                  value={selectedTransaction.id}
+                  colors={colors}
+                  isLast
+                />
+
+                {/* Transaction Type */}
+                <DetailRow 
+                  icon="arrow-up-right" 
+                  label="İşlem Tipi" 
+                  value="Para Transferi"
+                  colors={colors}
+                  isLast
+                />
               </View>
             )}
 
-            {/* Close Button */}
-            <TouchableOpacity style={[styles.modalCloseBtn, { backgroundColor: colors.ACCENT }]} onPress={closeModal}>
-              <Text style={styles.modalCloseBtnText}>Kapat</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+            {/* Action Buttons */}
+            <View style={styles.actionButtons}>
+              <TouchableOpacity 
+                style={[styles.secondaryBtn, { borderColor: colors.BORDER }]} 
+                onPress={closeModal}
+              >
+                <Icon name="share-2" size={18} color={colors.TEXT_PRIMARY} />
+                <Text style={[styles.secondaryBtnText, { color: colors.TEXT_PRIMARY }]}>Paylaş</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.primaryBtn, { backgroundColor: colors.ACCENT }]} 
+                onPress={closeModal}
+              >
+                <Text style={styles.primaryBtnText}>Kapat</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
     </View>
   );
 };
+
+// Detail Row Component
+const DetailRow = ({ icon, label, value, colors, isLast = false }) => (
+  <View style={[
+    styles.detailRow, 
+    !isLast && { borderBottomColor: colors.BORDER, borderBottomWidth: 1 }
+  ]}>
+    <View style={[styles.detailIcon, { backgroundColor: `${colors.ACCENT}15` }]}>
+      <Icon name={icon} size={IconSize.sm} color={colors.ACCENT} />
+    </View>
+    <View style={styles.detailContent}>
+      <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>{label}</Text>
+      <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{value}</Text>
+    </View>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -206,18 +278,26 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    borderTopLeftRadius: BorderRadius.xl,
-    borderTopRightRadius: BorderRadius.xl,
-    paddingTop: Spacing.lg,
+    borderTopLeftRadius: BorderRadius["2xl"],
+    borderTopRightRadius: BorderRadius["2xl"],
     paddingBottom: Spacing["2xl"],
     paddingHorizontal: Spacing.lg,
     ...Shadows.lg,
+  },
+  modalHandle: {
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+  },
+  handleBar: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
   },
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   modalTitle: {
     ...TextStyles.h3,
@@ -225,13 +305,27 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: Spacing.xs,
   },
+  statusBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.full,
+    marginBottom: Spacing.md,
+  },
+  statusText: {
+    ...TextStyles.labelSmall,
+    marginLeft: Spacing.xxs,
+    fontWeight: "600",
+  },
   modalBody: {
     marginBottom: Spacing.lg,
   },
   amountContainer: {
     alignItems: "center",
     paddingVertical: Spacing.lg,
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
     borderRadius: BorderRadius.lg,
   },
   amountLabel: {
@@ -240,12 +334,12 @@ const styles = StyleSheet.create({
   },
   amountValue: {
     ...TextStyles.displayMedium,
+    fontWeight: "700",
   },
   detailRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: Spacing.sm,
-    borderBottomWidth: 1,
   },
   detailIcon: {
     width: 40,
@@ -265,12 +359,30 @@ const styles = StyleSheet.create({
     ...TextStyles.bodyMedium,
     fontWeight: "500",
   },
-  modalCloseBtn: {
+  actionButtons: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+  },
+  secondaryBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    gap: Spacing.xs,
+  },
+  secondaryBtnText: {
+    ...TextStyles.labelMedium,
+  },
+  primaryBtn: {
+    flex: 1,
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.lg,
     alignItems: "center",
   },
-  modalCloseBtnText: {
+  primaryBtnText: {
     ...TextStyles.labelLarge,
     color: "#FFFFFF",
   },
