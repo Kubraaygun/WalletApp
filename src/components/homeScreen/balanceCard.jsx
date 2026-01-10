@@ -13,6 +13,7 @@ import Animated, {
   Extrapolation,
 } from "react-native-reanimated";
 import { Feather as Icon } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { Colors, Gradients } from "../../utils/colors";
 import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
@@ -92,11 +93,13 @@ const BalanceCard = ({ balance = 0 }) => {
   }));
 
   const toggleVisibility = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     scaleAnim.value = withSequence(
       withTiming(0.95, { duration: 100 }),
       withSpring(1, { damping: 15, stiffness: 400 })
     );
     setIsHidden(!isHidden);
+    console.log("Balance visibility toggled:", !isHidden ? "hidden" : "visible");
   };
 
   // Responsive card height based on screen width
@@ -114,7 +117,12 @@ const BalanceCard = ({ balance = 0 }) => {
         >
           <View style={styles.header}>
             <Text style={styles.label}>Toplam Bakiye</Text>
-            <TouchableOpacity style={styles.eyeButton} onPress={toggleVisibility}>
+            <TouchableOpacity 
+              style={styles.eyeButton} 
+              onPress={toggleVisibility}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Icon
                 name={isHidden ? "eye-off" : "eye"}
                 size={moderateScale(18)}
@@ -141,9 +149,9 @@ const BalanceCard = ({ balance = 0 }) => {
             </View>
           </View>
 
-          {/* Decorative circles */}
-          <View style={[styles.decorCircle1, { width: scale(120), height: scale(120), borderRadius: scale(60) }]} />
-          <View style={[styles.decorCircle2, { width: scale(150), height: scale(150), borderRadius: scale(75) }]} />
+          {/* Decorative circles - pointerEvents none to prevent touch blocking */}
+          <View pointerEvents="none" style={[styles.decorCircle1, { width: scale(120), height: scale(120), borderRadius: scale(60) }]} />
+          <View pointerEvents="none" style={[styles.decorCircle2, { width: scale(150), height: scale(150), borderRadius: scale(75) }]} />
         </LinearGradient>
       </Animated.View>
     </Animated.View>
