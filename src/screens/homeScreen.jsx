@@ -79,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleNotificationPress = () => {
-    // TODO: Bildirimler ekranina yonlendir
+    navigation.navigate("NotificationsScreen");
   };
 
   // Animated content style
