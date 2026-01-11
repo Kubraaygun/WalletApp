@@ -55,8 +55,8 @@ export const Colors = {
   GRADIENT_END: "#5856D6",
   
   // Overlay
-  OVERLAY: "rgba(0, 0, 0, 0.4)",
-  OVERLAY_LIGHT: "rgba(0, 0, 0, 0.1)",
+  OVERLAY: "transparent",
+  OVERLAY_LIGHT: "rgba(0, 0, 0, 0.05)",
 };
 
 // Gradient definitions
@@ -119,8 +119,8 @@ export const DarkColors = {
   GRADIENT_END: "#5E5CE6",
   
   // Overlay
-  OVERLAY: "rgba(0, 0, 0, 0.6)",
-  OVERLAY_LIGHT: "rgba(255, 255, 255, 0.1)",
+  OVERLAY: "transparent",
+  OVERLAY_LIGHT: "rgba(255, 255, 255, 0.05)",
 };
 
 export default Colors;
