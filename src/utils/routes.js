@@ -4,9 +4,11 @@ export const RESULTSCREEN = "ResultScreen";
 export const TRANSFERSCREEN = "TransferScreen";
 export const REGISTERSCREEN = "RegisterScreen";
 export const QRSCANNERSCREEN = "QRScannerScreen";
+export const QRCODESCREEN = "QRCodeScreen";
 export const PROFILESCREEN = "ProfileScreen";
 export const ONBOARDINGSCREEN = "OnboardingScreen";
 export const CRYPTOSCREEN = "CryptoScreen";
 export const STATSSCREEN = "StatsScreen";
 export const CARDSSCREEN = "CardsScreen";
 export const CURRENCYSCREEN = "CurrencyConverterScreen";
+

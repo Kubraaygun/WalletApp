@@ -60,7 +60,7 @@ const QuickActions = ({ navigation }) => {
             icon: "download",
             label: "Al",
             color: colors.SUCCESS,
-            onPress: () => console.log("Al pressed"),
+            onPress: () => handleNavigate("QRCodeScreen"),
         },
         {
             icon: "maximize",

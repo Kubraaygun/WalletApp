@@ -14,6 +14,7 @@ import TransferScreen from "../screens/transferScreen";
 import LoginScreen from "../screens/loginScreen";
 import RegisterScreen from "../screens/registerScreen";
 import QRScannerScreen from "../screens/qrScannerScreen";
+import QRCodeScreen from "../screens/qrCodeScreen";
 import ProfileScreen from "../screens/profileScreen";
 import OnboardingScreen from "../screens/onboardingScreen";
 import CryptoScreen from "../screens/cryptoScreen";
@@ -28,6 +29,7 @@ import {
   TRANSFERSCREEN,
   REGISTERSCREEN,
   QRSCANNERSCREEN,
+  QRCODESCREEN,
   PROFILESCREEN,
   ONBOARDINGSCREEN,
   CRYPTOSCREEN,
@@ -183,6 +185,11 @@ const RootNavigation = () => {
           <Stack.Screen 
             name={CURRENCYSCREEN} 
             component={CurrencyConverterScreen}
+            options={ScreenTransitions.slideFromBottom}
+          />
+          <Stack.Screen 
+            name={QRCODESCREEN} 
+            component={QRCodeScreen}
             options={ScreenTransitions.slideFromBottom}
           />
         </>
