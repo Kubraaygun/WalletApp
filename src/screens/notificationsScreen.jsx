@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInRight } from "react-native-reanimated";
@@ -91,19 +92,32 @@ const MOCK_NOTIFICATIONS = [
   },
 ];
 
-const NotificationItem = ({ item, index, onPress, onMarkAsRead, colors }) => {
+const NotificationItem = ({ item, index, onPress, onDelete, colors }) => {
+  const isUnread = !item.read;
+  
   return (
     <Animated.View entering={FadeInRight.delay(index * 80).springify()}>
       <TouchableOpacity
         style={[
           styles.notificationItem,
-          { backgroundColor: item.read ? colors.SURFACE : `${colors.PRIMARY}08` },
+          { backgroundColor: colors.SURFACE },
+          isUnread && styles.unreadItem,
+          isUnread && { borderLeftColor: colors.PRIMARY },
         ]}
         onPress={() => onPress(item)}
         activeOpacity={0.7}
       >
+        {/* Unread indicator bar */}
+        {isUnread && (
+          <View style={[styles.unreadBar, { backgroundColor: colors.PRIMARY }]} />
+        )}
+
         {/* Icon */}
-        <View style={[styles.iconContainer, { backgroundColor: `${item.color}20` }]}>
+        <View style={[
+          styles.iconContainer, 
+          { backgroundColor: `${item.color}20` },
+          isUnread && { backgroundColor: `${item.color}30` }
+        ]}>
           <Icon name={item.icon} size={20} color={item.color} />
         </View>
 
@@ -114,15 +128,23 @@ const NotificationItem = ({ item, index, onPress, onMarkAsRead, colors }) => {
               style={[
                 styles.title, 
                 { color: colors.TEXT_PRIMARY },
-                !item.read && styles.unreadTitle
+                isUnread && styles.unreadTitle
               ]}
             >
               {item.title}
             </Text>
-            {!item.read && <View style={[styles.unreadDot, { backgroundColor: colors.PRIMARY }]} />}
+            {isUnread && (
+              <View style={[styles.newBadge, { backgroundColor: colors.PRIMARY }]}>
+                <Text style={styles.newBadgeText}>YENİ</Text>
+              </View>
+            )}
           </View>
           <Text 
-            style={[styles.message, { color: colors.TEXT_SECONDARY }]}
+            style={[
+              styles.message, 
+              { color: colors.TEXT_SECONDARY },
+              isUnread && { color: colors.TEXT_PRIMARY }
+            ]}
             numberOfLines={2}
           >
             {item.message}
@@ -130,13 +152,13 @@ const NotificationItem = ({ item, index, onPress, onMarkAsRead, colors }) => {
           <Text style={[styles.time, { color: colors.GRAY_400 }]}>{item.time}</Text>
         </View>
 
-        {/* Action */}
+        {/* Delete button */}
         <TouchableOpacity 
-          style={styles.moreButton}
-          onPress={() => onMarkAsRead(item.id)}
+          style={styles.deleteButton}
+          onPress={() => onDelete(item.id)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Icon name="more-vertical" size={18} color={colors.GRAY_400} />
+          <Icon name="x" size={16} color={colors.GRAY_400} />
         </TouchableOpacity>
       </TouchableOpacity>
     </Animated.View>
@@ -163,11 +185,9 @@ const NotificationsScreen = ({ navigation }) => {
     // TODO: Navigate based on notification type
   };
 
-  const handleMarkAsRead = (id) => {
+  const handleDeleteNotification = (id) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setNotifications(notifications.map(n => 
-      n.id === id ? { ...n, read: true } : n
-    ));
+    setNotifications(notifications.filter(n => n.id !== id));
   };
 
   const handleMarkAllAsRead = () => {
@@ -177,7 +197,21 @@ const NotificationsScreen = ({ navigation }) => {
 
   const handleClearAll = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    setNotifications([]);
+    Alert.alert(
+      "Tüm Bildirimleri Sil",
+      "Tüm bildirimler silinecek. Emin misiniz?",
+      [
+        { text: "İptal", style: "cancel" },
+        { 
+          text: "Sil", 
+          style: "destructive",
+          onPress: () => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            setNotifications([]);
+          }
+        }
+      ]
+    );
   };
 
   const onRefresh = async () => {
@@ -190,15 +224,17 @@ const NotificationsScreen = ({ navigation }) => {
   const renderHeader = () => (
     <View style={styles.listHeader}>
       {unreadCount > 0 && (
-        <TouchableOpacity 
-          style={[styles.actionButton, { backgroundColor: `${colors.PRIMARY}15` }]}
-          onPress={handleMarkAllAsRead}
-        >
-          <Icon name="check-circle" size={16} color={colors.PRIMARY} />
-          <Text style={[styles.actionButtonText, { color: colors.PRIMARY }]}>
-            Tümünü Okundu İşaretle
+        <View style={[styles.unreadBanner, { backgroundColor: `${colors.PRIMARY}10` }]}>
+          <Icon name="bell" size={16} color={colors.PRIMARY} />
+          <Text style={[styles.unreadBannerText, { color: colors.PRIMARY }]}>
+            {unreadCount} okunmamış bildirim
           </Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={handleMarkAllAsRead}>
+            <Text style={[styles.markAllText, { color: colors.PRIMARY }]}>
+              Tümünü Oku
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -230,15 +266,18 @@ const NotificationsScreen = ({ navigation }) => {
         <View style={styles.headerCenter}>
           <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>Bildirimler</Text>
           {unreadCount > 0 && (
-            <View style={[styles.badge, { backgroundColor: colors.PRIMARY }]}>
+            <View style={[styles.badge, { backgroundColor: colors.ERROR }]}>
               <Text style={styles.badgeText}>{unreadCount}</Text>
             </View>
           )}
         </View>
 
         {notifications.length > 0 && (
-          <TouchableOpacity style={styles.clearButton} onPress={handleClearAll}>
-            <Icon name="trash-2" size={20} color={colors.ERROR} />
+          <TouchableOpacity 
+            style={[styles.clearButton, { backgroundColor: `${colors.ERROR}15` }]} 
+            onPress={handleClearAll}
+          >
+            <Icon name="trash-2" size={18} color={colors.ERROR} />
           </TouchableOpacity>
         )}
         {notifications.length === 0 && <View style={styles.headerSpacer} />}
@@ -252,7 +291,7 @@ const NotificationsScreen = ({ navigation }) => {
             item={item}
             index={index}
             onPress={handleNotificationPress}
-            onMarkAsRead={handleMarkAsRead}
+            onDelete={handleDeleteNotification}
             colors={colors}
           />
         )}
@@ -314,10 +353,12 @@ const styles = StyleSheet.create({
     ...TextStyles.caption,
     color: "#FFFFFF",
     fontWeight: "700",
+    fontSize: 11,
   },
   clearButton: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -334,17 +375,21 @@ const styles = StyleSheet.create({
   listHeader: {
     marginBottom: Spacing.md,
   },
-  actionButton: {
+  unreadBanner: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     borderRadius: BorderRadius.lg,
     gap: Spacing.xs,
   },
-  actionButtonText: {
+  unreadBannerText: {
     ...TextStyles.labelMedium,
+    flex: 1,
+  },
+  markAllText: {
+    ...TextStyles.labelMedium,
+    fontWeight: "700",
   },
   notificationItem: {
     flexDirection: "row",
@@ -352,6 +397,18 @@ const styles = StyleSheet.create({
     padding: Spacing.md,
     borderRadius: BorderRadius.lg,
     marginBottom: Spacing.sm,
+    position: "relative",
+    overflow: "hidden",
+  },
+  unreadItem: {
+    borderLeftWidth: 3,
+  },
+  unreadBar: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 3,
   },
   iconContainer: {
     width: 44,
@@ -368,19 +425,25 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 2,
   },
   title: {
     ...TextStyles.labelMedium,
-    marginBottom: 2,
   },
   unreadTitle: {
     fontWeight: "700",
   },
-  unreadDot: {
-    width: 8,
-    height: 8,
+  newBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
     borderRadius: 4,
     marginLeft: Spacing.xs,
+  },
+  newBadgeText: {
+    fontSize: 9,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    letterSpacing: 0.5,
   },
   message: {
     ...TextStyles.bodySmall,
@@ -389,8 +452,12 @@ const styles = StyleSheet.create({
   time: {
     ...TextStyles.caption,
   },
-  moreButton: {
-    padding: Spacing.xxs,
+  deleteButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
   },
   emptyContainer: {
     flex: 1,
