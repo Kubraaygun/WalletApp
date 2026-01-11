@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInRight } from "react-native-reanimated";
@@ -25,7 +26,9 @@ const MOCK_NOTIFICATIONS = [
     type: "transfer_received",
     title: "Para Transferi Alındı",
     message: "Ahmet Yılmaz size ₺500,00 gönderdi",
+    detail: "Ahmet Yılmaz hesabınıza ₺500,00 tutarında para transferi gerçekleştirdi. İşlem numarası: TRX-2024-001234",
     time: "2 dakika önce",
+    date: "11 Ocak 2026, 21:30",
     read: false,
     icon: "download",
     color: "#4ADE80",
@@ -35,7 +38,9 @@ const MOCK_NOTIFICATIONS = [
     type: "transfer_sent",
     title: "Transfer Başarılı",
     message: "Ayşe Kaya'ya ₺150,00 gönderildi",
+    detail: "Ayşe Kaya'ya ₺150,00 tutarında para transferiniz başarıyla tamamlandı. İşlem numarası: TRX-2024-001233",
     time: "1 saat önce",
+    date: "11 Ocak 2026, 20:30",
     read: false,
     icon: "send",
     color: "#3B82F6",
@@ -45,7 +50,9 @@ const MOCK_NOTIFICATIONS = [
     type: "promo",
     title: "Özel Kampanya",
     message: "İlk transfer işleminizde %10 bonus kazanın!",
+    detail: "Yeni üyelere özel! İlk para transfer işleminizde %10 bonus kazanın. Kampanya 31 Ocak 2026 tarihine kadar geçerlidir.",
     time: "3 saat önce",
+    date: "11 Ocak 2026, 18:30",
     read: true,
     icon: "gift",
     color: "#F59E0B",
@@ -55,7 +62,9 @@ const MOCK_NOTIFICATIONS = [
     type: "security",
     title: "Güvenlik Uyarısı",
     message: "Yeni cihazdan giriş yapıldı",
+    detail: "Hesabınıza iPhone 16 Pro cihazından yeni bir giriş tespit edildi. Konum: İstanbul, Türkiye. Bu siz değilseniz lütfen şifrenizi değiştirin.",
     time: "Dün",
+    date: "10 Ocak 2026, 14:22",
     read: true,
     icon: "shield",
     color: "#EF4444",
@@ -65,7 +74,9 @@ const MOCK_NOTIFICATIONS = [
     type: "card",
     title: "Kart İşlemi",
     message: "Alışveriş Kartınız aktifleştirildi",
+    detail: "Alışveriş Kartınız (**** 7891) başarıyla aktifleştirildi. Artık online ve mağaza içi alışverişlerde kullanabilirsiniz.",
     time: "Dün",
+    date: "10 Ocak 2026, 10:15",
     read: true,
     icon: "credit-card",
     color: "#8B5CF6",
@@ -75,7 +86,9 @@ const MOCK_NOTIFICATIONS = [
     type: "transfer_received",
     title: "Para Transferi Alındı",
     message: "Mehmet Demir size ₺1.250,00 gönderdi",
+    detail: "Mehmet Demir hesabınıza ₺1.250,00 tutarında para transferi gerçekleştirdi. İşlem numarası: TRX-2024-001200",
     time: "2 gün önce",
+    date: "9 Ocak 2026, 16:45",
     read: true,
     icon: "download",
     color: "#4ADE80",
@@ -85,7 +98,9 @@ const MOCK_NOTIFICATIONS = [
     type: "system",
     title: "Uygulama Güncellendi",
     message: "WalletApp v2.0 yeni özelliklerle güncellendi",
+    detail: "WalletApp v2.0 ile yeni özellikler: QR kod ile ödeme alma, gelişmiş bildirimler, kart yönetimi ve daha fazlası!",
     time: "3 gün önce",
+    date: "8 Ocak 2026, 09:00",
     read: true,
     icon: "info",
     color: "#06B6D4",
@@ -155,7 +170,10 @@ const NotificationItem = ({ item, index, onPress, onDelete, colors }) => {
         {/* Delete button */}
         <TouchableOpacity 
           style={styles.deleteButton}
-          onPress={() => onDelete(item.id)}
+          onPress={(e) => {
+            e.stopPropagation();
+            onDelete(item.id);
+          }}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Icon name="x" size={16} color={colors.GRAY_400} />
@@ -169,6 +187,8 @@ const NotificationsScreen = ({ navigation }) => {
   const { colors, isDark } = useTheme();
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -182,7 +202,14 @@ const NotificationsScreen = ({ navigation }) => {
     setNotifications(notifications.map(n => 
       n.id === notification.id ? { ...n, read: true } : n
     ));
-    // TODO: Navigate based on notification type
+    // Show modal
+    setSelectedNotification({ ...notification, read: true });
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedNotification(null);
   };
 
   const handleDeleteNotification = (id) => {
@@ -216,7 +243,6 @@ const NotificationsScreen = ({ navigation }) => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    // Simulate refresh
     await new Promise(resolve => setTimeout(resolve, 1000));
     setRefreshing(false);
   };
@@ -312,6 +338,75 @@ const NotificationsScreen = ({ navigation }) => {
           />
         }
       />
+
+      {/* Notification Detail Modal */}
+      <Modal
+        visible={showModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableOpacity 
+          style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
+          activeOpacity={1}
+          onPress={handleCloseModal}
+        >
+          <TouchableOpacity 
+            activeOpacity={1} 
+            style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}
+          >
+            {/* Handle */}
+            <View style={styles.modalHandle}>
+              <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
+            </View>
+
+            {selectedNotification && (
+              <>
+                {/* Icon & Title */}
+                <View style={styles.modalHeader}>
+                  <View style={[styles.modalIcon, { backgroundColor: `${selectedNotification.color}20` }]}>
+                    <Icon name={selectedNotification.icon} size={28} color={selectedNotification.color} />
+                  </View>
+                  <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>
+                    {selectedNotification.title}
+                  </Text>
+                  <Text style={[styles.modalDate, { color: colors.TEXT_SECONDARY }]}>
+                    {selectedNotification.date}
+                  </Text>
+                </View>
+
+                {/* Detail Message */}
+                <View style={[styles.modalBody, { backgroundColor: colors.BACKGROUND }]}>
+                  <Text style={[styles.modalDetail, { color: colors.TEXT_PRIMARY }]}>
+                    {selectedNotification.detail}
+                  </Text>
+                </View>
+
+                {/* Actions */}
+                <View style={styles.modalActions}>
+                  <TouchableOpacity 
+                    style={[styles.modalActionBtn, { backgroundColor: `${colors.ERROR}15` }]}
+                    onPress={() => {
+                      handleDeleteNotification(selectedNotification.id);
+                      handleCloseModal();
+                    }}
+                  >
+                    <Icon name="trash-2" size={18} color={colors.ERROR} />
+                    <Text style={[styles.modalActionText, { color: colors.ERROR }]}>Sil</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    style={[styles.modalActionBtn, styles.modalActionBtnPrimary, { backgroundColor: colors.PRIMARY }]}
+                    onPress={handleCloseModal}
+                  >
+                    <Text style={styles.modalActionTextPrimary}>Tamam</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -480,6 +575,81 @@ const styles = StyleSheet.create({
   emptyMessage: {
     ...TextStyles.bodyMedium,
     textAlign: "center",
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  modalContent: {
+    borderTopLeftRadius: BorderRadius["2xl"],
+    borderTopRightRadius: BorderRadius["2xl"],
+    paddingBottom: Spacing["2xl"],
+    ...Shadows.lg,
+  },
+  modalHandle: {
+    alignItems: "center",
+    paddingVertical: Spacing.sm,
+  },
+  handleBar: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+  },
+  modalHeader: {
+    alignItems: "center",
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.md,
+  },
+  modalIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: Spacing.md,
+  },
+  modalTitle: {
+    ...TextStyles.h3,
+    textAlign: "center",
+    marginBottom: Spacing.xxs,
+  },
+  modalDate: {
+    ...TextStyles.caption,
+  },
+  modalBody: {
+    marginHorizontal: Spacing.lg,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    marginBottom: Spacing.lg,
+  },
+  modalDetail: {
+    ...TextStyles.bodyMedium,
+    lineHeight: 22,
+  },
+  modalActions: {
+    flexDirection: "row",
+    paddingHorizontal: Spacing.lg,
+    gap: Spacing.sm,
+  },
+  modalActionBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    gap: Spacing.xs,
+  },
+  modalActionBtnPrimary: {
+    flex: 2,
+  },
+  modalActionText: {
+    ...TextStyles.labelMedium,
+  },
+  modalActionTextPrimary: {
+    ...TextStyles.labelLarge,
+    color: "#FFFFFF",
   },
 });
 
