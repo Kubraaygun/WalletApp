@@ -59,12 +59,24 @@ export const Colors = {
   OVERLAY_LIGHT: "rgba(0, 0, 0, 0.05)",
 };
 
-// Gradient definitions
+// Gradient definitions - Premium Fintech Style
 export const Gradients = {
-  balance: ["#007AFF", "#5856D6"],
+  // Main balance card - Deep purple to blue
+  balance: ["#667EEA", "#764BA2"],
+  balanceDark: ["#4C63D2", "#5E3B8A"],
+  
+  // Card variants
+  cardBlue: ["#0066FF", "#00D4FF"],
+  cardPurple: ["#8B5CF6", "#D946EF"],
+  cardGreen: ["#059669", "#34D399"],
+  cardRed: ["#DC2626", "#FB7185"],
+  cardGold: ["#D97706", "#FCD34D"],
+  cardDark: ["#1F2937", "#374151"],
+  
+  // Legacy
   card: ["#1C1C1E", "#3A3A3C"],
-  success: ["#34C759", "#30D158"],
-  premium: ["#FFD700", "#FF9500"],
+  success: ["#059669", "#34D399"],
+  premium: ["#D97706", "#FCD34D"],
 };
 
 // Dark Mode Colors

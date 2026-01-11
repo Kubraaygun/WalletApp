@@ -31,7 +31,7 @@ const CARD_TYPES = [
     name: "Alışveriş Kartı",
     icon: "shopping-bag",
     description: "Günlük alışverişler için ideal",
-    gradient: ["#FF6B6B", "#EE5A5A"],
+    gradient: ["#F43F5E", "#FB7185"],
     defaultName: "Alışveriş Kartı",
   },
   {
@@ -39,7 +39,7 @@ const CARD_TYPES = [
     name: "Tasarruf Kartı",
     icon: "dollar-sign",
     description: "Birikim yapmak için uygun",
-    gradient: ["#34C759", "#30D158"],
+    gradient: ["#059669", "#34D399"],
     defaultName: "Tasarruf Kartı",
   },
   {
@@ -47,7 +47,7 @@ const CARD_TYPES = [
     name: "Seyahat Kartı",
     icon: "map-pin",
     description: "Yurt dışı harcamalar için",
-    gradient: ["#007AFF", "#5856D6"],
+    gradient: ["#0066FF", "#00D4FF"],
     defaultName: "Seyahat Kartı",
   },
   {
@@ -55,15 +55,15 @@ const CARD_TYPES = [
     name: "Genel Kart",
     icon: "credit-card",
     description: "Her amaç için kullanılabilir",
-    gradient: ["#1C1C1E", "#3A3A3C"],
+    gradient: ["#1F2937", "#4B5563"],
     defaultName: "Genel Kart",
   },
 ];
 
 const MOCK_CARDS = [
-  { id: "1", type: "general", name: "Ana Kart", number: "4582", expiry: "12/28", balance: 15420.5, gradient: ["#007AFF", "#5856D6"], isActive: true, createdAt: "01.01.2024" },
-  { id: "2", type: "shopping", name: "Alışveriş Kartı", number: "7891", expiry: "06/27", balance: 2500.0, gradient: ["#FF6B6B", "#EE5A5A"], isActive: true, createdAt: "15.03.2024" },
-  { id: "3", type: "savings", name: "Tasarruf Kartı", number: "3456", expiry: "03/29", balance: 8750.0, gradient: ["#34C759", "#30D158"], isActive: false, createdAt: "20.06.2024" },
+  { id: "1", type: "general", name: "Ana Kart", number: "4582", expiry: "12/28", balance: 15420.5, gradient: ["#667EEA", "#764BA2"], isActive: true, createdAt: "01.01.2024" },
+  { id: "2", type: "shopping", name: "Alışveriş Kartı", number: "7891", expiry: "06/27", balance: 2500.0, gradient: ["#F43F5E", "#FB7185"], isActive: true, createdAt: "15.03.2024" },
+  { id: "3", type: "savings", name: "Tasarruf Kartı", number: "3456", expiry: "03/29", balance: 8750.0, gradient: ["#059669", "#34D399"], isActive: false, createdAt: "20.06.2024" },
 ];
 
 const CardItem = ({ card, index, onPress, onInfoPress }) => {
