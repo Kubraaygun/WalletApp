@@ -1,6 +1,6 @@
-# WalletApp
+# 💳 WalletApp
 
-Modern, guvenli ve kullanici dostu bir mobil cuzdan uygulamasi.
+Modern, güvenli ve kullanıcı dostu bir mobil cüzdan uygulaması.
 
 ![React Native](https://img.shields.io/badge/React_Native-0.81.5-61DAFB?logo=react)
 ![Expo](https://img.shields.io/badge/Expo-54-000020?logo=expo)
@@ -8,38 +8,60 @@ Modern, guvenli ve kullanici dostu bir mobil cuzdan uygulamasi.
 
 ---
 
-## Onizleme (Showcase)
+## ✨ Özellikler
 
-<p align="center">
-  <img src="assets/screenshots/showcase_onboarding.png" width="200" alt="Onboarding" />
-  <img src="assets/screenshots/showcase_home.png" width="200" alt="Ana Sayfa" />
-  <img src="assets/screenshots/showcase_crypto.png" width="200" alt="Kripto Takibi" />
-  <img src="assets/screenshots/showcase_stats.png" width="200" alt="Istatistikler" />
-  <img src="assets/screenshots/showcase_transfer.png" width="200" alt="Para Transferi" />
-  <img src="assets/screenshots/showcase_profile.png" width="200" alt="Profil" />
-</p>
+### 💸 Finansal İşlemler
+
+- **Para Transferi** - Telefon numarasıyla hızlı para gönderme
+- **Para Yükleme** - Karttan bakiye yükleme
+- **QR Kod Ödeme** - QR ile anında ödeme başlatma
+- **İşlem Filtreleme** - Tarih, tutar ve türe göre işlem arama
+
+### 📊 Analiz & Takip
+
+- **Harcama Grafikleri** - Aylık harcama analizi ve kategorilendirme
+- **Kripto Takibi** - Canlı kripto para fiyatları ve trendler
+- **Döviz Çevirici** - Anlık döviz kuru hesaplama
+
+### 💳 Kart Yönetimi
+
+- **Sanal Kart Oluşturma** - Farklı türlerde sanal kart oluşturma
+- **Kart Limitleri** - Günlük/aylık harcama limiti ayarlama
+- **Güvenlik Kontrolleri** - Temassız, online ve yurt dışı kullanım ayarları
+
+### 🔐 Güvenlik
+
+- **Biyometrik Giriş** - Face ID / Touch ID desteği
+- **256-bit Şifreleme** - Tüm veriler şifrelenmiş
+- **Input Sanitizasyonu** - XSS ve injection koruması
+- **Güvenli Depolama** - Hassas veriler için Secure Store
+
+### 🎨 Kullanıcı Deneyimi
+
+- **Dark/Light Mode** - Koyu ve açık tema desteği
+- **Bildirimler** - Detaylı bildirim merkezi
+- **Skeleton Yükleme** - Profesyonel yükleme animasyonları
+- **Pull to Refresh** - Sayfayı çekerek yenileme
+- **Haptic Feedback** - Dokunsal geri bildirim
+
+### ⚙️ Ayarlar & Profil
+
+- **Profil Düzenleme** - Kullanıcı bilgilerini güncelleme
+- **Ayarlar Sayfası** - Tema, bildirim, güvenlik ayarları
+- **Çoklu Dil** - Türkçe ve İngilizce desteği
 
 ---
 
-## Ozellikler
+## 🎨 Tasarım Sistemi
 
-- **Para Transferi** - Telefon numarasiyla hizli para gonderme
-- **Harcama Grafikleri** - Aylik harcama analizi ve kategorilendirme
-- **Kripto Takibi** - Canli kripto para fiyatlari ve trendler
-- **QR Kod Tarama** - QR ile aninda odeme baslatma
-- **Biyometrik Giris** - Face ID / Touch ID destegi
-- **Kart Yonetimi** - Sanal kart olusturma ve yonetme
-- **Doviz Cevirici** - Anlik doviz kuru hesaplama
-- **Coklu Dil Destegi** - Turkce ve Ingilizce destegi
+- **Minimal White Tema** - Apple Pay tarzı temiz ve modern arayüz
+- **Premium Gradientler** - Fintech tarzı gradient kartlar
+- **İnteraktif Animasyonlar** - Lottie ve Reanimated ile akıcı geçişler
+- **Glassmorphism** - Buzlu cam efektli modern bileşenler
 
-## Tasarim Sistemi
+---
 
-- **Minimal White Tema** - Apple Pay tarzi temiz ve modern arayuz
-- **Interaktif Animasyonlar** - Lottie ve Reanimated ile akici gecisler
-- **Glassmorphism** - Buzlu cam efektli modern bilesenler
-- **Dark Mode Hazirligi** - Koyu mod uyumlu renk paleti
-
-## Teknolojiler
+## 🛠 Teknolojiler
 
 | Kategori         | Teknoloji                     |
 | ---------------- | ----------------------------- |
@@ -53,24 +75,98 @@ Modern, guvenli ve kullanici dostu bir mobil cuzdan uygulamasi.
 | Error Tracking   | Sentry                        |
 | i18n             | i18next + react-i18next       |
 
-## Kurulum
+---
 
-```bash
-# Bagimlilikiari yukle
-npm install --legacy-peer-deps
+## 📱 Ekran Görüntüleri
 
-# Gelistirme sunucusunu baslat
-npx expo start --android --clear
-```
+### Ana Ekran
 
-## Lisans
+- Balance kartı ile bakiye görüntüleme
+- Hızlı işlemler menüsü
+- Son işlemler listesi
+- Tema değiştirme butonu
 
-Bu proje [0BSD](LICENSE) lisansi altindadir.
+### İşlem Filtreleme
 
-## Gelistirici
+- Gelen/Giden filtresi
+- Tarih aralığı seçimi
+- Tutar aralığı filtresi
 
-**Kubra Aygun**
+### Kart Yönetimi
+
+- Sanal kart oluşturma
+- Kart limitleri ayarlama
+- Güvenlik kontrolleri
+
+### Ayarlar
+
+- Görünüm ayarları
+- Bildirim tercihleri
+- Güvenlik seçenekleri
+- Hesap yönetimi
 
 ---
 
-Bu projeyi begendiniyseniz yildiz vermeyi unutmayin!
+## 🚀 Kurulum
+
+```bash
+# Repoyu klonla
+git clone https://github.com/Kubraaygun/WalletApp.git
+cd WalletApp
+
+# Bağımlılıkları yükle
+npm install --legacy-peer-deps
+
+# Geliştirme sunucusunu başlat
+npx expo start --ios --clear
+
+# Android için
+npx expo start --android --clear
+```
+
+---
+
+## 📁 Proje Yapısı
+
+```
+src/
+├── components/       # Yeniden kullanılabilir bileşenler
+│   ├── homeScreen/   # Ana sayfa bileşenleri
+│   └── animations/   # Animasyon bileşenleri
+├── screens/          # Uygulama ekranları
+├── navigation/       # Navigasyon yapılandırması
+├── store/            # Redux store ve slice'lar
+├── contexts/         # React context'leri
+├── services/         # API ve servisler
+├── utils/            # Yardımcı fonksiyonlar
+│   ├── colors.js     # Renk paleti
+│   ├── typography.js # Tipografi stilleri
+│   ├── spacing.js    # Boşluk sistemi
+│   └── shadows.js    # Gölge stilleri
+└── i18n/             # Çoklu dil dosyaları
+```
+
+---
+
+## 🔒 Güvenlik Notları
+
+- Tüm kullanıcı girdileri sanitize edilir
+- Hassas veriler Secure Store'da saklanır
+- API istekleri HTTPS üzerinden yapılır
+- Biyometrik doğrulama desteklenir
+
+---
+
+## 📄 Lisans
+
+Bu proje [0BSD](LICENSE) lisansı altındadır.
+
+---
+
+## 👩‍💻 Geliştirici
+
+**Kübra Aygün**
+
+---
+
+⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
