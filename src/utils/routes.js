@@ -7,6 +7,7 @@ export const QRSCANNERSCREEN = "QRScannerScreen";
 export const QRCODESCREEN = "QRCodeScreen";
 export const NOTIFICATIONSSCREEN = "NotificationsScreen";
 export const TOPUPSCREEN = "TopUpScreen";
+export const CARDLIMITSSCREEN = "CardLimitsScreen";
 export const PROFILESCREEN = "ProfileScreen";
 export const ONBOARDINGSCREEN = "OnboardingScreen";
 export const CRYPTOSCREEN = "CryptoScreen";

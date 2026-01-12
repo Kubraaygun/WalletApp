@@ -17,6 +17,7 @@ import QRScannerScreen from "../screens/qrScannerScreen";
 import QRCodeScreen from "../screens/qrCodeScreen";
 import NotificationsScreen from "../screens/notificationsScreen";
 import TopUpScreen from "../screens/topUpScreen";
+import CardLimitsScreen from "../screens/cardLimitsScreen";
 import ProfileScreen from "../screens/profileScreen";
 import OnboardingScreen from "../screens/onboardingScreen";
 import CryptoScreen from "../screens/cryptoScreen";
@@ -34,6 +35,7 @@ import {
   QRCODESCREEN,
   NOTIFICATIONSSCREEN,
   TOPUPSCREEN,
+  CARDLIMITSSCREEN,
   PROFILESCREEN,
   ONBOARDINGSCREEN,
   CRYPTOSCREEN,
@@ -205,6 +207,11 @@ const RootNavigation = () => {
             name={TOPUPSCREEN} 
             component={TopUpScreen}
             options={ScreenTransitions.slideFromBottom}
+          />
+          <Stack.Screen 
+            name={CARDLIMITSSCREEN} 
+            component={CardLimitsScreen}
+            options={ScreenTransitions.slideFromRight}
           />
         </>
       )}
