@@ -178,6 +178,13 @@ const ProfileScreen = ({ navigation }) => {
           <Avatar name={user?.name || "Kullanici"} size="xl" />
           <Text style={[styles.profileName, { color: colors.TEXT_PRIMARY }]}>{user?.name || "Kullanici"}</Text>
           <Text style={[styles.profileEmail, { color: colors.TEXT_SECONDARY }]}>{user?.email || "email@example.com"}</Text>
+          <TouchableOpacity 
+            style={[styles.editProfileButton, { backgroundColor: colors.PRIMARY }]}
+            onPress={() => navigation.navigate("EditProfileScreen")}
+          >
+            <Icon name="edit-2" size={14} color="#FFFFFF" />
+            <Text style={styles.editProfileText}>Profili Düzenle</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Settings Sections */}
@@ -302,6 +309,19 @@ const styles = StyleSheet.create({
   profileEmail: {
     ...TextStyles.bodyMedium,
     marginTop: Spacing.xxs,
+  },
+  editProfileButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.full,
+    marginTop: Spacing.md,
+    gap: Spacing.xxs,
+  },
+  editProfileText: {
+    ...TextStyles.labelSmall,
+    color: "#FFFFFF",
   },
   section: {
     marginBottom: Spacing.lg,

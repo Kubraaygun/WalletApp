@@ -9,6 +9,7 @@ export const NOTIFICATIONSSCREEN = "NotificationsScreen";
 export const TOPUPSCREEN = "TopUpScreen";
 export const CARDLIMITSSCREEN = "CardLimitsScreen";
 export const SETTINGSSCREEN = "SettingsScreen";
+export const EDITPROFILESCREEN = "EditProfileScreen";
 export const PROFILESCREEN = "ProfileScreen";
 export const ONBOARDINGSCREEN = "OnboardingScreen";
 export const CRYPTOSCREEN = "CryptoScreen";

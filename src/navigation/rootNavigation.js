@@ -19,6 +19,7 @@ import NotificationsScreen from "../screens/notificationsScreen";
 import TopUpScreen from "../screens/topUpScreen";
 import CardLimitsScreen from "../screens/cardLimitsScreen";
 import SettingsScreen from "../screens/settingsScreen";
+import EditProfileScreen from "../screens/editProfileScreen";
 import ProfileScreen from "../screens/profileScreen";
 import OnboardingScreen from "../screens/onboardingScreen";
 import CryptoScreen from "../screens/cryptoScreen";
@@ -38,6 +39,7 @@ import {
   TOPUPSCREEN,
   CARDLIMITSSCREEN,
   SETTINGSSCREEN,
+  EDITPROFILESCREEN,
   PROFILESCREEN,
   ONBOARDINGSCREEN,
   CRYPTOSCREEN,
@@ -218,6 +220,11 @@ const RootNavigation = () => {
           <Stack.Screen 
             name={SETTINGSSCREEN} 
             component={SettingsScreen}
+            options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={EDITPROFILESCREEN} 
+            component={EditProfileScreen}
             options={ScreenTransitions.slideFromRight}
           />
         </>
