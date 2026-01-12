@@ -29,12 +29,19 @@ export const ThemeProvider = ({ children }) => {
     dispatch(setThemeMode(mode));
   };
 
+  // Hizli tema degistirme (toggle)
+  const toggleTheme = () => {
+    const newMode = isDark ? "light" : "dark";
+    dispatch(setThemeMode(newMode));
+  };
+
   const value = useMemo(
     () => ({
       isDark,
       colors,
       themeMode,
       setTheme,
+      toggleTheme,
     }),
     [isDark, colors, themeMode]
   );
