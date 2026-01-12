@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,42 +6,41 @@ import {
   StatusBar,
   StyleSheet,
   TouchableOpacity,
-  Switch,
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Feather as Icon } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 import { logout } from "../store/authSlice";
 import { resetWallet } from "../store/walletSlice";
-import { biometricService } from "../services";
-import { changeLanguage, supportedLanguages, getCurrentLanguage } from "../i18n";
 import Avatar from "../components/avatar";
 
-const SettingItem = ({ icon, label, value, onPress, hasArrow = true, rightComponent, colors }) => (
+const ProfileMenuItem = ({ icon, label, description, onPress, color, colors, danger = false }) => (
   <TouchableOpacity 
-    style={[styles.settingItem, { borderBottomColor: colors.BORDER }]} 
-    onPress={onPress} 
-    disabled={!onPress}
+    style={[styles.menuItem, { backgroundColor: colors.SURFACE }]} 
+    onPress={onPress}
+    activeOpacity={0.7}
   >
-    <View style={styles.settingLeft}>
-      <View style={[styles.settingIconContainer, { backgroundColor: `${colors.ACCENT}15` }]}>
-        <Icon name={icon} size={IconSize.sm} color={colors.ACCENT} />
-      </View>
-      <Text style={[styles.settingLabel, { color: colors.TEXT_PRIMARY }]}>{label}</Text>
+    <View style={[styles.menuIcon, { backgroundColor: `${danger ? colors.ERROR : color}15` }]}>
+      <Icon name={icon} size={20} color={danger ? colors.ERROR : color} />
     </View>
-    <View style={styles.settingRight}>
-      {value && <Text style={[styles.settingValue, { color: colors.TEXT_SECONDARY }]}>{value}</Text>}
-      {rightComponent}
-      {hasArrow && !rightComponent && (
-        <Icon name="chevron-right" size={IconSize.sm} color={colors.GRAY_400} />
+    <View style={styles.menuContent}>
+      <Text style={[styles.menuLabel, { color: danger ? colors.ERROR : colors.TEXT_PRIMARY }]}>
+        {label}
+      </Text>
+      {description && (
+        <Text style={[styles.menuDescription, { color: colors.TEXT_SECONDARY }]}>
+          {description}
+        </Text>
       )}
     </View>
+    <Icon name="chevron-right" size={18} color={colors.GRAY_400} />
   </TouchableOpacity>
 );
 
@@ -49,86 +48,13 @@ const ProfileScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { colors, themeMode, setTheme, isDark } = useTheme();
-  
-  const [biometricEnabled, setBiometricEnabled] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [currentLang, setCurrentLang] = useState(getCurrentLanguage());
-
-  React.useEffect(() => {
-    checkBiometricSetting();
-  }, []);
-
-  const checkBiometricSetting = async () => {
-    const enabled = await biometricService.isBiometricLoginEnabled();
-    setBiometricEnabled(enabled);
-  };
-
-  const handleBiometricToggle = async (value) => {
-    if (value) {
-      const result = await biometricService.authenticateWithBiometric(
-        "Biyometrik girisi etkinlestirmek icin dogrulayin"
-      );
-      if (result.success) {
-        await biometricService.setBiometricLoginEnabled(true);
-        setBiometricEnabled(true);
-      } else {
-        Alert.alert("Dogrulama Basarisiz", result.error);
-      }
-    } else {
-      await biometricService.setBiometricLoginEnabled(false);
-      setBiometricEnabled(false);
-    }
-  };
-
-  const handleLanguageChange = () => {
-    Alert.alert(
-      t("settings.language"),
-      "Dil secin / Select language",
-      supportedLanguages.map((lang) => ({
-        text: `${lang.flag} ${lang.name}`,
-        onPress: async () => {
-          await changeLanguage(lang.code);
-          setCurrentLang(lang.code);
-        },
-      }))
-    );
-  };
-
-  const handleThemeChange = () => {
-    const themeOptions = [
-      { text: "Acik", mode: "light" },
-      { text: "Koyu", mode: "dark" },
-      { text: "Sistem", mode: "system" },
-    ];
-
-    Alert.alert(
-      "Tema",
-      "Tema secin",
-      themeOptions.map((option) => ({
-        text: option.text,
-        onPress: () => setTheme(option.mode),
-      }))
-    );
-  };
-
-  const getThemeName = () => {
-    switch (themeMode) {
-      case "light":
-        return "Acik";
-      case "dark":
-        return "Koyu";
-      case "system":
-        return "Sistem";
-      default:
-        return "Sistem";
-    }
-  };
+  const { colors, isDark } = useTheme();
 
   const handleLogout = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     Alert.alert(
       t("auth.logout"),
-      "Cikis yapmak istediginize emin misiniz?",
+      "Çıkış yapmak istediğinize emin misiniz?",
       [
         { text: t("common.cancel"), style: "cancel" },
         {
@@ -147,10 +73,12 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
-  const getLangName = () => {
-    const lang = supportedLanguages.find((l) => l.code === currentLang);
-    return lang ? `${lang.flag} ${lang.name}` : "Turkce";
-  };
+  // Stats data
+  const stats = [
+    { label: "İşlem", value: "127", icon: "activity" },
+    { label: "Kart", value: "3", icon: "credit-card" },
+    { label: "Favori", value: "8", icon: "heart" },
+  ];
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]}>
@@ -175,91 +103,111 @@ const ProfileScreen = ({ navigation }) => {
       >
         {/* Profile Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.SURFACE }]}>
-          <Avatar name={user?.name || "Kullanici"} size="xl" />
-          <Text style={[styles.profileName, { color: colors.TEXT_PRIMARY }]}>{user?.name || "Kullanici"}</Text>
-          <Text style={[styles.profileEmail, { color: colors.TEXT_SECONDARY }]}>{user?.email || "email@example.com"}</Text>
+          <Avatar name={user?.name || "Kullanici"} size="2xl" />
+          <Text style={[styles.profileName, { color: colors.TEXT_PRIMARY }]}>
+            {user?.name || "Kullanici"}
+          </Text>
+          <Text style={[styles.profileEmail, { color: colors.TEXT_SECONDARY }]}>
+            {user?.email || "email@example.com"}
+          </Text>
+          
+          {/* Stats Row */}
+          <View style={styles.statsRow}>
+            {stats.map((stat, index) => (
+              <View key={index} style={styles.statItem}>
+                <View style={[styles.statIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                  <Icon name={stat.icon} size={16} color={colors.PRIMARY} />
+                </View>
+                <Text style={[styles.statValue, { color: colors.TEXT_PRIMARY }]}>{stat.value}</Text>
+                <Text style={[styles.statLabel, { color: colors.TEXT_SECONDARY }]}>{stat.label}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Edit Profile Button */}
           <TouchableOpacity 
             style={[styles.editProfileButton, { backgroundColor: colors.PRIMARY }]}
             onPress={() => navigation.navigate("EditProfileScreen")}
           >
-            <Icon name="edit-2" size={14} color="#FFFFFF" />
+            <Icon name="edit-2" size={16} color="#FFFFFF" />
             <Text style={styles.editProfileText}>Profili Düzenle</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Settings Sections */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY }]}>Tercihler</Text>
-          <View style={[styles.sectionCard, { backgroundColor: colors.SURFACE }]}>
-            <SettingItem
-              icon="globe"
-              label={t("settings.language")}
-              value={getLangName()}
-              onPress={handleLanguageChange}
-              colors={colors}
-            />
-            <SettingItem
-              icon="moon"
-              label="Tema"
-              value={getThemeName()}
-              onPress={handleThemeChange}
-              colors={colors}
-            />
-            <SettingItem
-              icon="bell"
-              label={t("settings.notifications")}
-              hasArrow={false}
-              colors={colors}
-              rightComponent={
-                <Switch
-                  value={notificationsEnabled}
-                  onValueChange={setNotificationsEnabled}
-                  trackColor={{ false: colors.GRAY_300, true: colors.ACCENT }}
-                  thumbColor={colors.WHITE}
-                />
-              }
-            />
-            <SettingItem
-              icon="smartphone"
-              label={t("settings.biometric")}
-              hasArrow={false}
-              colors={colors}
-              rightComponent={
-                <Switch
-                  value={biometricEnabled}
-                  onValueChange={handleBiometricToggle}
-                  trackColor={{ false: colors.GRAY_300, true: colors.ACCENT }}
-                  thumbColor={colors.WHITE}
-                />
-              }
-            />
-          </View>
-        </View>
+        {/* Account Section */}
+        <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY }]}>HESAP</Text>
+        
+        <ProfileMenuItem
+          icon="credit-card"
+          label="Kartlarım"
+          description="Sanal kartlarınızı yönetin"
+          onPress={() => navigation.navigate("CardsScreen")}
+          color={colors.PRIMARY}
+          colors={colors}
+        />
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY }]}>Uygulama</Text>
-          <View style={[styles.sectionCard, { backgroundColor: colors.SURFACE }]}>
-            <SettingItem
-              icon="shield"
-              label={t("settings.security")}
-              onPress={() => {}}
-              colors={colors}
-            />
-            <SettingItem
-              icon="info"
-              label={t("settings.about")}
-              value="v1.0.0"
-              onPress={() => {}}
-              colors={colors}
-            />
-          </View>
-        </View>
+        <ProfileMenuItem
+          icon="activity"
+          label="İşlem Geçmişi"
+          description="Tüm işlemlerinizi görüntüleyin"
+          onPress={() => navigation.navigate("StatsScreen")}
+          color={colors.SUCCESS}
+          colors={colors}
+        />
 
-        {/* Logout Button */}
-        <TouchableOpacity style={[styles.logoutButton, { backgroundColor: `${colors.ERROR}15` }]} onPress={handleLogout}>
-          <Icon name="log-out" size={IconSize.sm} color={colors.ERROR} />
-          <Text style={[styles.logoutText, { color: colors.ERROR }]}>{t("auth.logout")}</Text>
-        </TouchableOpacity>
+        <ProfileMenuItem
+          icon="bell"
+          label="Bildirimler"
+          description="Bildirim geçmişiniz"
+          onPress={() => navigation.navigate("NotificationsScreen")}
+          color="#F59E0B"
+          colors={colors}
+        />
+
+        {/* Support Section */}
+        <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY, marginTop: Spacing.lg }]}>
+          DESTEK
+        </Text>
+
+        <ProfileMenuItem
+          icon="help-circle"
+          label="Yardım Merkezi"
+          description="Sık sorulan sorular"
+          onPress={() => Alert.alert("Bilgi", "Yardım merkezi yakında aktif olacak")}
+          color="#06B6D4"
+          colors={colors}
+        />
+
+        <ProfileMenuItem
+          icon="message-circle"
+          label="Bize Ulaşın"
+          description="Destek ekibimizle iletişime geçin"
+          onPress={() => Alert.alert("Bilgi", "İletişim formu yakında aktif olacak")}
+          color="#10B981"
+          colors={colors}
+        />
+
+        {/* Danger Zone */}
+        <Text style={[styles.sectionTitle, { color: colors.TEXT_SECONDARY, marginTop: Spacing.lg }]}>
+          HESAP İŞLEMLERİ
+        </Text>
+
+        <ProfileMenuItem
+          icon="log-out"
+          label="Çıkış Yap"
+          description="Hesabınızdan güvenli çıkış yapın"
+          onPress={handleLogout}
+          color={colors.ERROR}
+          colors={colors}
+          danger
+        />
+
+        {/* App Version */}
+        <View style={styles.versionContainer}>
+          <Text style={[styles.versionText, { color: colors.GRAY_400 }]}>
+            WalletApp v2.0.0
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -310,73 +258,82 @@ const styles = StyleSheet.create({
     ...TextStyles.bodyMedium,
     marginTop: Spacing.xxs,
   },
+  statsRow: {
+    flexDirection: "row",
+    marginTop: Spacing.lg,
+    gap: Spacing.xl,
+  },
+  statItem: {
+    alignItems: "center",
+  },
+  statIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: Spacing.xxs,
+  },
+  statValue: {
+    ...TextStyles.h4,
+    fontWeight: "700",
+  },
+  statLabel: {
+    ...TextStyles.caption,
+  },
   editProfileButton: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
     borderRadius: BorderRadius.full,
-    marginTop: Spacing.md,
-    gap: Spacing.xxs,
+    marginTop: Spacing.lg,
+    gap: Spacing.xs,
   },
   editProfileText: {
-    ...TextStyles.labelSmall,
+    ...TextStyles.labelMedium,
     color: "#FFFFFF",
   },
-  section: {
-    marginBottom: Spacing.lg,
-  },
   sectionTitle: {
-    ...TextStyles.labelMedium,
+    ...TextStyles.caption,
+    fontWeight: "600",
+    letterSpacing: 0.5,
     marginBottom: Spacing.sm,
     marginLeft: Spacing.xs,
   },
-  sectionCard: {
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: Spacing.md,
     borderRadius: BorderRadius.lg,
+    marginBottom: Spacing.sm,
     ...Shadows.sm,
   },
-  settingItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.md,
-    borderBottomWidth: 1,
-  },
-  settingLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  settingIconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: BorderRadius.md,
+  menuIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: Spacing.sm,
   },
-  settingLabel: {
-    ...TextStyles.bodyMedium,
+  menuContent: {
+    flex: 1,
+    marginLeft: Spacing.sm,
   },
-  settingRight: {
-    flexDirection: "row",
+  menuLabel: {
+    ...TextStyles.labelMedium,
+    fontWeight: "500",
+  },
+  menuDescription: {
+    ...TextStyles.caption,
+    marginTop: 2,
+  },
+  versionContainer: {
     alignItems: "center",
+    paddingVertical: Spacing["2xl"],
   },
-  settingValue: {
-    ...TextStyles.bodySmall,
-    marginRight: Spacing.xs,
-  },
-  logoutButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.lg,
-    marginTop: Spacing.md,
-  },
-  logoutText: {
-    ...TextStyles.labelLarge,
-    marginLeft: Spacing.xs,
+  versionText: {
+    ...TextStyles.caption,
   },
 });
 
