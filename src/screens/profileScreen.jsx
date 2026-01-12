@@ -160,7 +160,12 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.header}>
         <View style={styles.headerSpacer} />
         <Text style={[styles.headerTitle, { color: colors.TEXT_PRIMARY }]}>{t("settings.profile")}</Text>
-        <View style={styles.headerSpacer} />
+        <TouchableOpacity 
+          style={styles.settingsButton}
+          onPress={() => navigation.navigate("SettingsScreen")}
+        >
+          <Icon name="settings" size={IconSize.md} color={colors.TEXT_PRIMARY} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -269,6 +274,12 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 44,
+  },
+  settingsButton: {
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollView: {
     flex: 1,
