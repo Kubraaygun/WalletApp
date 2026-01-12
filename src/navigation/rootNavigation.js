@@ -16,6 +16,7 @@ import RegisterScreen from "../screens/registerScreen";
 import QRScannerScreen from "../screens/qrScannerScreen";
 import QRCodeScreen from "../screens/qrCodeScreen";
 import NotificationsScreen from "../screens/notificationsScreen";
+import TopUpScreen from "../screens/topUpScreen";
 import ProfileScreen from "../screens/profileScreen";
 import OnboardingScreen from "../screens/onboardingScreen";
 import CryptoScreen from "../screens/cryptoScreen";
@@ -32,6 +33,7 @@ import {
   QRSCANNERSCREEN,
   QRCODESCREEN,
   NOTIFICATIONSSCREEN,
+  TOPUPSCREEN,
   PROFILESCREEN,
   ONBOARDINGSCREEN,
   CRYPTOSCREEN,
@@ -198,6 +200,11 @@ const RootNavigation = () => {
             name={NOTIFICATIONSSCREEN} 
             component={NotificationsScreen}
             options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={TOPUPSCREEN} 
+            component={TopUpScreen}
+            options={ScreenTransitions.slideFromBottom}
           />
         </>
       )}

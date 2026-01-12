@@ -78,6 +78,12 @@ const QuickActions = ({ navigation }) => {
 
     const moreMenuItems = [
         {
+            icon: "plus-circle",
+            label: "Para Yukle",
+            color: colors.SUCCESS,
+            screen: "TopUpScreen",
+        },
+        {
             icon: "trending-up",
             label: "Kripto Fiyatlari",
             color: "#F7931A",
@@ -98,7 +104,7 @@ const QuickActions = ({ navigation }) => {
         {
             icon: "repeat",
             label: "Doviz Cevirici",
-            color: colors.SUCCESS,
+            color: "#06B6D4",
             screen: "CurrencyConverterScreen",
         },
     ];
