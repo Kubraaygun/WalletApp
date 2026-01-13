@@ -78,6 +78,12 @@ const QuickActions = ({ navigation }) => {
 
     const moreMenuItems = [
         {
+            icon: "heart",
+            label: "Favoriler",
+            color: "#EF4444",
+            screen: "FavoritesScreen",
+        },
+        {
             icon: "plus-circle",
             label: "Para Yukle",
             color: colors.SUCCESS,

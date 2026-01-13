@@ -5,12 +5,13 @@ import authReducer from "./authSlice";
 import walletReducer from "./walletSlice";
 import loadingReducer from "./loadingSlice";
 import themeReducer from "./themeSlice";
+import favoritesReducer from "./favoritesSlice";
 
 // Redux Persist yapılandırması
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["auth", "wallet", "theme"], // Theme tercihini de persist et
+  whitelist: ["auth", "wallet", "theme", "favorites"], // Favorites da persist edilsin
 };
 
 // Tüm reducer'ları birleştir
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   wallet: walletReducer,
   loading: loadingReducer,
   theme: themeReducer,
+  favorites: favoritesReducer,
 });
 
 // Persist edilmiş reducer
