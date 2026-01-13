@@ -10,10 +10,12 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActionSheetIOS,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather as Icon } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import * as ImagePicker from "expo-image-picker";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
@@ -32,15 +34,15 @@ const EditProfileScreen = ({ navigation }) => {
   const [email, setEmail] = useState(user?.email || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [address, setAddress] = useState(user?.address || "");
+  const [profileImage, setProfileImage] = useState(user?.profileImage || null);
   const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
   };
 
-  // Input validation - sanitize inputs
+  // Sanitize inputs
   const sanitizeInput = (text) => {
-    // Remove any potentially dangerous characters
     return text.replace(/[<>{}]/g, "").trim();
   };
 
@@ -50,13 +52,81 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   const validatePhone = (phone) => {
-    // Turkish phone format or international
     const phoneRegex = /^(\+90|0)?[5][0-9]{9}$/;
     return !phone || phoneRegex.test(phone.replace(/\s/g, ""));
   };
 
+  // Image picker
+  const pickImageFromGallery = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("İzin Gerekli", "Galeriye erişim izni vermeniz gerekiyor.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("İzin Gerekli", "Kamera erişim izni vermeniz gerekiyor.");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const handleChangePhoto = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    
+    if (Platform.OS === "ios") {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ["İptal", "Fotoğraf Çek", "Galeriden Seç", "Fotoğrafı Kaldır"],
+          destructiveButtonIndex: 3,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) takePhoto();
+          else if (buttonIndex === 2) pickImageFromGallery();
+          else if (buttonIndex === 3) setProfileImage(null);
+        }
+      );
+    } else {
+      Alert.alert(
+        "Profil Fotoğrafı",
+        "Bir seçenek belirleyin",
+        [
+          { text: "İptal", style: "cancel" },
+          { text: "Fotoğraf Çek", onPress: takePhoto },
+          { text: "Galeriden Seç", onPress: pickImageFromGallery },
+          { text: "Fotoğrafı Kaldır", style: "destructive", onPress: () => setProfileImage(null) },
+        ]
+      );
+    }
+  };
+
   const handleSave = async () => {
-    // Validation
     const sanitizedName = sanitizeInput(name);
     const sanitizedEmail = sanitizeInput(email);
     const sanitizedPhone = sanitizeInput(phone);
@@ -95,15 +165,14 @@ const EditProfileScreen = ({ navigation }) => {
             setLoading(true);
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             
-            // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
 
-            // Update Redux store
             dispatch(updateUser({
               name: sanitizedName,
               email: sanitizedEmail,
               phone: sanitizedPhone,
               address: sanitizedAddress,
+              profileImage: profileImage,
             }));
             
             setLoading(false);
@@ -174,10 +243,10 @@ const EditProfileScreen = ({ navigation }) => {
         >
           {/* Avatar Section */}
           <View style={styles.avatarSection}>
-            <Avatar name={name || "K"} size="2xl" />
+            <Avatar name={name || "K"} size="2xl" image={profileImage} />
             <TouchableOpacity 
               style={[styles.changeAvatarButton, { backgroundColor: colors.PRIMARY }]}
-              onPress={() => Alert.alert("Bilgi", "Fotoğraf değiştirme yakında aktif olacak")}
+              onPress={handleChangePhoto}
             >
               <Icon name="camera" size={16} color="#FFFFFF" />
             </TouchableOpacity>

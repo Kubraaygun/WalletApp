@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../contexts/ThemeContext";
-import { TextStyles } from "../utils/typography";
 
 const SIZES = {
   sm: 32,
@@ -15,6 +14,7 @@ const SIZES = {
 const Avatar = ({ 
   name = "User", 
   size = "md", 
+  image = null,
   showOnline = false, 
   onlineStatus = "offline" 
 }) => {
@@ -27,37 +27,50 @@ const Avatar = ({
     .toUpperCase()
     .slice(0, 2);
 
-  // Calculate font size based on dimension
   const fontSize = dimension * 0.38;
   const onlineDotSize = Math.max(dimension * 0.22, 10);
 
   return (
     <View style={[styles.wrapper, { width: dimension, height: dimension }]}>
-      <LinearGradient
-        colors={["#667EEA", "#764BA2"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={[
-          styles.container, 
-          { 
-            width: dimension, 
-            height: dimension, 
-            borderRadius: dimension / 2,
-          }
-        ]}
-      >
-        <Text 
+      {image ? (
+        <Image
+          source={{ uri: image }}
           style={[
-            styles.initials, 
+            styles.image,
+            {
+              width: dimension,
+              height: dimension,
+              borderRadius: dimension / 2,
+            }
+          ]}
+        />
+      ) : (
+        <LinearGradient
+          colors={["#667EEA", "#764BA2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[
+            styles.container, 
             { 
-              fontSize,
-              lineHeight: fontSize * 1.2,
+              width: dimension, 
+              height: dimension, 
+              borderRadius: dimension / 2,
             }
           ]}
         >
-          {initials}
-        </Text>
-      </LinearGradient>
+          <Text 
+            style={[
+              styles.initials, 
+              { 
+                fontSize,
+                lineHeight: fontSize * 1.2,
+              }
+            ]}
+          >
+            {initials}
+          </Text>
+        </LinearGradient>
+      )}
       
       {showOnline && (
         <View 
@@ -84,6 +97,13 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "#667EEA",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  image: {
     shadowColor: "#667EEA",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,

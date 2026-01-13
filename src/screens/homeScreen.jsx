@@ -111,6 +111,7 @@ const HomeScreen = ({ navigation }) => {
           {/* Header */}
           <HomeHeader
             userName={user?.name || "Kullanici"}
+            profileImage={user?.profileImage}
             onNotificationPress={handleNotificationPress}
             onProfilePress={handleProfilePress}
           />

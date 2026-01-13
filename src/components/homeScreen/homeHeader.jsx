@@ -7,7 +7,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, IconSize } from "../../utils/spacing";
 
-const HomeHeader = ({ userName = "Kullanici", onNotificationPress, onProfilePress }) => {
+const HomeHeader = ({ userName = "Kullanici", profileImage = null, onNotificationPress, onProfilePress }) => {
     const { colors, isDark, toggleTheme } = useTheme();
 
     const getGreeting = () => {
@@ -25,7 +25,7 @@ const HomeHeader = ({ userName = "Kullanici", onNotificationPress, onProfilePres
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.profileSection} onPress={onProfilePress}>
-                <Avatar name={userName} size="md" showOnline onlineStatus="online" />
+                <Avatar name={userName} size="md" image={profileImage} showOnline onlineStatus="online" />
                 <View style={styles.greetingContainer}>
                     <Text style={[styles.greeting, { color: colors.TEXT_SECONDARY }]}>{getGreeting()}</Text>
                     <Text style={[styles.userName, { color: colors.TEXT_PRIMARY }]}>{userName}</Text>
