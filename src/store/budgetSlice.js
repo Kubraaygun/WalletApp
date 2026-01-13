@@ -3,15 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   monthlyBudget: 0,
   categories: [
-    { id: "food", name: "Yemek", icon: "coffee", color: "#F59E0B", budget: 0, spent: 0 },
-    { id: "transport", name: "Ulaşım", icon: "navigation", color: "#3B82F6", budget: 0, spent: 0 },
-    { id: "shopping", name: "Alışveriş", icon: "shopping-bag", color: "#EC4899", budget: 0, spent: 0 },
-    { id: "entertainment", name: "Eğlence", icon: "film", color: "#8B5CF6", budget: 0, spent: 0 },
-    { id: "bills", name: "Faturalar", icon: "file-text", color: "#EF4444", budget: 0, spent: 0 },
-    { id: "health", name: "Sağlık", icon: "heart", color: "#10B981", budget: 0, spent: 0 },
-    { id: "other", name: "Diğer", icon: "more-horizontal", color: "#6B7280", budget: 0, spent: 0 },
+    { id: "food", name: "Yemek", icon: "coffee", color: "#F59E0B", budget: 0 },
+    { id: "transport", name: "Ulaşım", icon: "navigation", color: "#3B82F6", budget: 0 },
+    { id: "shopping", name: "Alışveriş", icon: "shopping-bag", color: "#EC4899", budget: 0 },
+    { id: "entertainment", name: "Eğlence", icon: "film", color: "#8B5CF6", budget: 0 },
+    { id: "bills", name: "Faturalar", icon: "file-text", color: "#EF4444", budget: 0 },
+    { id: "health", name: "Sağlık", icon: "heart", color: "#10B981", budget: 0 },
+    { id: "other", name: "Diğer", icon: "more-horizontal", color: "#6B7280", budget: 0 },
   ],
-  budgetHistory: [],
+  expenses: [], // Tüm harcama kayıtları
 };
 
 const budgetSlice = createSlice({
@@ -20,7 +20,7 @@ const budgetSlice = createSlice({
   reducers: {
     // Aylık bütçe belirle
     setMonthlyBudget: (state, action) => {
-      const amount = Math.max(0, Math.min(action.payload, 1000000)); // Max 1M limit
+      const amount = Math.max(0, Math.min(action.payload, 1000000));
       state.monthlyBudget = amount;
     },
 
@@ -29,56 +29,51 @@ const budgetSlice = createSlice({
       const { categoryId, amount } = action.payload;
       const category = state.categories.find((c) => c.id === categoryId);
       if (category) {
-        category.budget = Math.max(0, Math.min(amount, 100000)); // Max 100K limit
+        category.budget = Math.max(0, Math.min(amount, 100000));
       }
     },
 
-    // Kategori harcaması ekle
+    // Harcama ekle
     addExpense: (state, action) => {
-      const { categoryId, amount } = action.payload;
+      const { categoryId, amount, description = "" } = action.payload;
       const category = state.categories.find((c) => c.id === categoryId);
-      if (category && amount > 0) {
-        category.spent += amount;
-      }
-    },
-
-    // Kategori harcamasını sıfırla
-    resetCategorySpent: (state, action) => {
-      const categoryId = action.payload;
-      const category = state.categories.find((c) => c.id === categoryId);
-      if (category) {
-        category.spent = 0;
-      }
-    },
-
-    // Tüm harcamaları sıfırla (yeni ay)
-    resetAllSpent: (state) => {
-      state.categories.forEach((category) => {
-        category.spent = 0;
-      });
-    },
-
-    // Bütçe geçmişine kaydet
-    saveBudgetHistory: (state, action) => {
-      const { month, year } = action.payload;
-      const historyEntry = {
-        month,
-        year,
-        totalBudget: state.monthlyBudget,
-        totalSpent: state.categories.reduce((sum, c) => sum + c.spent, 0),
-        categories: state.categories.map((c) => ({
-          id: c.id,
-          budget: c.budget,
-          spent: c.spent,
-        })),
-        savedAt: new Date().toISOString(),
-      };
       
-      // Max 12 ay geçmiş tut
-      state.budgetHistory.unshift(historyEntry);
-      if (state.budgetHistory.length > 12) {
-        state.budgetHistory = state.budgetHistory.slice(0, 12);
+      if (category && amount > 0 && amount <= 100000) {
+        const expense = {
+          id: Date.now().toString(),
+          categoryId,
+          categoryName: category.name,
+          categoryColor: category.color,
+          categoryIcon: category.icon,
+          amount: Math.round(amount * 100) / 100, // 2 decimal
+          description: description.slice(0, 100), // Max 100 char
+          date: new Date().toISOString(),
+          createdAt: Date.now(),
+        };
+        state.expenses.unshift(expense);
+        
+        // Max 500 harcama tut (memory için)
+        if (state.expenses.length > 500) {
+          state.expenses = state.expenses.slice(0, 500);
+        }
       }
+    },
+
+    // Harcama sil
+    removeExpense: (state, action) => {
+      const expenseId = action.payload;
+      state.expenses = state.expenses.filter((e) => e.id !== expenseId);
+    },
+
+    // Belirli kategorinin harcamalarını temizle
+    clearCategoryExpenses: (state, action) => {
+      const categoryId = action.payload;
+      state.expenses = state.expenses.filter((e) => e.categoryId !== categoryId);
+    },
+
+    // Tüm harcamaları temizle
+    clearAllExpenses: (state) => {
+      state.expenses = [];
     },
 
     // Tümünü sıfırla
@@ -86,8 +81,8 @@ const budgetSlice = createSlice({
       state.monthlyBudget = 0;
       state.categories.forEach((category) => {
         category.budget = 0;
-        category.spent = 0;
       });
+      state.expenses = [];
     },
   },
 });
@@ -96,19 +91,113 @@ export const {
   setMonthlyBudget,
   setCategoryBudget,
   addExpense,
-  resetCategorySpent,
-  resetAllSpent,
-  saveBudgetHistory,
+  removeExpense,
+  clearCategoryExpenses,
+  clearAllExpenses,
   resetBudget,
 } = budgetSlice.actions;
+
+// Helper functions
+const isToday = (dateString) => {
+  const date = new Date(dateString);
+  const today = new Date();
+  return date.toDateString() === today.toDateString();
+};
+
+const isThisWeek = (dateString) => {
+  const date = new Date(dateString);
+  const today = new Date();
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - today.getDay());
+  weekStart.setHours(0, 0, 0, 0);
+  return date >= weekStart;
+};
+
+const isThisMonth = (dateString) => {
+  const date = new Date(dateString);
+  const today = new Date();
+  return date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+};
 
 // Selectors
 export const selectMonthlyBudget = (state) => state.budget.monthlyBudget;
 export const selectCategories = (state) => state.budget.categories;
-export const selectTotalSpent = (state) =>
-  state.budget.categories.reduce((sum, c) => sum + c.spent, 0);
-export const selectTotalBudget = (state) =>
-  state.budget.categories.reduce((sum, c) => sum + c.budget, 0);
-export const selectBudgetHistory = (state) => state.budget.budgetHistory;
+export const selectExpenses = (state) => state.budget.expenses;
+
+// Bugünkü harcamalar
+export const selectTodayExpenses = (state) =>
+  state.budget.expenses.filter((e) => isToday(e.date));
+
+export const selectTodayTotal = (state) =>
+  state.budget.expenses
+    .filter((e) => isToday(e.date))
+    .reduce((sum, e) => sum + e.amount, 0);
+
+// Bu haftanın harcamaları
+export const selectWeekExpenses = (state) =>
+  state.budget.expenses.filter((e) => isThisWeek(e.date));
+
+export const selectWeekTotal = (state) =>
+  state.budget.expenses
+    .filter((e) => isThisWeek(e.date))
+    .reduce((sum, e) => sum + e.amount, 0);
+
+// Bu ayın harcamaları
+export const selectMonthExpenses = (state) =>
+  state.budget.expenses.filter((e) => isThisMonth(e.date));
+
+export const selectMonthTotal = (state) =>
+  state.budget.expenses
+    .filter((e) => isThisMonth(e.date))
+    .reduce((sum, e) => sum + e.amount, 0);
+
+// Kategori bazlı aylık harcamalar
+export const selectCategoryMonthlySpent = (categoryId) => (state) =>
+  state.budget.expenses
+    .filter((e) => e.categoryId === categoryId && isThisMonth(e.date))
+    .reduce((sum, e) => sum + e.amount, 0);
+
+// Tüm kategorilerin aylık harcamaları
+export const selectCategoriesWithSpent = (state) =>
+  state.budget.categories.map((category) => ({
+    ...category,
+    spent: state.budget.expenses
+      .filter((e) => e.categoryId === category.id && isThisMonth(e.date))
+      .reduce((sum, e) => sum + e.amount, 0),
+  }));
+
+// Son 7 günün günlük harcamaları (grafik için)
+export const selectLast7DaysData = (state) => {
+  const result = [];
+  const today = new Date();
+  
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    const dateStr = date.toDateString();
+    
+    const dayTotal = state.budget.expenses
+      .filter((e) => new Date(e.date).toDateString() === dateStr)
+      .reduce((sum, e) => sum + e.amount, 0);
+    
+    const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+    result.push({
+      day: dayNames[date.getDay()],
+      amount: dayTotal,
+    });
+  }
+  
+  return result;
+};
+
+// Kategori bazlı toplam (pie chart için)
+export const selectCategoryTotals = (state) =>
+  state.budget.categories.map((category) => ({
+    name: category.name,
+    color: category.color,
+    amount: state.budget.expenses
+      .filter((e) => e.categoryId === category.id && isThisMonth(e.date))
+      .reduce((sum, e) => sum + e.amount, 0),
+  })).filter((c) => c.amount > 0);
 
 export default budgetSlice.reducer;
