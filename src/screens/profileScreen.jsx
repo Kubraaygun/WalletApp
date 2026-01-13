@@ -103,7 +103,7 @@ const ProfileScreen = ({ navigation }) => {
       >
         {/* Profile Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.SURFACE }]}>
-          <Avatar name={user?.name || "Kullanici"} size="2xl" />
+          <Avatar name={user?.name || "Kullanici"} size="2xl" image={user?.profileImage} />
           <Text style={[styles.profileName, { color: colors.TEXT_PRIMARY }]}>
             {user?.name || "Kullanici"}
           </Text>
