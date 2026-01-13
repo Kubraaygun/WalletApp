@@ -21,6 +21,7 @@ import CardLimitsScreen from "../screens/cardLimitsScreen";
 import SettingsScreen from "../screens/settingsScreen";
 import EditProfileScreen from "../screens/editProfileScreen";
 import FavoritesScreen from "../screens/favoritesScreen";
+import BudgetScreen from "../screens/budgetScreen";
 import ProfileScreen from "../screens/profileScreen";
 import OnboardingScreen from "../screens/onboardingScreen";
 import CryptoScreen from "../screens/cryptoScreen";
@@ -42,6 +43,7 @@ import {
   SETTINGSSCREEN,
   EDITPROFILESCREEN,
   FAVORITESSCREEN,
+  BUDGETSCREEN,
   PROFILESCREEN,
   ONBOARDINGSCREEN,
   CRYPTOSCREEN,
@@ -232,6 +234,11 @@ const RootNavigation = () => {
           <Stack.Screen 
             name={FAVORITESSCREEN} 
             component={FavoritesScreen}
+            options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={BUDGETSCREEN} 
+            component={BudgetScreen}
             options={ScreenTransitions.slideFromRight}
           />
         </>

@@ -11,6 +11,7 @@ export const CARDLIMITSSCREEN = "CardLimitsScreen";
 export const SETTINGSSCREEN = "SettingsScreen";
 export const EDITPROFILESCREEN = "EditProfileScreen";
 export const FAVORITESSCREEN = "FavoritesScreen";
+export const BUDGETSCREEN = "BudgetScreen";
 export const PROFILESCREEN = "ProfileScreen";
 export const ONBOARDINGSCREEN = "OnboardingScreen";
 export const CRYPTOSCREEN = "CryptoScreen";
