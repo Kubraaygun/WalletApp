@@ -119,55 +119,56 @@ const isThisMonth = (dateString) => {
   return date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
 };
 
-// Selectors
-export const selectMonthlyBudget = (state) => state.budget.monthlyBudget;
-export const selectCategories = (state) => state.budget.categories;
-export const selectExpenses = (state) => state.budget.expenses;
+// Selectors with null safety
+export const selectMonthlyBudget = (state) => state.budget?.monthlyBudget ?? 0;
+export const selectCategories = (state) => state.budget?.categories ?? [];
+export const selectExpenses = (state) => state.budget?.expenses ?? [];
 
 // Bugünkü harcamalar
 export const selectTodayExpenses = (state) =>
-  state.budget.expenses.filter((e) => isToday(e.date));
+  (state.budget?.expenses ?? []).filter((e) => isToday(e.date));
 
 export const selectTodayTotal = (state) =>
-  state.budget.expenses
+  (state.budget?.expenses ?? [])
     .filter((e) => isToday(e.date))
     .reduce((sum, e) => sum + e.amount, 0);
 
 // Bu haftanın harcamaları
 export const selectWeekExpenses = (state) =>
-  state.budget.expenses.filter((e) => isThisWeek(e.date));
+  (state.budget?.expenses ?? []).filter((e) => isThisWeek(e.date));
 
 export const selectWeekTotal = (state) =>
-  state.budget.expenses
+  (state.budget?.expenses ?? [])
     .filter((e) => isThisWeek(e.date))
     .reduce((sum, e) => sum + e.amount, 0);
 
 // Bu ayın harcamaları
 export const selectMonthExpenses = (state) =>
-  state.budget.expenses.filter((e) => isThisMonth(e.date));
+  (state.budget?.expenses ?? []).filter((e) => isThisMonth(e.date));
 
 export const selectMonthTotal = (state) =>
-  state.budget.expenses
+  (state.budget?.expenses ?? [])
     .filter((e) => isThisMonth(e.date))
     .reduce((sum, e) => sum + e.amount, 0);
 
 // Kategori bazlı aylık harcamalar
 export const selectCategoryMonthlySpent = (categoryId) => (state) =>
-  state.budget.expenses
+  (state.budget?.expenses ?? [])
     .filter((e) => e.categoryId === categoryId && isThisMonth(e.date))
     .reduce((sum, e) => sum + e.amount, 0);
 
 // Tüm kategorilerin aylık harcamaları
 export const selectCategoriesWithSpent = (state) =>
-  state.budget.categories.map((category) => ({
+  (state.budget?.categories ?? []).map((category) => ({
     ...category,
-    spent: state.budget.expenses
+    spent: (state.budget?.expenses ?? [])
       .filter((e) => e.categoryId === category.id && isThisMonth(e.date))
       .reduce((sum, e) => sum + e.amount, 0),
   }));
 
 // Son 7 günün günlük harcamaları (grafik için)
 export const selectLast7DaysData = (state) => {
+  const expenses = state.budget?.expenses ?? [];
   const result = [];
   const today = new Date();
   
@@ -176,7 +177,7 @@ export const selectLast7DaysData = (state) => {
     date.setDate(today.getDate() - i);
     const dateStr = date.toDateString();
     
-    const dayTotal = state.budget.expenses
+    const dayTotal = expenses
       .filter((e) => new Date(e.date).toDateString() === dateStr)
       .reduce((sum, e) => sum + e.amount, 0);
     
@@ -192,10 +193,10 @@ export const selectLast7DaysData = (state) => {
 
 // Kategori bazlı toplam (pie chart için)
 export const selectCategoryTotals = (state) =>
-  state.budget.categories.map((category) => ({
+  (state.budget?.categories ?? []).map((category) => ({
     name: category.name,
     color: category.color,
-    amount: state.budget.expenses
+    amount: (state.budget?.expenses ?? [])
       .filter((e) => e.categoryId === category.id && isThisMonth(e.date))
       .reduce((sum, e) => sum + e.amount, 0),
   })).filter((c) => c.amount > 0);
