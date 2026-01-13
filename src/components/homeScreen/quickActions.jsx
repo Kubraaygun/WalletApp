@@ -84,12 +84,6 @@ const QuickActions = ({ navigation }) => {
             screen: "FavoritesScreen",
         },
         {
-            icon: "target",
-            label: "Butce Takibi",
-            color: "#8B5CF6",
-            screen: "BudgetScreen",
-        },
-        {
             icon: "plus-circle",
             label: "Para Yukle",
             color: colors.SUCCESS,
@@ -103,7 +97,7 @@ const QuickActions = ({ navigation }) => {
         },
         {
             icon: "pie-chart",
-            label: "Harcama Istatistikleri",
+            label: "Mali Durum",
             color: colors.PRIMARY,
             screen: "StatsScreen",
         },
