@@ -38,6 +38,11 @@ const budgetSlice = createSlice({
       const { categoryId, amount, description = "" } = action.payload;
       const category = state.categories.find((c) => c.id === categoryId);
       
+      // Eski persisted state'de expenses yoksa oluştur
+      if (!state.expenses) {
+        state.expenses = [];
+      }
+      
       if (category && amount > 0 && amount <= 100000) {
         const expense = {
           id: Date.now().toString(),
