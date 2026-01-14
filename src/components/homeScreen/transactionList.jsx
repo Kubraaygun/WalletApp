@@ -326,7 +326,7 @@ const TransactionList = ({
         onRequestClose={closeFilterModal}
       >
         <TouchableOpacity 
-          style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={closeFilterModal}
         >
@@ -448,7 +448,7 @@ const TransactionList = ({
         onRequestClose={closeModal}
       >
         <TouchableOpacity 
-          style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={closeModal}
         >

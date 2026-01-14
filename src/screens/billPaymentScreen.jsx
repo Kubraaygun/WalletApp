@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   emptyText: { ...TextStyles.bodyMedium, marginTop: Spacing.sm },
   infoBox: { flexDirection: "row", alignItems: "center", padding: Spacing.md, borderRadius: BorderRadius.lg, gap: Spacing.sm, marginTop: Spacing.lg },
   infoText: { ...TextStyles.caption, flex: 1 },
-  modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
+  modalOverlay: { flex: 1, justifyContent: "flex-end" },
   modalContent: { borderTopLeftRadius: BorderRadius.xl, borderTopRightRadius: BorderRadius.xl, padding: Spacing.lg, paddingBottom: Spacing["2xl"] },
   modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: Spacing.lg },
   modalTitle: { ...TextStyles.h3 },

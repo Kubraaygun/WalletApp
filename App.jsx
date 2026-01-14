@@ -33,6 +33,8 @@ const PersistLoading = () => (
   </View>
 );
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [isReady, setIsReady] = useState(false);
@@ -71,27 +73,29 @@ const App = () => {
   };
 
   return (
-    <Provider store={store}>
-      <ThemeProvider>
-        <SafeAreaProvider>
-          <PersistGate 
-            loading={<PersistLoading />} 
-            persistor={persistor}
-            onBeforeLift={handlePersistorReady}
-          >
-            <NavigationContainer>
-              <RootNavigation />
-            </NavigationContainer>
-            <LoadingModal />
-            
-            {/* Animated Splash Screen */}
-            {showSplash && (
-              <AnimatedSplash onAnimationComplete={handleSplashComplete} />
-            )}
-          </PersistGate>
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <ThemeProvider>
+          <SafeAreaProvider>
+            <PersistGate 
+              loading={<PersistLoading />} 
+              persistor={persistor}
+              onBeforeLift={handlePersistorReady}
+            >
+              <NavigationContainer>
+                <RootNavigation />
+              </NavigationContainer>
+              <LoadingModal />
+              
+              {/* Animated Splash Screen */}
+              {showSplash && (
+                <AnimatedSplash onAnimationComplete={handleSplashComplete} />
+              )}
+            </PersistGate>
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

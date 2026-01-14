@@ -138,12 +138,13 @@ const QuickActions = ({ navigation }) => {
                 transparent={true}
                 onRequestClose={() => setShowMoreMenu(false)}
             >
-                <TouchableOpacity
-                    style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
-                    activeOpacity={1}
-                    onPress={() => setShowMoreMenu(false)}
-                >
-                    <View style={[styles.menuContainer, { backgroundColor: colors.BACKGROUND }]}>
+                <View style={styles.modalOverlay}>
+                    <TouchableOpacity 
+                        style={styles.modalBackground} 
+                        activeOpacity={1} 
+                        onPress={() => setShowMoreMenu(false)} 
+                    />
+                    <View style={[styles.menuContainer, { backgroundColor: colors.BACKGROUND }, Shadows.xl]}>
                         <View style={[styles.menuHandle, { backgroundColor: colors.GRAY_300 }]} />
                         <Text style={[styles.menuTitle, { color: colors.TEXT_PRIMARY }]}>Daha Fazla</Text>
                         {moreMenuItems.map((item, index) => (
@@ -165,7 +166,7 @@ const QuickActions = ({ navigation }) => {
                             <Text style={[styles.closeButtonText, { color: colors.TEXT_SECONDARY }]}>Kapat</Text>
                         </ScalePress>
                     </View>
-                </TouchableOpacity>
+                </View>
             </Modal>
         </View>
     );
@@ -206,6 +207,10 @@ const styles = StyleSheet.create({
     modalOverlay: {
         flex: 1,
         justifyContent: "flex-end",
+    },
+    modalBackground: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "rgba(0,0,0,0.15)", // Added back a subtle backdrop for visual separation
     },
     menuContainer: {
         borderTopLeftRadius: BorderRadius.xl,

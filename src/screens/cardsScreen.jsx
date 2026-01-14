@@ -326,7 +326,7 @@ const CardsScreen = ({ navigation }) => {
         animationType="slide"
         onRequestClose={() => setShowDetailModal(false)}
       >
-        <View style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}>
+        <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}>
             {/* Modal Handle */}
             <View style={styles.modalHandle}>
@@ -423,7 +423,7 @@ const CardsScreen = ({ navigation }) => {
         animationType="slide"
         onRequestClose={handleCloseModal}
       >
-        <View style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}>
+        <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}>
             {/* Modal Handle */}
             <View style={styles.modalHandle}>

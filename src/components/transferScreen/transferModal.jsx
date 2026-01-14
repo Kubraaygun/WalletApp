@@ -124,7 +124,6 @@ const TransferModal = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: Colors.OVERLAY,
     justifyContent: "flex-end",
   },
   bottomSheet: {

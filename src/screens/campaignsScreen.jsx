@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
   validText: { ...TextStyles.caption },
   emptyState: { alignItems: "center", paddingVertical: Spacing.xl },
   emptyText: { ...TextStyles.bodyMedium, marginTop: Spacing.sm },
-  modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
+  modalOverlay: { flex: 1, justifyContent: "flex-end" },
   modalContent: { borderTopLeftRadius: BorderRadius.xl, borderTopRightRadius: BorderRadius.xl, padding: Spacing.lg, paddingBottom: Spacing["2xl"] },
   modalHeader: { alignItems: "center", marginBottom: Spacing.md },
   modalBadge: { width: 72, height: 72, borderRadius: 20, justifyContent: "center", alignItems: "center" },

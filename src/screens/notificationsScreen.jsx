@@ -347,7 +347,7 @@ const NotificationsScreen = ({ navigation }) => {
         onRequestClose={handleCloseModal}
       >
         <TouchableOpacity 
-          style={[styles.modalOverlay, { backgroundColor: colors.OVERLAY }]}
+          style={styles.modalOverlay}
           activeOpacity={1}
           onPress={handleCloseModal}
         >
