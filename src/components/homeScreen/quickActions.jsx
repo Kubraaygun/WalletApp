@@ -84,6 +84,12 @@ const QuickActions = ({ navigation }) => {
             screen: "FavoritesScreen",
         },
         {
+            icon: "file-text",
+            label: "Fatura Ode",
+            color: "#F59E0B",
+            screen: "BillPaymentScreen",
+        },
+        {
             icon: "plus-circle",
             label: "Para Yukle",
             color: colors.SUCCESS,
@@ -112,6 +118,18 @@ const QuickActions = ({ navigation }) => {
             label: "Doviz Cevirici",
             color: "#06B6D4",
             screen: "CurrencyConverterScreen",
+        },
+        {
+            icon: "gift",
+            label: "Kampanyalar",
+            color: "#8B5CF6",
+            screen: "CampaignsScreen",
+        },
+        {
+            icon: "file-text",
+            label: "Raporlar",
+            color: "#10B981",
+            screen: "ReportScreen",
         },
     ];
 

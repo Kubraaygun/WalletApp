@@ -51,7 +51,8 @@
           "faceIDPermission": "Güvenli giriş için Face ID kullanılır."
         }
       ],
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "expo-secure-store"
     ],
     "extra": {
       "apiUrl": "http://localhost:3001/api",

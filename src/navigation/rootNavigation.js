@@ -28,6 +28,10 @@ import CryptoScreen from "../screens/cryptoScreen";
 import StatsScreen from "../screens/statsScreen";
 import CardsScreen from "../screens/cardsScreen";
 import CurrencyConverterScreen from "../screens/currencyConverterScreen";
+import BillPaymentScreen from "../screens/billPaymentScreen";
+import PinScreen from "../screens/pinScreen";
+import CampaignsScreen from "../screens/campaignsScreen";
+import ReportScreen from "../screens/reportScreen";
 
 import {
   HOMESCREEN,
@@ -50,6 +54,10 @@ import {
   STATSSCREEN,
   CARDSSCREEN,
   CURRENCYSCREEN,
+  BILLPAYMENTSCREEN,
+  PINSCREEN,
+  CAMPAIGNSSCREEN,
+  REPORTSCREEN,
 } from "../utils/routes";
 
 const Stack = createStackNavigator();
@@ -239,6 +247,26 @@ const RootNavigation = () => {
           <Stack.Screen 
             name={BUDGETSCREEN} 
             component={BudgetScreen}
+            options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={BILLPAYMENTSCREEN} 
+            component={BillPaymentScreen}
+            options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={PINSCREEN} 
+            component={PinScreen}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
+          <Stack.Screen 
+            name={CAMPAIGNSSCREEN} 
+            component={CampaignsScreen}
+            options={ScreenTransitions.slideFromRight}
+          />
+          <Stack.Screen 
+            name={REPORTSCREEN} 
+            component={ReportScreen}
             options={ScreenTransitions.slideFromRight}
           />
         </>

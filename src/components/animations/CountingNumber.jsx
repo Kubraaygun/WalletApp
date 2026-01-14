@@ -12,7 +12,7 @@ const CountingNumber = ({
   prefix = "₺",
   suffix = "",
   style,
-  decimals = 2,
+  decimals = 2, 
 }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [displayValue, setDisplayValue] = React.useState("0");

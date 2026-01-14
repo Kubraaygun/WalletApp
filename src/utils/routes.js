@@ -18,5 +18,9 @@ export const CRYPTOSCREEN = "CryptoScreen";
 export const STATSSCREEN = "StatsScreen";
 export const CARDSSCREEN = "CardsScreen";
 export const CURRENCYSCREEN = "CurrencyConverterScreen";
+export const BILLPAYMENTSCREEN = "BillPaymentScreen";
+export const PINSCREEN = "PinScreen";
+export const CAMPAIGNSSCREEN = "CampaignsScreen";
+export const REPORTSCREEN = "ReportScreen";
 
 
