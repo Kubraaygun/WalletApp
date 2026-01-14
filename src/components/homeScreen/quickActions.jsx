@@ -96,12 +96,6 @@ const QuickActions = ({ navigation }) => {
             screen: "TopUpScreen",
         },
         {
-            icon: "trending-up",
-            label: "Kripto Fiyatlari",
-            color: "#F7931A",
-            screen: "CryptoScreen",
-        },
-        {
             icon: "repeat",
             label: "Doviz Cevirici",
             color: "#06B6D4",

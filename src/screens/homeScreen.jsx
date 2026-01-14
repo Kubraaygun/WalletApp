@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, ScrollView, StatusBar, StyleSheet, RefreshControl } from "react-native";
+import { View, StatusBar, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import Animated, {
@@ -91,48 +91,32 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing || isLoading}
-            onRefresh={onRefresh}
-            tintColor={colors.ACCENT}
-            colors={[colors.ACCENT, colors.PRIMARY]}
-            progressBackgroundColor={colors.SURFACE}
-            title="Yenileniyor..."
-            titleColor={colors.TEXT_SECONDARY}
-          />
-        }
-      >
-        <Animated.View style={animatedContentStyle}>
-          {/* Header */}
-          <HomeHeader
-            userName={user?.name || "Kullanici"}
-            profileImage={user?.profileImage}
-            onNotificationPress={handleNotificationPress}
-            onProfilePress={handleProfilePress}
-          />
+      <Animated.View style={animatedContentStyle}>
+        {/* Header */}
+        <HomeHeader
+          userName={user?.name || "Kullanici"}
+          profileImage={user?.profileImage}
+          onNotificationPress={handleNotificationPress}
+          onProfilePress={handleProfilePress}
+        />
 
-          {/* Balance Card */}
-          <BalanceCard balance={balance} />
+        {/* Balance Card */}
+        <BalanceCard balance={balance} />
 
-          {/* Quick Actions */}
-          <QuickActions navigation={navigation} />
+        {/* Quick Actions */}
+        <QuickActions navigation={navigation} />
+      </Animated.View>
 
-          {/* Transaction List */}
-          <TransactionList
-            transactions={transactions}
-            onSeeAll={() => { }}
-            maxItems={5}
-          />
-
-          {/* Bottom spacer for scroll */}
-          <View style={styles.bottomSpacer} />
-        </Animated.View>
-      </ScrollView>
+      {/* Transaction List (Scrollable Part) */}
+      <TransactionList
+        transactions={transactions}
+        onSeeAll={() => { }}
+        maxItems={20}
+        scrollEnabled={true}
+        refreshing={refreshing || isLoading}
+        onRefresh={onRefresh}
+        containerStyle={{ flex: 1 }}
+      />
     </SafeAreaView>
   );
 };

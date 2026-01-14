@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, RefreshControl } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -38,7 +38,15 @@ const AMOUNT_FILTERS = [
   { id: "over1000", label: "₺1000 üzeri" },
 ];
 
-const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
+const TransactionList = ({ 
+  transactions, 
+  onSeeAll, 
+  maxItems = 10, 
+  scrollEnabled = false,
+  refreshing = false,
+  onRefresh = null,
+  containerStyle = {}
+}) => {
   const { colors } = useTheme();
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -185,7 +193,7 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.header}>
         <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>Son Islemler</Text>
         <View style={styles.headerActions}>
@@ -294,8 +302,19 @@ const TransactionList = ({ transactions, onSeeAll, maxItems = 5 }) => {
             />
           )}
           keyExtractor={(item, index) => item.id || index.toString()}
-          scrollEnabled={false}
+          scrollEnabled={scrollEnabled}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            onRefresh ? (
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={colors.ACCENT}
+                colors={[colors.ACCENT, colors.PRIMARY]}
+              />
+            ) : null
+          }
+          contentContainerStyle={{ paddingBottom: Spacing.xl }}
         />
       )}
 
