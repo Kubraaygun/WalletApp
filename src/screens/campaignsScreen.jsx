@@ -134,46 +134,50 @@ const CampaignsScreen = ({ navigation }) => {
         <View style={styles.headerSpacer} />
       </View>
 
-      {/* Categories */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.categoriesContainer}
-      >
-        {CATEGORIES.map((cat) => (
-          <TouchableOpacity
-            key={cat.id}
-            style={[
-              styles.categoryChip,
-              {
-                backgroundColor: selectedCategory === cat.id ? colors.PRIMARY : colors.SURFACE,
-              }
-            ]}
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              setSelectedCategory(cat.id);
-            }}
-          >
-            <Icon
-              name={cat.icon}
-              size={16}
-              color={selectedCategory === cat.id ? "#FFF" : colors.TEXT_SECONDARY}
-            />
-            <Text
+      {/* Categories Bar */}
+      <View style={styles.categoryBar}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          {CATEGORIES.map((cat) => (
+            <TouchableOpacity
+              key={cat.id}
               style={[
-                styles.categoryText,
-                { color: selectedCategory === cat.id ? "#FFF" : colors.TEXT_PRIMARY }
+                styles.categoryChip,
+                {
+                  backgroundColor: selectedCategory === cat.id ? colors.PRIMARY : colors.SURFACE,
+                  borderColor: selectedCategory === cat.id ? colors.PRIMARY : colors.BORDER,
+                  borderWidth: 1,
+                }
               ]}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setSelectedCategory(cat.id);
+              }}
             >
-              {cat.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+              <Icon
+                name={cat.icon}
+                size={14}
+                color={selectedCategory === cat.id ? "#FFF" : colors.TEXT_SECONDARY}
+              />
+              <Text
+                style={[
+                  styles.categoryText,
+                  { color: selectedCategory === cat.id ? "#FFF" : colors.TEXT_PRIMARY }
+                ]}
+              >
+                {cat.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Cashback Summary */}
-        <FadeSlide delay={0}>
+      {/* Fixed Summary Card */}
+      <View style={styles.fixedHeader}>
+        <FadeSlide delay={0} distance={0}>
           <LinearGradient
             colors={[colors.PRIMARY, "#7C3AED"]}
             start={{ x: 0, y: 0 }}
@@ -202,7 +206,13 @@ const CampaignsScreen = ({ navigation }) => {
             </View>
           </LinearGradient>
         </FadeSlide>
+      </View>
 
+      <ScrollView 
+        style={styles.contentScrollView} 
+        contentContainerStyle={styles.scrollContent} 
+        showsVerticalScrollIndicator={false}
+      >
         {/* Campaigns List */}
         <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>
           {selectedCategory === "all" ? "Tüm Kampanyalar" : `${CATEGORIES.find(c => c.id === selectedCategory)?.label} Kampanyaları`}
@@ -331,26 +341,28 @@ const CampaignsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
-  header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm },
+  header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: Spacing.md, height: 44 },
   backButton: { width: 44, height: 44, justifyContent: "center", alignItems: "center" },
-  headerTitle: { ...TextStyles.h3 },
+  headerTitle: { ...TextStyles.h3, fontSize: 17 },
   headerSpacer: { width: 44 },
-  categoriesContainer: { paddingHorizontal: Spacing.md, paddingBottom: Spacing.sm },
-  categoryChip: { flexDirection: "row", alignItems: "center", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, marginRight: 6, height: 28 },
-  categoryText: { fontSize: 11, marginLeft: 4 },
-  scrollView: { flex: 1 },
-  scrollContent: { padding: Spacing.md, paddingBottom: Spacing["2xl"] },
-  summaryCard: { borderRadius: BorderRadius.xl, padding: Spacing.lg, marginBottom: Spacing.lg },
+  categoryBar: { height: 40, justifyContent: "center", marginBottom: 12 },
+  categoriesContainer: { paddingHorizontal: Spacing.md, height: 40, alignItems: "center" },
+  categoryChip: { flexDirection: "row", alignItems: "center", paddingHorizontal: 10, borderRadius: 14, marginRight: 8, height: 28 },
+  categoryText: { fontSize: 12, marginLeft: 5, fontWeight: "500" },
+  fixedHeader: { paddingHorizontal: Spacing.md, paddingBottom: 8 },
+  contentScrollView: { flex: 1 },
+  scrollContent: { paddingHorizontal: Spacing.md, paddingTop: 4, paddingBottom: Spacing["2xl"] },
+  summaryCard: { borderRadius: BorderRadius.lg, padding: Spacing.md, marginBottom: 4 },
   summaryRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  summaryLabel: { ...TextStyles.labelMedium, color: "rgba(255,255,255,0.8)" },
-  summaryAmount: { fontSize: 28, fontWeight: "700", color: "#FFF", marginTop: 4 },
-  summaryIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.2)", justifyContent: "center", alignItems: "center" },
+  summaryLabel: { ...TextStyles.labelMedium, color: "rgba(255,255,255,0.8)", fontSize: 13 },
+  summaryAmount: { fontSize: 26, fontWeight: "700", color: "#FFF", marginTop: 2 },
+  summaryIcon: { width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.2)", justifyContent: "center", alignItems: "center" },
   summaryStats: { flexDirection: "row", marginTop: Spacing.md, paddingTop: Spacing.sm, borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.2)", alignItems: "center" },
   summaryStatItem: { flex: 1, alignItems: "center" },
-  summaryStatValue: { ...TextStyles.labelLarge, color: "#FFF", fontWeight: "700" },
-  summaryStatLabel: { ...TextStyles.caption, color: "rgba(255,255,255,0.7)", marginTop: 2 },
-  divider: { width: 1, height: 32, backgroundColor: "rgba(255,255,255,0.2)" },
-  sectionTitle: { ...TextStyles.labelLarge, marginBottom: Spacing.md },
+  summaryStatValue: { ...TextStyles.labelLarge, color: "#FFF", fontWeight: "700", fontSize: 16 },
+  summaryStatLabel: { ...TextStyles.caption, color: "rgba(255,255,255,0.7)", marginTop: 2, fontSize: 11 },
+  divider: { width: 1, height: 28, backgroundColor: "rgba(255,255,255,0.2)" },
+  sectionTitle: { ...TextStyles.labelLarge, marginBottom: Spacing.sm, fontSize: 15 },
   campaignCard: { flexDirection: "row", alignItems: "center", padding: Spacing.md, borderRadius: BorderRadius.lg, marginBottom: Spacing.sm, ...Shadows.sm },
   campaignBadge: { width: 48, height: 48, borderRadius: 14, justifyContent: "center", alignItems: "center" },
   campaignContent: { flex: 1, marginLeft: Spacing.sm, marginRight: Spacing.xs },
