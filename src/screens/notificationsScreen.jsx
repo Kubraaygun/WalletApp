@@ -18,6 +18,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Mock notifications data
 const MOCK_NOTIFICATIONS = [
@@ -346,66 +347,68 @@ const NotificationsScreen = ({ navigation }) => {
         animationType="slide"
         onRequestClose={handleCloseModal}
       >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={handleCloseModal}
-        >
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <TouchableOpacity 
-            activeOpacity={1} 
-            style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={handleCloseModal}
           >
-            {/* Handle */}
-            <View style={styles.modalHandle}>
-              <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
-            </View>
+            <TouchableOpacity 
+              activeOpacity={1} 
+              style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}
+            >
+              {/* Handle */}
+              <View style={styles.modalHandle}>
+                <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
+              </View>
 
-            {selectedNotification && (
-              <>
-                {/* Icon & Title */}
-                <View style={styles.modalHeader}>
-                  <View style={[styles.modalIcon, { backgroundColor: `${selectedNotification.color}20` }]}>
-                    <Icon name={selectedNotification.icon} size={28} color={selectedNotification.color} />
+              {selectedNotification && (
+                <>
+                  {/* Icon & Title */}
+                  <View style={styles.modalHeader}>
+                    <View style={[styles.modalIcon, { backgroundColor: `${selectedNotification.color}20` }]}>
+                      <Icon name={selectedNotification.icon} size={28} color={selectedNotification.color} />
+                    </View>
+                    <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>
+                      {selectedNotification.title}
+                    </Text>
+                    <Text style={[styles.modalDate, { color: colors.TEXT_SECONDARY }]}>
+                      {selectedNotification.date}
+                    </Text>
                   </View>
-                  <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>
-                    {selectedNotification.title}
-                  </Text>
-                  <Text style={[styles.modalDate, { color: colors.TEXT_SECONDARY }]}>
-                    {selectedNotification.date}
-                  </Text>
-                </View>
 
-                {/* Detail Message */}
-                <View style={[styles.modalBody, { backgroundColor: colors.BACKGROUND }]}>
-                  <Text style={[styles.modalDetail, { color: colors.TEXT_PRIMARY }]}>
-                    {selectedNotification.detail}
-                  </Text>
-                </View>
+                  {/* Detail Message */}
+                  <View style={[styles.modalBody, { backgroundColor: colors.BACKGROUND }]}>
+                    <Text style={[styles.modalDetail, { color: colors.TEXT_PRIMARY }]}>
+                      {selectedNotification.detail}
+                    </Text>
+                  </View>
 
-                {/* Actions */}
-                <View style={styles.modalActions}>
-                  <TouchableOpacity 
-                    style={[styles.modalActionBtn, { backgroundColor: `${colors.ERROR}15` }]}
-                    onPress={() => {
-                      handleDeleteNotification(selectedNotification.id);
-                      handleCloseModal();
-                    }}
-                  >
-                    <Icon name="trash-2" size={18} color={colors.ERROR} />
-                    <Text style={[styles.modalActionText, { color: colors.ERROR }]}>Sil</Text>
-                  </TouchableOpacity>
-                  
-                  <TouchableOpacity 
-                    style={[styles.modalActionBtn, styles.modalActionBtnPrimary, { backgroundColor: colors.PRIMARY }]}
-                    onPress={handleCloseModal}
-                  >
-                    <Text style={styles.modalActionTextPrimary}>Tamam</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
+                  {/* Actions */}
+                  <View style={styles.modalActions}>
+                    <TouchableOpacity 
+                      style={[styles.modalActionBtn, { backgroundColor: `${colors.ERROR}15` }]}
+                      onPress={() => {
+                        handleDeleteNotification(selectedNotification.id);
+                        handleCloseModal();
+                      }}
+                    >
+                      <Icon name="trash-2" size={18} color={colors.ERROR} />
+                      <Text style={[styles.modalActionText, { color: colors.ERROR }]}>Sil</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                      style={[styles.modalActionBtn, styles.modalActionBtnPrimary, { backgroundColor: colors.PRIMARY }]}
+                      onPress={handleCloseModal}
+                    >
+                      <Text style={styles.modalActionTextPrimary}>Tamam</Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+            </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
+        </GestureHandlerRootView>
       </Modal>
     </SafeAreaView>
   );

@@ -19,6 +19,7 @@ import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 import { FadeSlide } from "../components/animations";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const CAMPAIGNS = [
   {
@@ -268,7 +269,7 @@ const CampaignsScreen = ({ navigation }) => {
 
       {/* Detail Modal */}
       <Modal visible={detailModalVisible} animationType="slide" transparent onRequestClose={() => setDetailModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.BACKGROUND }]}>
             {selectedCampaign && (
               <>
@@ -333,7 +334,7 @@ const CampaignsScreen = ({ navigation }) => {
               </>
             )}
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
     </SafeAreaView>
   );

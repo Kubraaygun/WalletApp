@@ -21,6 +21,7 @@ import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 import { FadeSlide } from "../components/animations";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   selectCategories,
   selectMonthlyBudget,
@@ -373,7 +374,7 @@ const StatsScreen = ({ navigation }) => {
 
       {/* Add Expense Modal */}
       <Modal visible={addExpenseModalVisible} animationType="slide" transparent onRequestClose={() => setAddExpenseModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.BACKGROUND }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>Harcama Ekle</Text>
@@ -434,12 +435,12 @@ const StatsScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
 
       {/* Budget Edit Modal */}
       <Modal visible={budgetModalVisible} animationType="slide" transparent onRequestClose={() => setBudgetModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.BACKGROUND }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>{selectedCategory?.name} Bütçesi</Text>
@@ -466,7 +467,7 @@ const StatsScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
     </SafeAreaView>
   );

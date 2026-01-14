@@ -15,6 +15,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Filter options
 const FILTER_TYPES = [
@@ -325,119 +326,121 @@ const TransactionList = ({
         animationType="slide"
         onRequestClose={closeFilterModal}
       >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={closeFilterModal}
-        >
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <TouchableOpacity 
-            activeOpacity={1} 
-            onPress={() => {}}
-            style={[styles.filterModalContent, { backgroundColor: colors.SURFACE }]}
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={closeFilterModal}
           >
-            <View style={styles.modalHandle}>
-              <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
-            </View>
-
-            <View style={styles.filterModalHeader}>
-              <Text style={[styles.filterModalTitle, { color: colors.TEXT_PRIMARY }]}>
-                İşlemleri Filtrele
-              </Text>
-              <TouchableOpacity onPress={clearFilters}>
-                <Text style={[styles.clearText, { color: colors.ERROR }]}>Sıfırla</Text>
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {/* Type Filter */}
-              <View style={styles.filterSection}>
-                <Text style={[styles.filterSectionTitle, { color: colors.TEXT_PRIMARY }]}>
-                  İşlem Türü
-                </Text>
-                <View style={styles.filterOptions}>
-                  {FILTER_TYPES.map((type) => (
-                    <TouchableOpacity
-                      key={type.id}
-                      style={[
-                        styles.filterOption,
-                        { 
-                          backgroundColor: typeFilter === type.id ? colors.PRIMARY : colors.BACKGROUND,
-                          borderColor: typeFilter === type.id ? colors.PRIMARY : colors.BORDER,
-                        }
-                      ]}
-                      onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                        setTypeFilter(type.id);
-                      }}
-                    >
-                      <Icon 
-                        name={type.icon} 
-                        size={18} 
-                        color={typeFilter === type.id ? "#FFFFFF" : colors.TEXT_SECONDARY} 
-                      />
-                      <Text style={[
-                        styles.filterOptionText,
-                        { color: typeFilter === type.id ? "#FFFFFF" : colors.TEXT_PRIMARY }
-                      ]}>
-                        {type.label}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-
-              {/* Date Filter */}
-              <View style={styles.filterSection}>
-                <Text style={[styles.filterSectionTitle, { color: colors.TEXT_PRIMARY }]}>
-                  Tarih Aralığı
-                </Text>
-                <View style={styles.filterChips}>
-                  {DATE_FILTERS.map((date) => (
-                    <FilterChip
-                      key={date.id}
-                      label={date.label}
-                      isActive={dateFilter === date.id}
-                      onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                        setDateFilter(date.id);
-                      }}
-                    />
-                  ))}
-                </View>
-              </View>
-
-              {/* Amount Filter */}
-              <View style={styles.filterSection}>
-                <Text style={[styles.filterSectionTitle, { color: colors.TEXT_PRIMARY }]}>
-                  Tutar Aralığı
-                </Text>
-                <View style={styles.filterChips}>
-                  {AMOUNT_FILTERS.map((amount) => (
-                    <FilterChip
-                      key={amount.id}
-                      label={amount.label}
-                      isActive={amountFilter === amount.id}
-                      onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                        setAmountFilter(amount.id);
-                      }}
-                    />
-                  ))}
-                </View>
-              </View>
-            </ScrollView>
-
-            {/* Apply Button */}
-            <TouchableOpacity
-              style={[styles.applyButton, { backgroundColor: colors.PRIMARY }]}
-              onPress={applyFilters}
+            <TouchableOpacity 
+              activeOpacity={1} 
+              onPress={() => {}}
+              style={[styles.filterModalContent, { backgroundColor: colors.SURFACE }]}
             >
-              <Text style={styles.applyButtonText}>
-                Uygula ({filteredTransactions.length} sonuç)
-              </Text>
+              <View style={styles.modalHandle}>
+                <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
+              </View>
+
+              <View style={styles.filterModalHeader}>
+                <Text style={[styles.filterModalTitle, { color: colors.TEXT_PRIMARY }]}>
+                  İşlemleri Filtrele
+                </Text>
+                <TouchableOpacity onPress={clearFilters}>
+                  <Text style={[styles.clearText, { color: colors.ERROR }]}>Sıfırla</Text>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Type Filter */}
+                <View style={styles.filterSection}>
+                  <Text style={[styles.filterSectionTitle, { color: colors.TEXT_PRIMARY }]}>
+                    İşlem Türü
+                  </Text>
+                  <View style={styles.filterOptions}>
+                    {FILTER_TYPES.map((type) => (
+                      <TouchableOpacity
+                        key={type.id}
+                        style={[
+                          styles.filterOption,
+                          { 
+                            backgroundColor: typeFilter === type.id ? colors.PRIMARY : colors.BACKGROUND,
+                            borderColor: typeFilter === type.id ? colors.PRIMARY : colors.BORDER,
+                          }
+                        ]}
+                        onPress={() => {
+                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                          setTypeFilter(type.id);
+                        }}
+                      >
+                        <Icon 
+                          name={type.icon} 
+                          size={18} 
+                          color={typeFilter === type.id ? "#FFFFFF" : colors.TEXT_SECONDARY} 
+                        />
+                        <Text style={[
+                          styles.filterOptionText,
+                          { color: typeFilter === type.id ? "#FFFFFF" : colors.TEXT_PRIMARY }
+                        ]}>
+                          {type.label}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+
+                {/* Date Filter */}
+                <View style={styles.filterSection}>
+                  <Text style={[styles.filterSectionTitle, { color: colors.TEXT_PRIMARY }]}>
+                    Tarih Aralığı
+                  </Text>
+                  <View style={styles.filterChips}>
+                    {DATE_FILTERS.map((date) => (
+                      <FilterChip
+                        key={date.id}
+                        label={date.label}
+                        isActive={dateFilter === date.id}
+                        onPress={() => {
+                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                          setDateFilter(date.id);
+                        }}
+                      />
+                    ))}
+                  </View>
+                </View>
+
+                {/* Amount Filter */}
+                <View style={styles.filterSection}>
+                  <Text style={[styles.filterSectionTitle, { color: colors.TEXT_PRIMARY }]}>
+                    Tutar Aralığı
+                  </Text>
+                  <View style={styles.filterChips}>
+                    {AMOUNT_FILTERS.map((amount) => (
+                      <FilterChip
+                        key={amount.id}
+                        label={amount.label}
+                        isActive={amountFilter === amount.id}
+                        onPress={() => {
+                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                          setAmountFilter(amount.id);
+                        }}
+                      />
+                    ))}
+                  </View>
+                </View>
+              </ScrollView>
+
+              {/* Apply Button */}
+              <TouchableOpacity
+                style={[styles.applyButton, { backgroundColor: colors.PRIMARY }]}
+                onPress={applyFilters}
+              >
+                <Text style={styles.applyButtonText}>
+                  Uygula ({filteredTransactions.length} sonuç)
+                </Text>
+              </TouchableOpacity>
             </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
+        </GestureHandlerRootView>
       </Modal>
 
       {/* Transaction Detail Modal */}
@@ -447,106 +450,108 @@ const TransactionList = ({
         animationType="fade"
         onRequestClose={closeModal}
       >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={closeModal}
-        >
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <TouchableOpacity 
-            activeOpacity={1} 
-            onPress={() => {}}
-            style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={closeModal}
           >
-            {/* Modal Handle */}
-            <View style={styles.modalHandle}>
-              <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
-            </View>
+            <TouchableOpacity 
+              activeOpacity={1} 
+              onPress={() => {}}
+              style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}
+            >
+              {/* Modal Handle */}
+              <View style={styles.modalHandle}>
+                <View style={[styles.handleBar, { backgroundColor: colors.GRAY_300 }]} />
+              </View>
 
-            {/* Modal Header */}
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>İşlem Detayı</Text>
-              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                <Icon name="x" size={IconSize.md} color={colors.TEXT_SECONDARY} />
-              </TouchableOpacity>
-            </View>
+              {/* Modal Header */}
+              <View style={styles.modalHeader}>
+                <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>İşlem Detayı</Text>
+                <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                  <Icon name="x" size={IconSize.md} color={colors.TEXT_SECONDARY} />
+                </TouchableOpacity>
+              </View>
 
-            {selectedTransaction && (
-              <>
-                {/* Status Badge */}
-                {(() => {
-                  const status = getTransactionStatus(selectedTransaction);
-                  return (
-                    <View style={[styles.statusBadge, { backgroundColor: `${status.color}20` }]}>
-                      <Icon name={status.icon} size={14} color={status.color} />
-                      <Text style={[styles.statusText, { color: status.color }]}>{status.label}</Text>
+              {selectedTransaction && (
+                <>
+                  {/* Status Badge */}
+                  {(() => {
+                    const status = getTransactionStatus(selectedTransaction);
+                    return (
+                      <View style={[styles.statusBadge, { backgroundColor: `${status.color}20` }]}>
+                        <Icon name={status.icon} size={14} color={status.color} />
+                        <Text style={[styles.statusText, { color: status.color }]}>{status.label}</Text>
+                      </View>
+                    );
+                  })()}
+
+                  <View style={styles.modalBody}>
+                    {/* Amount */}
+                    <View style={[styles.amountContainer, { backgroundColor: colors.BACKGROUND }]}>
+                      <Text style={[styles.amountLabel, { color: colors.TEXT_SECONDARY }]}>İşlem Tutarı</Text>
+                      <Text style={[
+                        styles.amountValue, 
+                        { color: parseFloat(selectedTransaction.amount) > 0 ? colors.SUCCESS : colors.ERROR }
+                      ]}>
+                        {parseFloat(selectedTransaction.amount) > 0 ? "+" : ""}₺{formatAmount(Math.abs(parseFloat(selectedTransaction.amount)))}
+                      </Text>
                     </View>
-                  );
-                })()}
 
-                <View style={styles.modalBody}>
-                  {/* Amount */}
-                  <View style={[styles.amountContainer, { backgroundColor: colors.BACKGROUND }]}>
-                    <Text style={[styles.amountLabel, { color: colors.TEXT_SECONDARY }]}>İşlem Tutarı</Text>
-                    <Text style={[
-                      styles.amountValue, 
-                      { color: parseFloat(selectedTransaction.amount) > 0 ? colors.SUCCESS : colors.ERROR }
-                    ]}>
-                      {parseFloat(selectedTransaction.amount) > 0 ? "+" : ""}₺{formatAmount(Math.abs(parseFloat(selectedTransaction.amount)))}
-                    </Text>
+                    {/* Details */}
+                    <View style={[styles.detailRow, { borderBottomColor: colors.BORDER, borderBottomWidth: 1 }]}>
+                      <View style={[styles.detailIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                        <Icon name="user" size={16} color={colors.PRIMARY} />
+                      </View>
+                      <View style={styles.detailContent}>
+                        <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Kişi</Text>
+                        <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.name}</Text>
+                      </View>
+                    </View>
+
+                    <View style={[styles.detailRow, { borderBottomColor: colors.BORDER, borderBottomWidth: 1 }]}>
+                      <View style={[styles.detailIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                        <Icon name="calendar" size={16} color={colors.PRIMARY} />
+                      </View>
+                      <View style={styles.detailContent}>
+                        <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Tarih</Text>
+                        <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.dateText || "Bugün"}</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.detailRow}>
+                      <View style={[styles.detailIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                        <Icon name="hash" size={16} color={colors.PRIMARY} />
+                      </View>
+                      <View style={styles.detailContent}>
+                        <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>İşlem No</Text>
+                        <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>TRX-{selectedTransaction.id}</Text>
+                      </View>
+                    </View>
                   </View>
 
-                  {/* Details */}
-                  <View style={[styles.detailRow, { borderBottomColor: colors.BORDER, borderBottomWidth: 1 }]}>
-                    <View style={[styles.detailIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
-                      <Icon name="user" size={16} color={colors.PRIMARY} />
-                    </View>
-                    <View style={styles.detailContent}>
-                      <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Kişi</Text>
-                      <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.name}</Text>
-                    </View>
+                  {/* Action Buttons */}
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity 
+                      style={[styles.secondaryBtn, { borderColor: colors.BORDER }]}
+                      onPress={closeModal}
+                    >
+                      <Icon name="share-2" size={16} color={colors.TEXT_PRIMARY} />
+                      <Text style={[styles.secondaryBtnText, { color: colors.TEXT_PRIMARY }]}>Paylaş</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      style={[styles.primaryBtn, { backgroundColor: colors.PRIMARY }]}
+                      onPress={closeModal}
+                    >
+                      <Text style={styles.primaryBtnText}>Tekrarla</Text>
+                    </TouchableOpacity>
                   </View>
-
-                  <View style={[styles.detailRow, { borderBottomColor: colors.BORDER, borderBottomWidth: 1 }]}>
-                    <View style={[styles.detailIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
-                      <Icon name="calendar" size={16} color={colors.PRIMARY} />
-                    </View>
-                    <View style={styles.detailContent}>
-                      <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>Tarih</Text>
-                      <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>{selectedTransaction.dateText || "Bugün"}</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.detailRow}>
-                    <View style={[styles.detailIcon, { backgroundColor: `${colors.PRIMARY}15` }]}>
-                      <Icon name="hash" size={16} color={colors.PRIMARY} />
-                    </View>
-                    <View style={styles.detailContent}>
-                      <Text style={[styles.detailLabel, { color: colors.TEXT_SECONDARY }]}>İşlem No</Text>
-                      <Text style={[styles.detailValue, { color: colors.TEXT_PRIMARY }]}>TRX-{selectedTransaction.id}</Text>
-                    </View>
-                  </View>
-                </View>
-
-                {/* Action Buttons */}
-                <View style={styles.actionButtons}>
-                  <TouchableOpacity 
-                    style={[styles.secondaryBtn, { borderColor: colors.BORDER }]}
-                    onPress={closeModal}
-                  >
-                    <Icon name="share-2" size={16} color={colors.TEXT_PRIMARY} />
-                    <Text style={[styles.secondaryBtnText, { color: colors.TEXT_PRIMARY }]}>Paylaş</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    style={[styles.primaryBtn, { backgroundColor: colors.PRIMARY }]}
-                    onPress={closeModal}
-                  >
-                    <Text style={styles.primaryBtnText}>Tekrarla</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
+                </>
+              )}
+            </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
+        </GestureHandlerRootView>
       </Modal>
     </View>
   );

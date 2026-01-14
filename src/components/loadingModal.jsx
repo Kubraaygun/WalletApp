@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Modal, ActivityIndicator, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { Colors } from "../utils/colors";
 import { TextStyles } from "../utils/typography";
@@ -13,12 +14,12 @@ const LoadingModal = ({ message = "Lütfen bekleyin..." }) => {
 
   return (
     <Modal visible={true} transparent statusBarTranslucent animationType="fade">
-      <View style={styles.overlay}>
+      <GestureHandlerRootView style={styles.overlay}>
         <View style={styles.container}>
           <ActivityIndicator size="large" color={Colors.ACCENT} />
           <Text style={styles.message}>{message}</Text>
         </View>
-      </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 };

@@ -6,6 +6,7 @@ import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
 import { ScalePress } from "../animations";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const QuickActionButton = ({ icon, label, onPress, color, textColor }) => {
     return (
@@ -138,7 +139,7 @@ const QuickActions = ({ navigation }) => {
                 transparent={true}
                 onRequestClose={() => setShowMoreMenu(false)}
             >
-                <View style={styles.modalOverlay}>
+                <GestureHandlerRootView style={styles.modalOverlay}>
                     <TouchableOpacity 
                         style={styles.modalBackground} 
                         activeOpacity={1} 
@@ -166,7 +167,7 @@ const QuickActions = ({ navigation }) => {
                             <Text style={[styles.closeButtonText, { color: colors.TEXT_SECONDARY }]}>Kapat</Text>
                         </ScalePress>
                     </View>
-                </View>
+                </GestureHandlerRootView>
             </Modal>
         </View>
     );

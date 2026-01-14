@@ -18,6 +18,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   selectCategories,
   selectMonthlyBudget,
@@ -249,7 +250,7 @@ const BudgetScreen = ({ navigation }) => {
         transparent={true}
         onRequestClose={() => setEditModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.BACKGROUND }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>
@@ -290,7 +291,7 @@ const BudgetScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
 
       {/* Monthly Budget Modal */}
@@ -300,7 +301,7 @@ const BudgetScreen = ({ navigation }) => {
         transparent={true}
         onRequestClose={() => setMonthlyModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.BACKGROUND }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>
@@ -341,7 +342,7 @@ const BudgetScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
     </SafeAreaView>
   );

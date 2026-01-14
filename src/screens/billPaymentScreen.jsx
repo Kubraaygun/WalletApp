@@ -18,6 +18,7 @@ import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 import { FadeSlide } from "../components/animations";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const BILL_TYPES = [
   { id: "electric", name: "Elektrik", icon: "zap", color: "#F59E0B", company: "EDAŞ" },
@@ -218,7 +219,7 @@ const BillPaymentScreen = ({ navigation }) => {
 
       {/* Query Modal */}
       <Modal visible={queryModalVisible} animationType="slide" transparent onRequestClose={() => setQueryModalVisible(false)}>
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.BACKGROUND }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.TEXT_PRIMARY }]}>
@@ -255,7 +256,7 @@ const BillPaymentScreen = ({ navigation }) => {
               <Text style={styles.queryButtonText}>Fatura Sorgula</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
     </SafeAreaView>
   );

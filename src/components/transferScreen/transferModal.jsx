@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Modal, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Feather as Icon } from "@expo/vector-icons";
 import { Colors } from "../../utils/colors";
 import { TextStyles } from "../../utils/typography";
@@ -27,96 +28,98 @@ const TransferModal = ({
       animationType="slide"
       statusBarTranslucent
     >
-      <TouchableWithoutFeedback onPress={handleCancel}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback>
-            <View style={styles.bottomSheet}>
-              {/* Handle */}
-              <View style={styles.handle} />
+      <GestureHandlerRootView style={styles.overlay}>
+        <TouchableWithoutFeedback onPress={handleCancel}>
+          <View style={styles.overlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.bottomSheet}>
+                {/* Handle */}
+                <View style={styles.handle} />
 
-              {/* Header */}
-              <View style={styles.header}>
-                <Text style={styles.title}>Transfer Onayı</Text>
-                <TouchableOpacity style={styles.closeButton} onPress={handleCancel}>
-                  <Icon name="x" size={IconSize.md} color={Colors.GRAY_500} />
-                </TouchableOpacity>
-              </View>
-
-              {/* Amount Display */}
-              <View style={styles.amountContainer}>
-                <Text style={styles.amountLabel}>Gönderilecek Tutar</Text>
-                <Text style={styles.amount}>₺{formatAmount(confirmData?.amount || 0)}</Text>
-              </View>
-
-              {/* Details */}
-              <View style={styles.detailsCard}>
-                <View style={styles.detailRow}>
-                  <View style={styles.detailIcon}>
-                    <Icon name="user" size={IconSize.sm} color={Colors.ACCENT} />
-                  </View>
-                  <View style={styles.detailContent}>
-                    <Text style={styles.detailLabel}>Alıcı</Text>
-                    <Text style={styles.detailValue}>
-                      {confirmData?.phoneNumber || "-"}
-                    </Text>
-                  </View>
+                {/* Header */}
+                <View style={styles.header}>
+                  <Text style={styles.title}>Transfer Onayı</Text>
+                  <TouchableOpacity style={styles.closeButton} onPress={handleCancel}>
+                    <Icon name="x" size={IconSize.md} color={Colors.GRAY_500} />
+                  </TouchableOpacity>
                 </View>
 
-                {confirmData?.description && (
+                {/* Amount Display */}
+                <View style={styles.amountContainer}>
+                  <Text style={styles.amountLabel}>Gönderilecek Tutar</Text>
+                  <Text style={styles.amount}>₺{formatAmount(confirmData?.amount || 0)}</Text>
+                </View>
+
+                {/* Details */}
+                <View style={styles.detailsCard}>
                   <View style={styles.detailRow}>
                     <View style={styles.detailIcon}>
-                      <Icon name="file-text" size={IconSize.sm} color={Colors.ACCENT} />
+                      <Icon name="user" size={IconSize.sm} color={Colors.ACCENT} />
                     </View>
                     <View style={styles.detailContent}>
-                      <Text style={styles.detailLabel}>Açıklama</Text>
+                      <Text style={styles.detailLabel}>Alıcı</Text>
                       <Text style={styles.detailValue}>
-                        {confirmData.description}
+                        {confirmData?.phoneNumber || "-"}
                       </Text>
                     </View>
                   </View>
-                )}
 
-                <View style={styles.detailRow}>
-                  <View style={styles.detailIcon}>
-                    <Icon name="clock" size={IconSize.sm} color={Colors.ACCENT} />
-                  </View>
-                  <View style={styles.detailContent}>
-                    <Text style={styles.detailLabel}>İşlem Tarihi</Text>
-                    <Text style={styles.detailValue}>
-                      {new Date().toLocaleDateString("tr-TR")} - Anlık
-                    </Text>
+                  {confirmData?.description && (
+                    <View style={styles.detailRow}>
+                      <View style={styles.detailIcon}>
+                        <Icon name="file-text" size={IconSize.sm} color={Colors.ACCENT} />
+                      </View>
+                      <View style={styles.detailContent}>
+                        <Text style={styles.detailLabel}>Açıklama</Text>
+                        <Text style={styles.detailValue}>
+                          {confirmData.description}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+
+                  <View style={styles.detailRow}>
+                    <View style={styles.detailIcon}>
+                      <Icon name="clock" size={IconSize.sm} color={Colors.ACCENT} />
+                    </View>
+                    <View style={styles.detailContent}>
+                      <Text style={styles.detailLabel}>İşlem Tarihi</Text>
+                      <Text style={styles.detailValue}>
+                        {new Date().toLocaleDateString("tr-TR")} - Anlık
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
 
-              {/* Warning */}
-              <View style={styles.warningContainer}>
-                <Icon name="alert-circle" size={IconSize.sm} color={Colors.WARNING} />
-                <Text style={styles.warningText}>
-                  Bu işlem geri alınamaz. Lütfen bilgileri kontrol edin.
-                </Text>
-              </View>
+                {/* Warning */}
+                <View style={styles.warningContainer}>
+                  <Icon name="alert-circle" size={IconSize.sm} color={Colors.WARNING} />
+                  <Text style={styles.warningText}>
+                    Bu işlem geri alınamaz. Lütfen bilgileri kontrol edin.
+                  </Text>
+                </View>
 
-              {/* Buttons */}
-              <View style={styles.buttonContainer}>
-                <CustomButton
-                  title="Onayla"
-                  onPress={handleConfirm}
-                  variant="primary"
-                  size="lg"
-                  style={styles.confirmButton}
-                />
-                <CustomButton
-                  title="İptal"
-                  onPress={handleCancel}
-                  variant="ghost"
-                  size="lg"
-                />
+                {/* Buttons */}
+                <View style={styles.buttonContainer}>
+                  <CustomButton
+                    title="Onayla"
+                    onPress={handleConfirm}
+                    variant="primary"
+                    size="lg"
+                    style={styles.confirmButton}
+                  />
+                  <CustomButton
+                    title="İptal"
+                    onPress={handleCancel}
+                    variant="ghost"
+                    size="lg"
+                  />
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </GestureHandlerRootView>
     </Modal>
   );
 };

@@ -20,6 +20,7 @@ import { TextStyles } from "../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../utils/spacing";
 import { Shadows } from "../utils/shadows";
 import { FadeSlide } from "../components/animations";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width - Spacing.md * 2;
@@ -326,7 +327,7 @@ const CardsScreen = ({ navigation }) => {
         animationType="slide"
         onRequestClose={() => setShowDetailModal(false)}
       >
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}>
             {/* Modal Handle */}
             <View style={styles.modalHandle}>
@@ -413,7 +414,7 @@ const CardsScreen = ({ navigation }) => {
               </>
             )}
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
 
       {/* Add Card Modal */}
@@ -423,7 +424,7 @@ const CardsScreen = ({ navigation }) => {
         animationType="slide"
         onRequestClose={handleCloseModal}
       >
-        <View style={styles.modalOverlay}>
+        <GestureHandlerRootView style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.SURFACE }]}>
             {/* Modal Handle */}
             <View style={styles.modalHandle}>
@@ -477,7 +478,7 @@ const CardsScreen = ({ navigation }) => {
                       color: colors.TEXT_PRIMARY,
                       borderColor: colors.BORDER,
                     }
-                  ]}
+                   ]}
                   value={cardName}
                   onChangeText={setCardName}
                   placeholder="Örn: Alışveriş Kartım"
@@ -521,7 +522,7 @@ const CardsScreen = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </Modal>
     </SafeAreaView>
   );
