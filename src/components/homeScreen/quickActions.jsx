@@ -102,18 +102,6 @@ const QuickActions = ({ navigation }) => {
             screen: "CryptoScreen",
         },
         {
-            icon: "pie-chart",
-            label: "Mali Durum",
-            color: colors.PRIMARY,
-            screen: "StatsScreen",
-        },
-        {
-            icon: "credit-card",
-            label: "Kartlarim",
-            color: colors.SECONDARY,
-            screen: "CardsScreen",
-        },
-        {
             icon: "repeat",
             label: "Doviz Cevirici",
             color: "#06B6D4",
