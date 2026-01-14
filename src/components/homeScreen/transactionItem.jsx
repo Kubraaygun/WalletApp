@@ -15,6 +15,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
 import { Shadows } from "../../utils/shadows";
+import { formatCurrency } from "../../utils/formatters";
 
 const TransactionItem = ({ item, onPress, index = 0 }) => {
   const { colors } = useTheme();
@@ -22,11 +23,7 @@ const TransactionItem = ({ item, onPress, index = 0 }) => {
   const opacity = useSharedValue(1);
 
   const formatAmount = (amount) => {
-    const numAmount = parseFloat(amount);
-    return new Intl.NumberFormat("tr-TR", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }).format(numAmount);
+    return formatCurrency(amount);
   };
 
   const formatDate = (dateStr) => {

@@ -13,8 +13,9 @@ import * as Haptics from "expo-haptics";
 import TransactionItem from "./transactionItem";
 import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
-import { Spacing, BorderRadius, IconSize } from "../../utils/spacing";
-import { Shadows } from "../../utils/shadows";
+import { Spacing, BorderRadius, IconSize, scale, verticalScale, moderateScale } from "../../utils/spacing";
+import { GlowShadows } from "../../utils/shadows";
+import { formatCurrency } from "../../utils/formatters";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Filter options
@@ -40,13 +41,14 @@ const AMOUNT_FILTERS = [
 ];
 
 const TransactionList = ({ 
-  transactions, 
+  transactions = [], 
   onSeeAll, 
   maxItems = 10, 
   scrollEnabled = false,
   refreshing = false,
   onRefresh = null,
-  containerStyle = {}
+  containerStyle = {},
+  ListHeaderComponent = null,
 }) => {
   const { colors } = useTheme();
   const [selectedTransaction, setSelectedTransaction] = useState(null);
@@ -61,9 +63,11 @@ const TransactionList = ({
   // Check if any filter is active
   const hasActiveFilters = typeFilter !== "all" || dateFilter !== "all" || amountFilter !== "all";
 
+  const txs = Array.isArray(transactions) ? transactions : [];
+
   // Filter transactions
   const filteredTransactions = useMemo(() => {
-    let result = [...transactions];
+    let result = [...txs];
 
     // Type filter
     if (typeFilter === "incoming") {
@@ -71,7 +75,10 @@ const TransactionList = ({
     } else if (typeFilter === "outgoing") {
       result = result.filter(t => parseFloat(t.amount) < 0);
     }
-
+    // ... rest of filters ...
+    // Note: I will only replace the top lines of filteredTransactions to save space if possible, 
+    // but the instruction says CONTIGUOUS block. I'll replace the whole needed section.
+    
     // Date filter
     const now = new Date();
     if (dateFilter === "today") {
@@ -108,7 +115,7 @@ const TransactionList = ({
     }
 
     return result;
-  }, [transactions, typeFilter, dateFilter, amountFilter]);
+  }, [txs, typeFilter, dateFilter, amountFilter]);
 
   const displayedTransactions = filteredTransactions.slice(0, maxItems);
   const hasMore = filteredTransactions.length > maxItems;
@@ -148,11 +155,7 @@ const TransactionList = ({
   };
 
   const formatAmount = (amount) => {
-    const numAmount = parseFloat(amount);
-    return new Intl.NumberFormat("tr-TR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(numAmount);
+    return formatCurrency(amount);
   };
 
   const getTransactionStatus = (transaction) => {
@@ -179,145 +182,152 @@ const TransactionList = ({
     </TouchableOpacity>
   );
 
-  if (!transactions.length) {
-    return (
-      <View style={styles.emptyContainer}>
-        <View style={[styles.emptyIconContainer, { backgroundColor: colors.SURFACE }]}>
-          <Icon name="inbox" size={IconSize["2xl"]} color={colors.GRAY_400} />
-        </View>
-        <Text style={[styles.emptyTitle, { color: colors.TEXT_PRIMARY }]}>Henuz islem yok</Text>
-        <Text style={[styles.emptySubtitle, { color: colors.TEXT_SECONDARY }]}>
-          Ilk para transferinizi yaparak baslayin
-        </Text>
+  const renderEmptyState = () => (
+    <View style={styles.emptyContainer}>
+      <View style={[styles.emptyIconContainer, { backgroundColor: colors.SURFACE }]}>
+        <Icon name="inbox" size={IconSize["2xl"]} color={colors.GRAY_400} />
       </View>
-    );
-  }
+      <Text style={[styles.emptyTitle, { color: colors.TEXT_PRIMARY }]}>Henuz islem yok</Text>
+      <Text style={[styles.emptySubtitle, { color: colors.TEXT_SECONDARY }]}>
+        Ilk para transferinizi yaparak baslayin
+      </Text>
+    </View>
+  );
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <View style={styles.header}>
-        <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>Son Islemler</Text>
-        <View style={styles.headerActions}>
-          {/* Filter Button */}
-          <TouchableOpacity 
-            style={[
-              styles.filterButton, 
-              { backgroundColor: hasActiveFilters ? colors.PRIMARY : colors.SURFACE }
-            ]} 
-            onPress={openFilterModal}
-          >
-            <Icon 
-              name="sliders" 
-              size={16} 
-              color={hasActiveFilters ? "#FFFFFF" : colors.TEXT_SECONDARY} 
-            />
+      <FlatList
+        data={displayedTransactions}
+        renderItem={({ item, index }) => (
+          <TransactionItem 
+            item={item} 
+            index={index}
+            onPress={() => handleTransactionPress(item)}
+          />
+        )}
+        keyExtractor={(item, index) => item.id || index.toString()}
+        scrollEnabled={scrollEnabled}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <View>
+            {ListHeaderComponent}
+            
+            <View style={styles.header}>
+              <Text style={[styles.sectionTitle, { color: colors.TEXT_PRIMARY }]}>Son Islemler</Text>
+              <View style={styles.headerActions}>
+                <TouchableOpacity 
+                  style={[
+                    styles.filterButton, 
+                    { backgroundColor: hasActiveFilters ? colors.PRIMARY : colors.SURFACE }
+                  ]} 
+                  onPress={openFilterModal}
+                >
+                  <Icon 
+                    name="sliders" 
+                    size={16} 
+                    color={hasActiveFilters ? "#FFFFFF" : colors.TEXT_SECONDARY} 
+                  />
+                  {hasActiveFilters && (
+                    <View style={[styles.filterBadge, { backgroundColor: "#FFFFFF" }]}>
+                      <Text style={[styles.filterBadgeText, { color: colors.PRIMARY }]}>
+                        {[typeFilter, dateFilter, amountFilter].filter(f => f !== "all").length}
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+                
+                {hasMore && (
+                  <TouchableOpacity style={styles.seeAllButton} onPress={onSeeAll}>
+                    <Text style={[styles.seeAllText, { color: colors.ACCENT }]}>Tumunu Gor</Text>
+                    <Icon name="chevron-right" size={IconSize.sm} color={colors.ACCENT} />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+
+            {/* Active Filters Display */}
             {hasActiveFilters && (
-              <View style={[styles.filterBadge, { backgroundColor: "#FFFFFF" }]}>
-                <Text style={[styles.filterBadgeText, { color: colors.PRIMARY }]}>
-                  {[typeFilter, dateFilter, amountFilter].filter(f => f !== "all").length}
-                </Text>
+              <View style={styles.activeFiltersContainer}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {typeFilter !== "all" && (
+                    <View style={[styles.activeFilter, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                      <Text style={[styles.activeFilterText, { color: colors.PRIMARY }]}>
+                        {FILTER_TYPES.find(f => f.id === typeFilter)?.label}
+                      </Text>
+                      <TouchableOpacity onPress={() => setTypeFilter("all")}>
+                        <Icon name="x" size={14} color={colors.PRIMARY} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {dateFilter !== "all" && (
+                    <View style={[styles.activeFilter, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                      <Text style={[styles.activeFilterText, { color: colors.PRIMARY }]}>
+                        {DATE_FILTERS.find(f => f.id === dateFilter)?.label}
+                      </Text>
+                      <TouchableOpacity onPress={() => setDateFilter("all")}>
+                        <Icon name="x" size={14} color={colors.PRIMARY} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {amountFilter !== "all" && (
+                    <View style={[styles.activeFilter, { backgroundColor: `${colors.PRIMARY}15` }]}>
+                      <Text style={[styles.activeFilterText, { color: colors.PRIMARY }]}>
+                        {AMOUNT_FILTERS.find(f => f.id === amountFilter)?.label}
+                      </Text>
+                      <TouchableOpacity onPress={() => setAmountFilter("all")}>
+                        <Icon name="x" size={14} color={colors.PRIMARY} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  <TouchableOpacity 
+                    style={[styles.clearAllButton, { backgroundColor: `${colors.ERROR}15` }]}
+                    onPress={clearFilters}
+                  >
+                    <Text style={[styles.clearAllText, { color: colors.ERROR }]}>Temizle</Text>
+                  </TouchableOpacity>
+                </ScrollView>
               </View>
             )}
-          </TouchableOpacity>
-          
-          {hasMore && (
-            <TouchableOpacity style={styles.seeAllButton} onPress={onSeeAll}>
-              <Text style={[styles.seeAllText, { color: colors.ACCENT }]}>Tumunu Gor</Text>
-              <Icon name="chevron-right" size={IconSize.sm} color={colors.ACCENT} />
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
 
-      {/* Active Filters Display */}
-      {hasActiveFilters && (
-        <View style={styles.activeFiltersContainer}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {typeFilter !== "all" && (
-              <View style={[styles.activeFilter, { backgroundColor: `${colors.PRIMARY}15` }]}>
-                <Text style={[styles.activeFilterText, { color: colors.PRIMARY }]}>
-                  {FILTER_TYPES.find(f => f.id === typeFilter)?.label}
+            {/* Results Count */}
+            {hasActiveFilters && (
+              <Text style={[styles.resultsCount, { color: colors.TEXT_SECONDARY }]}>
+                {filteredTransactions.length} sonuç bulundu
+              </Text>
+            )}
+
+            {txs.length === 0 && (
+              renderEmptyState()
+            )}
+
+            {txs.length > 0 && filteredTransactions.length === 0 && hasActiveFilters && (
+              <View style={styles.noResultsContainer}>
+                <Icon name="search" size={32} color={colors.GRAY_400} />
+                <Text style={[styles.noResultsText, { color: colors.TEXT_SECONDARY }]}>
+                  Filtrelerle eşleşen işlem bulunamadı
                 </Text>
-                <TouchableOpacity onPress={() => setTypeFilter("all")}>
-                  <Icon name="x" size={14} color={colors.PRIMARY} />
+                <TouchableOpacity onPress={clearFilters}>
+                  <Text style={[styles.clearFiltersLink, { color: colors.PRIMARY }]}>
+                    Filtreleri Temizle
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
-            {dateFilter !== "all" && (
-              <View style={[styles.activeFilter, { backgroundColor: `${colors.PRIMARY}15` }]}>
-                <Text style={[styles.activeFilterText, { color: colors.PRIMARY }]}>
-                  {DATE_FILTERS.find(f => f.id === dateFilter)?.label}
-                </Text>
-                <TouchableOpacity onPress={() => setDateFilter("all")}>
-                  <Icon name="x" size={14} color={colors.PRIMARY} />
-                </TouchableOpacity>
-              </View>
-            )}
-            {amountFilter !== "all" && (
-              <View style={[styles.activeFilter, { backgroundColor: `${colors.PRIMARY}15` }]}>
-                <Text style={[styles.activeFilterText, { color: colors.PRIMARY }]}>
-                  {AMOUNT_FILTERS.find(f => f.id === amountFilter)?.label}
-                </Text>
-                <TouchableOpacity onPress={() => setAmountFilter("all")}>
-                  <Icon name="x" size={14} color={colors.PRIMARY} />
-                </TouchableOpacity>
-              </View>
-            )}
-            <TouchableOpacity 
-              style={[styles.clearAllButton, { backgroundColor: `${colors.ERROR}15` }]}
-              onPress={clearFilters}
-            >
-              <Text style={[styles.clearAllText, { color: colors.ERROR }]}>Temizle</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
-      )}
-
-      {/* Results Count */}
-      {hasActiveFilters && (
-        <Text style={[styles.resultsCount, { color: colors.TEXT_SECONDARY }]}>
-          {filteredTransactions.length} sonuç bulundu
-        </Text>
-      )}
-
-      {filteredTransactions.length === 0 ? (
-        <View style={styles.noResultsContainer}>
-          <Icon name="search" size={32} color={colors.GRAY_400} />
-          <Text style={[styles.noResultsText, { color: colors.TEXT_SECONDARY }]}>
-            Filtrelerle eşleşen işlem bulunamadı
-          </Text>
-          <TouchableOpacity onPress={clearFilters}>
-            <Text style={[styles.clearFiltersLink, { color: colors.PRIMARY }]}>
-              Filtreleri Temizle
-            </Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <FlatList
-          data={displayedTransactions}
-          renderItem={({ item, index }) => (
-            <TransactionItem 
-              item={item} 
-              index={index}
-              onPress={() => handleTransactionPress(item)}
+          </View>
+        }
+        ListEmptyComponent={null}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={colors.ACCENT}
+              colors={[colors.ACCENT, colors.PRIMARY]}
             />
-          )}
-          keyExtractor={(item, index) => item.id || index.toString()}
-          scrollEnabled={scrollEnabled}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            onRefresh ? (
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor={colors.ACCENT}
-                colors={[colors.ACCENT, colors.PRIMARY]}
-              />
-            ) : null
-          }
-          contentContainerStyle={{ paddingBottom: Spacing.xl }}
-        />
-      )}
+          ) : null
+        }
+        contentContainerStyle={{ paddingBottom: Spacing.xl }}
+      />
 
       {/* Filter Modal */}
       <Modal

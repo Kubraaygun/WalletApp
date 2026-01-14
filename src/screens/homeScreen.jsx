@@ -91,38 +91,44 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.BACKGROUND }]} edges={["top"]}>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.BACKGROUND} />
-      <Animated.View style={animatedContentStyle}>
-        {/* Header */}
-        <HomeHeader
-          userName={user?.name || "Kullanici"}
-          profileImage={user?.profileImage}
-          onNotificationPress={handleNotificationPress}
-          onProfilePress={handleProfilePress}
+      
+      <Animated.View style={[styles.content, animatedContentStyle]}>
+        <TransactionList
+          transactions={transactions}
+          onSeeAll={() => { }}
+          maxItems={20}
+          scrollEnabled={true}
+          refreshing={refreshing || isLoading}
+          onRefresh={onRefresh}
+          containerStyle={{ flex: 1 }}
+          ListHeaderComponent={
+            <View>
+              {/* Header */}
+              <HomeHeader
+                userName={user?.name || "Kullanici"}
+                profileImage={user?.profileImage}
+                onNotificationPress={handleNotificationPress}
+                onProfilePress={handleProfilePress}
+              />
+
+              {/* Balance Card */}
+              <BalanceCard balance={balance} />
+
+              {/* Quick Actions */}
+              <QuickActions navigation={navigation} />
+            </View>
+          }
         />
-
-        {/* Balance Card */}
-        <BalanceCard balance={balance} />
-
-        {/* Quick Actions */}
-        <QuickActions navigation={navigation} />
       </Animated.View>
-
-      {/* Transaction List (Scrollable Part) */}
-      <TransactionList
-        transactions={transactions}
-        onSeeAll={() => { }}
-        maxItems={20}
-        scrollEnabled={true}
-        refreshing={refreshing || isLoading}
-        onRefresh={onRefresh}
-        containerStyle={{ flex: 1 }}
-      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   safeArea: {
+    flex: 1,
+  },
+  content: {
     flex: 1,
   },
   scrollView: {

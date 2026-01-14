@@ -19,6 +19,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { TextStyles } from "../../utils/typography";
 import { Spacing, BorderRadius, IconSize, scale, verticalScale, moderateScale } from "../../utils/spacing";
 import { GlowShadows } from "../../utils/shadows";
+import { formatCurrency } from "../../utils/formatters";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -52,10 +53,7 @@ const BalanceCard = ({ balance = 0 }) => {
   }, []);
 
   const formatBalance = (amount) => {
-    return new Intl.NumberFormat("tr-TR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
+    return formatCurrency(amount);
   };
 
   // Entry animation style
